@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5">
+    <!--<servlet>-->
+        <!--<servlet-name>fhirServlet</servlet-name>-->
+        <!--<servlet-clfhirconverter.fhirservletervletpark.RestfulServlet</servlet-class>-->
+        <!--<load-on-startup>1</load-on-startup>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>fhirServlet</servlet-name>-->
+        <!--<url-pattern>/fhir/*</url-pattern>-->
+    <!--</servlet-mapping>-->
+
+</web-app>

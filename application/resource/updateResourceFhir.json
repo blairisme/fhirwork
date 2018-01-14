@@ -1,0 +1,62 @@
+{
+  "resourceType": "Patient",
+  "identifier": [
+    {
+      "system": "SSN",
+      "value": "568754549875445698798988873"
+    }
+  ],
+  "name": [
+    {
+      "use": "usual",
+      "family": ["Williams"],
+      "given": [
+        "Kate",
+        "Mary"
+      ],
+      "prefix": [
+        "Miss"
+      ]
+    },
+    {
+      "use": "maiden",
+      "family": ["Kat"]
+    }
+  ],
+  "telecom": [
+    {
+      "system": "email",
+      "value": "katewilliams@gmail.com"
+    },
+    {
+      "system": "phone",
+      "value": "6789475459787"
+    }
+  ],
+  "gender": "female",
+  "birthDate": "1970-09-24",
+  "deceasedDateTime": "1982-08-25T07:06:12-04:00",
+  "address": [
+    {
+      "text": "Kings Cross Penton Rise London London 589632 UK",
+      "line": [
+        "Kings Cross",
+        "Penton Rise"
+      ],
+      "city": "London",
+      "state": "London",
+      "postalCode": "589632",
+      "country": "UK"
+    }
+  ],
+  "maritalStatus": {
+    "coding": [
+	    {	
+		"system": "http://hl7.org/fhir/v3/MaritalStatus",
+		"code": "D"
+	    }
+    ]
+  },
+  "multipleBirthInteger": 2
+}
+

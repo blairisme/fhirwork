@@ -1,0 +1,164 @@
+{
+   "$schema": "http://json-schema.org/draft-04/schema#",
+   "title": "OPENEMPI-SCHEMA",
+   "description": "OpenEMPI Data Schema",
+   "additionalProperties": false,
+   "type": "object",
+   "properties": {
+   	"address1":{	
+		"description": "Patient's Address part 1",
+		"type":"string"
+	},
+	"address2":{	
+		"description": "Patient's Address part 2",
+		"type":"string"
+	},   	
+   	"birthOrder":{
+		"description": "For Twins or more birth order",
+		"type": "string"
+	},
+   	"birthPlace":{
+		"description": "Patient's Birth Place",
+		"type": "string"
+	},
+	"city":{
+		"description": "Patient's city",
+		"type": "string"
+	},	
+ 	"country":{
+		"description": "Patient's Country",
+		"type": "string"
+	},  	
+	"countryCode":{
+		"description": "Patient's Country Code",
+		"type": "string"
+	},
+	"dateChanged":{
+		"description": "Patient's last Updated",
+		"type": "string"
+	},
+	"dateCreated":{
+		"description": "Patient's date Created",
+		"type": "string"
+	},
+	"dateOfBirth":{
+		"description": "Patient's DOB",
+		"type": "string"
+	},	
+	"deathInd":{
+		"description": "Patient's Death Indicater",
+		"type": "string"
+	},
+	"deathTime":{
+		"description": "Patient's Death Time",
+		"type": "string"
+	},
+	"degree":{
+		"description": "Patient's degree",
+		"type": "string"
+	},
+	"email":{
+		"description": "Patient's email",
+		"type": "string"
+	},	
+	"familyName":{
+		"description": "Patient's Family Name",
+		"type": "string"
+	},
+	"familyName2":{
+		"description": "Patient's Family Name 2",
+		"type": "string"
+	},	
+	"fatherName":{
+		"description": "Patient's father name",
+		"type": "string"
+	},
+   	"gender": {
+		"type": "object",
+		"properties":{
+      			"genderCd": {"type": "string"},
+      			"genderCode":  {"type": "string"},
+      			"genderDescription":  {"type": "string"},
+      			"genderName":  {"type": "string"}
+		}
+   	},
+	"givenName":{
+		"description": "Patient's given name",
+		"type": "string"
+	},
+ 	"maritalStatusCode":{
+		"description": "Patient's marital status",
+		"type": "string"
+	},
+	"middleName":{
+		"description": "Patient's middle name",
+		"type": "string"
+	},
+	"motherName":{
+		"description": "Patient's mother name",
+		"type": "string"
+	},
+	"mothersMaidenName":{
+		"description": "Patient mother's family name",
+		"type": "string"
+	},
+	"multipleBirthInd":{
+		"description": "Patient's birth indicator",
+		"type": "string"
+	},
+   	"personIdentifiers": {
+		"type": "array",
+		"properties": {
+         		"dateCreated": {"type": "string"},
+         		"identifier":  {"type": "string"},
+         		"identifierDomain": {
+				"type": "object",
+				"properties":{
+            				"identifierDomainId":  {"type": "string"}
+					}
+				},
+            		"identifierDomainName": {"type": "string"},
+            		"namespaceIdentifier": {"type": "string"},
+            		"universalIdentifier": {"type": "string"},
+            		"universalIdentifierTypeCode": {"type": "string"},
+         		"personIdentifierId": {"type": "string"}
+		}
+      	},
+   	"phoneAreaCode":{
+		"description": "Patient's phone area code",
+		"type": "string"
+	},
+	"phoneCountryCode":{
+		"description": "Patient's phone country code",
+		"type": "string"
+	},	
+	"phoneExt":{
+		"description": "Patient's phone ext",
+		"type": "string"
+	},
+	"phoneNumber":{
+		"description": "Patient's Phone number",
+		"type": "string"
+	},
+	"postalCode":{
+		"description": "Patient's postal Code",
+		"type": "string"
+	},
+	"prefix":{
+		"description": "Patient's prefix",
+		"type": "string"
+	},
+	"ssn":{
+		"description": "Patient's ssn",
+		"type": "string"
+	},
+	"state":{
+		"description": "Patient's state",
+		"type": "string"
+	},
+	"suffix":{
+		"description": "Patient's suffix",
+		"type": "string"
+	}
+     }
+}

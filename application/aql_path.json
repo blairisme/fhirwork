@@ -1,0 +1,48 @@
+{
+   "3141-9": {
+      "path": {
+         "date": "data[at0002]/origin/value",
+         "magnitude": "data[at0002]/events[at0003]/data[at0001]/items[at0004]/value/magnitude",
+         "units": "data[at0002]/events[at0003]/data[at0001]/items[at0004]/value/units"
+      },
+      "archetype": "openEHR-EHR-OBSERVATION.body_weight.v1",
+      "text": "body_weight"
+   },
+   "8302-2": {
+      "path": {
+         "date": "data[at0001]/origin/value",
+         "magnitude": "data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/magnitude",
+         "units": "data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/units"
+      },
+      "archetype": "openEHR-EHR-OBSERVATION.height.v1",
+      "text": "height"
+   },
+   "39156-5": {
+      "path": {
+         "date": "data[at0001]/origin/value",
+         "precision": "data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/precision",
+         "magnitude": "data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/magnitude",
+         "units": "data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/units"
+      },
+      "archetype": "openEHR-EHR-OBSERVATION.body_mass_index.v1",
+      "text": "body_mass_index"
+   },
+   "8287-5": {
+      "path": {
+         "date": "data[at0001]/origin/value",
+         "precision": "data[at0001]/events[at0010]/data[at0003]/items[at0004]/value/precision",
+         "magnitude": "data[at0001]/events[at0010]/data[at0003]/items[at0004]/value/magnitude",
+         "units": "data[at0001]/events[at0010]/data[at0003]/items[at0004]/value/units"
+      },
+      "archetype": "openEHR-EHR-OBSERVATION.head_circumference.v0",
+      "text": "head_circumference"
+   },
+   "37362-1": {
+      "path": {
+         "date": "data[at0001]/origin/value",
+         "value": "data[at0001]/events[at0002]/data[at0003]/items[at0005]/value/value"
+      },
+      "archetype": "openEHR-EHR-OBSERVATION.skeletal_age.v0",
+      "text": "skeletal_age"
+   }
+}

@@ -1,0 +1,145 @@
+<Patient xmlns="http://hl7.org/fhir">
+  <meta><profile value="http://hl7.org/fhir/StructureDefinition/careconnect-patient-1" /></meta>
+  <extension url="http://hl7.org.uk/fhir/CareConnect-EthnicCategory-1-Extension">
+    <valueCodeableConcept>
+      <coding>
+        <system value="http://hl7.org.uk/fhir/CareConnect-EthnicCategory-1" />
+      <code value="A" /><display value="British, Mixed British" />
+    </coding>
+    </valueCodeableConcept>
+  </extension>
+  <extension url="http://hl7.org.uk/fhir/CareConnect-ReligiousAffiliation-1-Extension">
+    <valueCodeableConcept>
+      <coding><system value="http://snomed.info/sct" />
+        <code value="160542002" />
+        <display value="Atheist (person)" />
+      </coding>
+    </valueCodeableConcept>
+  </extension><extension url="http://hl7.org.uk/fhir/CareConnect-OrganDonor-1-Extension">
+  <valueBoolean value="true" />
+</extension>
+  <extension url="http://hl7.org.uk/fhir/CareConnect-ResidentialStatus-1-Extension">
+    <valueCodeableConcept>
+      <coding>
+        <system value="http://hl7.org.uk/fhir/ValueSet/CareConnect-ResidentialStatus" />
+        <code value="H" />
+        <display value="UK Resident" />
+      </coding>
+    </valueCodeableConcept>
+  </extension>
+  <extension url="http://hl7.org.uk/fhir/CareConnect-TreatmentCategory-1-Extension">
+  <valueCodeableConcept>
+    <coding>
+      <system value="http://hl7.org.uk/fhir/ValueSet/CareConnect-TreatmentCategory" />
+      <code value="8" />
+      <display value="Not applicable" />
+    </coding>
+  </valueCodeableConcept>
+  </extension>
+  <extension url="http://hl7.org.uk/fhir/CareConnect-NhsCommunication-1-Extension">
+    <extension url="language">
+      <valueCodeableConcept>
+        <coding>
+          <system value="http://hl7.org.uk/fhir/ValueSet/CareConnect-HumanLanguage" />
+          <code value="en" />
+          <display value="English" />
+        </coding>
+      </valueCodeableConcept>
+    </extension>
+    <extension url="preferred">
+      <valueBoolean value="true" />
+    </extension>
+    <extension url="modeOfCommunication">
+      <valueCodeableConcept>
+        <coding>
+          <system value="http://hl7.org.uk/fhir/ValueSet/CareConnect-LanguageAbilityMode" />
+          <code value="ESP" />
+          <display value="Expressed spoken" />
+        </coding>
+      </valueCodeableConcept>
+    </extension>
+    <extension url="modeOfCommunication">
+      <valueCodeableConcept>
+        <coding>
+          <system value="http://hl7.org.uk/fhir/ValueSet/CareConnect-LanguageAbilityMode" />
+          <code value="RWR" />
+          <display value="Received written" />
+        </coding>
+      </valueCodeableConcept>
+    </extension>
+    <extension url="communicationProficiency">
+      <valueCodeableConcept>
+        <coding>
+          <system value="http://hl7.org.uk/fhir/ValueSet/CareConnect-LanguageAbilityProficiency" />
+          <code value="E" />
+          <display value="Excellent" />
+        </coding>
+      </valueCodeableConcept>
+    </extension>
+    <extension url="interpreterRequired">
+      <valueBoolean value="false" />
+    </extension>
+  </extension>
+  <identifier>
+    <extension url="http://hl7.org.uk/fhir/CareConnect-NhsNumberVerificationStatus-1-Extension">
+      <valueCodeableConcept>
+        <coding>
+          <system value="http://hl7.org.uk/fhir/ValueSet/CareConnect-NhsNumberVerificationStatus" />
+          <code value="01" />
+          <display value="Number present and verified" />
+        </coding>
+      </valueCodeableConcept>
+    </extension>
+    <system value="http://fhir.nhs.net/Id/nhs-number" />
+    <value value="1352465790" />
+  </identifier><active value="true" />
+  <name>
+    <use value="usual" />
+    <family value="Smith" />
+    <given value="Richard" />
+    <prefix value="Mr" />
+  </name>
+  <gender value="male" />
+  <birthDate value="1957-01-01" />
+  <address><use value="home" />
+    <line value="21, Grove Street" />
+    <city value="Overtown" />
+    <district value="Leeds" />
+    <postalCode value="LS21 1PF" />
+  </address>
+  <maritalStatus>
+    <coding>
+      <system value="http://hl7.org/fhir/marital-status" /><code value="M" />
+      <display value="Married" />
+    </coding>
+  </maritalStatus>
+  <contact>
+    <relationship>
+      <coding>
+        <system value="http://hl7.org.uk/fhir/ValueSet/CareConnect-PersonRelationshipType" />
+        <code value="01" />
+        <display value="Spouse" />
+      </coding>
+    </relationship>
+    <name>
+      <use value="usual" />
+      <family value="Smith" />
+      <given value="Joy" />
+      <prefix value="Mrs" />
+    </name>
+    <telecom>
+      <system value="phone" />
+      <value value="0712345678" />
+      <use value="mobile" />
+    </telecom>
+    <telecom>
+      <system value="email" />
+      <value value="mrssmith@mymail.com" />
+    </telecom>
+    <gender value="female" />
+  </contact>
+  <careProvider>
+    <reference value="Organization/f9f24f89-646b-4a19-a6b1-cabfa3b612e1" />
+    <display value="MGP Medical Centre" />
+  </careProvider>
+</Patient>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Patient xmlns="http://hl7.org/fhir">
+    <id value="3512"/>
+    <meta>
+        <lastUpdated value="2017-08-16T00:00:00.000+01:00"/>
+    </meta>
+    <text>
+        <status value="generated"/>
+        <div xmlns="http://www.w3.org/1999/xhtml">
+            <div class="hapiHeaderText">Mr Richard 
+            
+                <b>SMITH </b>
+            </div>
+            <table class="hapiPropertyTable">
+                <tbody>
+                    <tr>
+                        <td>Identifier</td>
+                        <td>1352465790</td>
+                    </tr>
+                    <tr>
+                        <td>Address</td>
+                        <td>
+                            <span>21, Grove Street </span>
+                            <br/>
+                            <span>Overtown </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Date of birth</td>
+                        <td>
+                            <span>01 January 1957</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </text>
+    <identifier>
+        <system value="http://fhir.nhs.net/Id/nhs-number"/>
+        <value value="1352465790"/>
+    </identifier>
+    <name>
+        <use value="usual"/>
+        <family value="Smith"/>
+        <given value="Richard"/>
+        <prefix value="Mr"/>
+    </name>
+    <gender value="male"/>
+    <birthDate value="1957-01-01"/>
+    <address>
+        <text value="21, Grove Street Overtown LS21 1PF "/>
+        <line value="21, Grove Street"/>
+        <city value="Overtown"/>
+        <postalCode value="LS21 1PF"/>
+    </address>
+    <maritalStatus>
+        <coding>
+            <system value="http://hl7.org/fhir/v3/MaritalStatus"/>
+            <code value="M"/>
+        </coding>
+    </maritalStatus>
+</Patient>
