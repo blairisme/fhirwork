@@ -1,0 +1,76 @@
+/*
+ * FHIRWork (c)
+ *
+ * This work is licensed under the Creative Commons Attribution 4.0
+ * International License. To view a copy of this license, visit
+ *
+ *      http://creativecommons.org/licenses/by/4.0/
+ *
+ * Author: Blair Butterworth
+ */
+
+repositories {
+    ivy {
+        url 'https://github.com/'
+        layout 'pattern', {
+            artifact '/[organisation]/[module]/archive/[revision].[ext]'
+        }
+    }
+}
+
+configurations {
+    environment
+}
+
+dependencies {
+    environment 'alessfg:docker-ethercis:master@zip'
+    environment 'alessfg:docker-openempi:master@zip'
+}
+
+task extractEhr(type: Copy){
+  def zipPath = project.configurations.environment.find {it.name.startsWith('docker-ethercis') }
+  def zipFile = file(zipPath)
+  def outputDir = projectDir
+
+  from zipTree(zipFile)
+  into outputDir
+}
+
+task extractEmpi(type: Copy){
+  def zipPath = project.configurations.environment.find {it.name.startsWith('docker-openempi') }
+  def zipFile = file(zipPath)
+  def outputDir = projectDir
+
+  from zipTree(zipFile)
+  into outputDir
+}
+
+task startEhr(type: Exec) {
+  dependsOn 'extractEhr'
+  workingDir 'docker-ethercis-master'
+  commandLine 'docker-compose', 'up', '-d'
+}
+
+task startEmpi(type: Exec) {
+  dependsOn 'extractEmpi'
+  workingDir 'docker-openempi-master'
+  commandLine 'docker-compose', 'up', '-d'
+}
+
+task startEnvironment() {
+  dependsOn = ['startEmpi', 'startEhr']
+}
+
+task stopEhr(type: Exec){
+  workingDir 'docker-ethercis-master'
+  commandLine 'docker-compose', 'stop'
+}
+
+task stopEmpi(type: Exec){
+  workingDir 'docker-openempi-master'
+  commandLine 'docker-compose', 'stop'
+}
+
+task stopEnvironment() {
+  dependsOn = ['stopEhr', 'stopEmpi']
+}
