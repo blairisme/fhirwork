@@ -1,0 +1,6 @@
+{
+  "etherciseEHRPort": 8888,
+  "openEMPIPort": 8080,
+  "fhirPort": 8090,
+  "serverAddress": "127.0.0.1"
+}

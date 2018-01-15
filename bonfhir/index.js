@@ -1,14 +1,3 @@
-// app.js
-
-// Use __dirname to construct absolute paths for:
-
-// 1. express-static
-// 2. hbs views
-
-// (the instructions have details on how to do this)
-
-// LISTEN ON PORT 3000
-
 //Set up express, app and router
 const express = require('express');
 const app = express();
@@ -24,6 +13,13 @@ app.use(express.static(path.join(__dirname, "public")));
 
 //Set up for session management
 const session = require('express-session');
+
+//Setting up the configuration file
+const config = require('./config.json');
+
+const ehrPort = config.etherciseEHRPort;
+const openEMPIPort = config.openEMPIPort;
+const fhirPort = config.fhirPort
 
 //Setting up the options for session management
 const sessionOptions = {
