@@ -24,10 +24,10 @@ configurations {
 
 dependencies {
     environment 'alessfg:docker-ethercis:master@zip'
-    environment 'alessfg:docker-openempi:master@zip'
+    environment 'blairisme:docker-openempi:master@zip'
 }
 
-task extractEhr(type: Copy){
+task ehrExtract(type: Copy){
   def zipPath = project.configurations.environment.find {it.name.startsWith('docker-ethercis') }
   def zipFile = file(zipPath)
   def outputDir = projectDir
@@ -36,7 +36,7 @@ task extractEhr(type: Copy){
   into outputDir
 }
 
-task extractEmpi(type: Copy){
+task empiExtract(type: Copy){
   def zipPath = project.configurations.environment.find {it.name.startsWith('docker-openempi') }
   def zipFile = file(zipPath)
   def outputDir = projectDir
@@ -45,32 +45,32 @@ task extractEmpi(type: Copy){
   into outputDir
 }
 
-task startEhr(type: Exec) {
-  dependsOn 'extractEhr'
+task ehrStart(type: Exec) {
+  dependsOn 'ehrExtract'
   workingDir 'docker-ethercis-master'
   commandLine 'docker-compose', 'up', '-d'
 }
 
-task startEmpi(type: Exec) {
-  dependsOn 'extractEmpi'
+task empiStart(type: Exec) {
+  dependsOn 'empiExtract'
   workingDir 'docker-openempi-master'
   commandLine 'docker-compose', 'up', '-d'
 }
 
-task startEnvironment() {
-  dependsOn = ['startEmpi', 'startEhr']
+task envStart() {
+  dependsOn = ['empiStart', 'ehrStart']
 }
 
-task stopEhr(type: Exec){
+task ehrStop(type: Exec){
   workingDir 'docker-ethercis-master'
   commandLine 'docker-compose', 'stop'
 }
 
-task stopEmpi(type: Exec){
+task empiStop(type: Exec){
   workingDir 'docker-openempi-master'
   commandLine 'docker-compose', 'stop'
 }
 
-task stopEnvironment() {
-  dependsOn = ['stopEhr', 'stopEmpi']
+task envStop() {
+  dependsOn = ['ehrStop', 'empiStop']
 }

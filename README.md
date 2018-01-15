@@ -8,7 +8,7 @@ The FHIRWork server requires a number of services in order to run. Chiefly an Op
 
 1. Install [Docker](https://www.docker.com).
 1. Open a terminal and navigate to the _environment_ directory.
-1. Run `gradlew startEnvironment`.
+1. Run `gradlew envStart`.
 
 This will download and provision the EHR and EMPI services, running them when complete. Future calls to this command will run the previously provisioned service instances. When running the services can be used at the following addresses.
 

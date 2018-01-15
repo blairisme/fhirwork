@@ -12,9 +12,7 @@ apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.p
 
 gretty {
     contextPath = '/'
-//    host = '127.0.0.1'
     httpPort = 8090
-    // ... many more properties
 }
 
 war {
