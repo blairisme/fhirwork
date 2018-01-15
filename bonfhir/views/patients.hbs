@@ -1,0 +1,30 @@
+<form method="GET" action="">
+  <h1> Patients in the FHIR database </h1>
+  <table>
+    <div class="container">
+      <table>
+        <div class="container">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Birthdate</th>
+              <th>Given name</th>
+              <th>Family name</th>
+            </tr>
+          </thead>
+          <!--Hard coding a flight for testing purposes-->
+          {{#each patients}}
+
+            <tbody>
+              <tr>
+                <td>{{id}}</td>
+                <td>{{birthDate}}</td>
+                <td>{{given}}</td>
+                <td>{{family}}</td>
+                </tr>
+              </tbody>
+          {{/each}}
+        </table>
+  </div>
+</form>

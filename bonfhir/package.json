@@ -13,6 +13,7 @@
     "express": "^4.16.2",
     "express-session": "^1.15.6",
     "handlebars": "^4.0.11",
-    "hbs": "^4.0.1"
+    "hbs": "^4.0.1",
+    "restler": "^3.4.0"
   }
 }
