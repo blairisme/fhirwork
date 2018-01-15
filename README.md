@@ -6,7 +6,7 @@
 
 The FHIRWork server requires a number of services in order to run. Chiefly an OpenEHR from which to obtain patient data, an an EMPI service containing patient identifiers.
 
-1. Install [Docker](https://www.docker.com).
+1. Download, install and run [Docker](https://www.docker.com).
 1. Open a terminal and navigate to the _environment_ directory.
 1. Run `gradlew envStart`.
 
@@ -30,3 +30,7 @@ The FHIRWork project supports development from within the [Eclipse](https://www.
   * __Eclipse__: `gradlew eclipse`
   * __IntelliJ__: `gradlew idea`
 1. Open/Import the project files in the application directory.
+
+## Troubleshooting
+
+* Java 9 is currently __not__ supported. Please use Java 8 instead.
