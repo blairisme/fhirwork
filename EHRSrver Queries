@@ -1,0 +1,30 @@
+JSON Expression of EHRServer Queries
+Path-Based:
+Get clinical documents (compositions) with high BP.
+
+{  "uid": "9c5da334-4b81-4d60-92e2-aa96a722b4ac", 
+   "name": "Documents with high BP", 
+   "format": "xml",  
+   "type": "composition", 
+   "criteriaLogic": "OR",  
+   "criteria": [ 
+   
+   {      
+   "archetypeId": "openEHR-EHR-OBSERVATION.blood_pressure.v1",    
+    "path": "/data[at0001]/events[at0006]/data[at0003]/items[at0004]/value",    
+    "conditions": {      
+    "magnitude": { "gt": [ 140 ] },        "units": { "eq": "mm[Hg]" }     
+   }    
+  },  
+
+   {     
+   "archetypeId": "openEHR-EHR-OBSERVATION.blood_pressure.v1",     
+   "path": "/data[at0001]/events[at0006]/data[at0003]/items[at0005]/value",     
+   "conditions": {      
+    "magnitude": { "gt": [ 90 ] },       
+   "units": { "eq": "mm[Hg]" }      
+  }
+ }
+]
+}
+
