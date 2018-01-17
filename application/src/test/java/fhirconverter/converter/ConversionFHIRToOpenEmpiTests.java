@@ -10,11 +10,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
+import java.io.File;
+import java.net.URL;
+
 public class ConversionFHIRToOpenEmpiTests {
 
 	@Test
 	public void conversionToOpenEmpiTest() throws Exception {
-		JsonNode fhirResource = JsonLoader.fromPath("resource/ResourceFHIR.json");		
+
+		URL resourceUrl = Thread.currentThread().getContextClassLoader().getResource("ResourceFHIR.json");
+		JsonNode fhirResource = JsonLoader.fromFile(new File(resourceUrl.getPath()));
 		JSONObject patient = new JSONObject(fhirResource.toString());
 		ConversionFHIRToOpenEmpi converter = new ConversionFHIRToOpenEmpi();
 		JSONObject resourceOpenEmpiFormat = converter.conversionToOpenEMPI(patient);
@@ -22,8 +27,9 @@ public class ConversionFHIRToOpenEmpiTests {
 		
 		/* -- OpenEMPI format -- */
 		ObjectMapper mapper = new ObjectMapper();
-		JsonNode resultJackson = mapper.readTree(resourceOpenEmpiFormat.toString());		
-		boolean fhirSchemeRequirements = Utils.validateScheme(resultJackson, "resource/openempiSchema.json");		
+		JsonNode resultJackson = mapper.readTree(resourceOpenEmpiFormat.toString());
+        URL schemaUrl = Thread.currentThread().getContextClassLoader().getResource("openempiSchema.json");
+		boolean fhirSchemeRequirements = Utils.validateScheme(resultJackson, schemaUrl.getPath());
 		assertTrue("not in openEMPI Format!", fhirSchemeRequirements);
 
 		/* -- Name -- */

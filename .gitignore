@@ -1,0 +1,19 @@
+### Operating System Exclusions ###
+.DS_Store
+
+### Gradle Exclusions ###
+.gradle/
+build/
+
+### IntelliJ Exclusions ###
+*.iml
+*.ipr
+*.iws
+out/
+.idea/
+
+### Eclipse Exclusions ###
+*.classpath
+*.project
+.settings/
+bin/

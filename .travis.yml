@@ -4,11 +4,6 @@ language: java
 
 jdk:
   - oraclejdk8
-  - openjdk8
-
-before_script:
-  - cd application
-  - cp config.properties.example config.properties
 
 script:
   - gradle clean build check
