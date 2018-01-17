@@ -11,8 +11,12 @@ Navigate to the _bonfhir_ directory
 2. npm start
 
 To run in the background as a daemon:
-forever start -c nodemon index.js
+1. forever start -c nodemon index.js
 
 ## Usage
-- The port used for the application is 3000
+
+# Warning: This is prototype and the current fhir server queried is hardcoded
+
+- In the config.json file set the ports for the EMPI, EHR and FHIR servers
+- The port used for this application is 3000 and it runs on local host 127.0.0.1
 - To view a list of the patients in the FHIR database http://localhost:3000/patients
