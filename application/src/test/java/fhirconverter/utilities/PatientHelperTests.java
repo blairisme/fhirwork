@@ -21,7 +21,7 @@ public class PatientHelperTests {
 	@Test
 	public void testNHSexist() throws ResourceNotFoundException, Exception {
 		PatientFHIR tester = new PatientFHIR();	
-		JsonNode fhirResource = JsonLoader.fromPath("resource/ResourcePatientNHS.json");		
+		JsonNode fhirResource = JsonLoader.fromPath("resources/ResourcePatientNHS.json");
 		JSONObject patient = new JSONObject(fhirResource.toString());		
 		String newRecordID = tester.create(patient);
 		

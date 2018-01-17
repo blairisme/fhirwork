@@ -3,6 +3,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -27,7 +28,8 @@ public class ConversionOpenEmpiToFHIRTests {
 	@Test
 	public void conversionTest() throws ResourceNotFoundException, Exception {
 		ConversionOpenEmpiToFHIR tester = new ConversionOpenEmpiToFHIR();
-		String openEmpiResource = new String(Files.readAllBytes(Paths.get("resource/ResourceOpenEMPI.xml")), "UTF-8");
+		URL resourceUrl = Thread.currentThread().getContextClassLoader().getResource("ResourceOpenEMPI.xml");
+		String openEmpiResource = new String(Files.readAllBytes(Paths.get(resourceUrl.getPath())), "UTF-8");
 		JSONObject inputJson = XML.toJSONObject(openEmpiResource);
 		
 		List<Patient> p = tester.conversion(openEmpiResource);
@@ -40,8 +42,9 @@ public class ConversionOpenEmpiToFHIRTests {
 		
 		/* -- FHIR format -- */
 		ObjectMapper mapper = new ObjectMapper();
-		JsonNode resultJackson = mapper.readTree(resourceFhir.toString());		
-		boolean fhirSchemeRequirements = Utils.validateScheme(resultJackson, "resource/Patient.schema.json");		
+		JsonNode resultJackson = mapper.readTree(resourceFhir.toString());
+        URL schemaUrl = Thread.currentThread().getContextClassLoader().getResource("Patient.schema.json");
+		boolean fhirSchemeRequirements = Utils.validateScheme(resultJackson, schemaUrl.getPath());
 		assertTrue("not in FHIR Format!", fhirSchemeRequirements);
 
 		/* -- Name -- */

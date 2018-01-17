@@ -60,6 +60,8 @@ task wrapper(type: Wrapper) {
     gradleVersion = '4.0'
 }
 
+/*** code coverage configuration ***/
+
 jacocoTestReport {
     reports {
         xml.enabled = true
@@ -69,10 +71,24 @@ jacocoTestReport {
 
 check.dependsOn jacocoTestReport
 
+/*** style checking configuration ***/
+
 checkstyle {
     sourceSets = [project.sourceSets.main]
 }
 
 project.tasks.remove(project.tasks['checkstyleTest']);
 
-defaultTasks 'clean', 'build', 'check'
+/*** IntelliJ IDE configuration ***/
+
+idea {
+  module {
+      downloadSources = true
+
+      sourceDirs += file('src/main')
+      testSourceDirs += file('src/test')
+
+      excludeDirs += file('config')
+      excludeDirs += file('build')
+  }
+}
