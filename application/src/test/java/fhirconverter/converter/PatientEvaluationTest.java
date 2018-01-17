@@ -3,6 +3,7 @@
  */
 package fhirconverter.converter;
 
+import java.io.File;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -15,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.mashape.unirest.http.HttpResponse;
@@ -36,9 +38,11 @@ public class PatientEvaluationTest {
 	public void checkDataIntgrity() throws Exception {
 
 		URL requestUrl = Thread.currentThread().getContextClassLoader().getResource("PatientFHIRRequest.xml");
-        URL ch4Url = Thread.currentThread().getContextClassLoader().getResource("c4h.xml");
+        File requestFile = new File(requestUrl.toURI());
 
-		String createRequest = new String(Files.readAllBytes(Paths.get(requestUrl.getPath())), "UTF-8");
+        URL ch4Url = Thread.currentThread().getContextClassLoader().getResource("c4h.xml");
+        File ch4File = new File(ch4Url.toURI());
+		String createRequest = new String(Files.readAllBytes(Paths.get(ch4File.getPath())), "UTF-8");
 		String patientIdHAPI = patientCreateHAPI(createRequest);
 		String patientIdNHS = this.patientCreateNHS(createRequest);
 		String readHAPIPatient = "";
@@ -47,13 +51,13 @@ public class PatientEvaluationTest {
 		if(!("").equals(patientIdHAPI)){
 			readHAPIPatient = this.patientReadHAPI(patientIdHAPI);
 		}else{
-			readHAPIPatient = new String(Files.readAllBytes(Paths.get(requestUrl.getPath())), "UTF-8");
+			readHAPIPatient = new String(Files.readAllBytes(Paths.get(requestFile.getPath())), "UTF-8");
 		}
 
 		if(!("").equals(patientIdNHS)){
 			readNHSPatient = this.patientReadHAPI(patientIdHAPI);
 		}else{
-			readNHSPatient = new String(Files.readAllBytes(Paths.get(ch4Url.getPath())), "UTF-8");
+			readNHSPatient = new String(Files.readAllBytes(Paths.get(ch4File.getPath())), "UTF-8");
 		}
 
 		/* To calculate Growth Chart loss*/
