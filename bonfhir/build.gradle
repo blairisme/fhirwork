@@ -9,6 +9,8 @@
  * Author: Blair Butterworth
  */
 
+import org.apache.tools.ant.taskdefs.condition.Os
+
 plugins {
   id "com.moowork.node" version "1.2.0"
 }
@@ -37,7 +39,12 @@ task bonfhirStart(type: NodeTask, dependsOn: npmInstall) {
 task bonfhirStartDaemon(dependsOn: installForever) {
   doLast{
     exec{
-      commandLine "${nodeBinDir}/forever", 'start', 'index.js'
+      if (Os.isFamily(Os.FAMILY_WINDOWS)){
+        commandLine 'cmd', '/c', "${nodeBinDir}/forever start index.js"
+      }
+      else {
+        commandLine "${nodeBinDir}/forever", 'start', 'index.js'
+      }
     }
   }
 }
@@ -45,7 +52,12 @@ task bonfhirStartDaemon(dependsOn: installForever) {
 task bonfhirStopDaemon(dependsOn: installForever) {
   doLast{
     exec{
-      commandLine "${nodeBinDir}/forever", 'stop', 'index.js'
+      if (Os.isFamily(Os.FAMILY_WINDOWS)){
+        commandLine 'cmd', '/c', "${nodeBinDir}/forever stop index.js"
+      }
+      else {
+        commandLine "${nodeBinDir}/forever", 'start', 'index.js'
+      }
       ignoreExitValue true
     }
   }
