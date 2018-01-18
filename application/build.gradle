@@ -24,11 +24,6 @@ tasks.withType(JavaCompile) {
     options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
 }
 
-repositories {
-    mavenCentral()
-    jcenter()
-}
-
 dependencies {
     compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
 

@@ -1,0 +1,29 @@
+/*
+ * FHIRWork (c)
+ *
+ * This work is licensed under the Creative Commons Attribution 4.0
+ * International License. To view a copy of this license, visit
+ *
+ *      http://creativecommons.org/licenses/by/4.0/
+ *
+ * Author: Blair Butterworth
+ */
+
+plugins {
+  id 'java'
+  id 'idea'
+}
+
+dependencies {
+  testCompile group: 'junit', name:'junit', version:'4.11'
+  testCompile group: 'io.cucumber', name: 'cucumber-java', version: '2.3.1'
+  testCompile group: 'io.cucumber', name: 'cucumber-junit', version: '2.3.1'
+}
+
+test {
+  exclude '**/integration/**'
+}
+
+task integrationTest(type: Test) {
+  include '**/integration/**'
+}

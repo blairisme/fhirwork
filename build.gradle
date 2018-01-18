@@ -11,6 +11,13 @@
 
 apply plugin: 'idea'
 
+allprojects {
+  repositories {
+    mavenCentral()
+    jcenter()
+  }
+}
+
 idea {
   project {
     jdkName = '1.8'
