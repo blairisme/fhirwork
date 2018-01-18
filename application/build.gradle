@@ -78,17 +78,3 @@ checkstyle {
 }
 
 project.tasks.remove(project.tasks['checkstyleTest']);
-
-/*** IntelliJ IDE configuration ***/
-
-idea {
-  module {
-      downloadSources = true
-
-      sourceDirs += file('src/main')
-      testSourceDirs += file('src/test')
-
-      excludeDirs += file('config')
-      excludeDirs += file('build')
-  }
-}

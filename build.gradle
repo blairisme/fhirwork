@@ -15,5 +15,30 @@ idea {
   project {
     jdkName = '1.8'
     languageLevel = '1.8'
+    vcs = 'Git'
+    modules -= project.idea.module
+  }
+}
+
+subprojects {
+  plugins.withType(IdeaPlugin) {
+    idea {
+      module {
+        downloadSources = true
+
+        sourceDirs += file('src/main')
+        testSourceDirs += file('src/test')
+
+        excludeDirs += file('config')
+        excludeDirs += file('build')
+        excludeDirs += file('bin')
+        excludeDirs += file('.gradle')
+        excludeDirs += file('.settings')
+      }
+    }
+
+    afterEvaluate {
+      rootProject.idea.project.modules += project.idea.module
+    }
   }
 }
