@@ -94,5 +94,9 @@ app.get('/patients', function (req, res) {
   });
 })
 
+app.get('observations', function(req, res){
+	
+})
+
 //listen on port 3000
-app.listen(3000);
+app.listen(3001);
