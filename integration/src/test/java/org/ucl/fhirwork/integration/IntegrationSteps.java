@@ -15,7 +15,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import cucumber.runtime.java.StepDefAnnotation;
 import org.junit.Assert;
-import org.ucl.fhirwork.integration.data.Patient;
+import org.ucl.fhirwork.integration.cucumber.Patient;
 import org.ucl.fhirwork.integration.empi.EmpiServer;
 import org.ucl.fhirwork.integration.fhir.model.FhirPatient;
 import org.ucl.fhirwork.integration.fhir.FhirServer;
@@ -54,6 +54,30 @@ public class IntegrationSteps
     public void patientSearch() throws Exception
     {
         patients = fhirServer.searchPatients();
+    }
+
+    @When("^the user searches for patients with id \"(.*)\"$")
+    public void patientSearchByIdentifier(String identifier) throws Exception
+    {
+        patients = fhirServer.searchPatientsByIdentifier(identifier);
+    }
+
+    @When("^the user searches for patients with (male|female) gender$")
+    public void patientSearchByGender(String gender) throws Exception
+    {
+        patients = fhirServer.searchPatientsByGender(gender);
+    }
+
+    @When("^the user searches for patients with last name \"(.*)\"$")
+    public void patientSearchBySurname(String surname) throws Exception
+    {
+        patients = fhirServer.searchPatientsBySurname(surname);
+    }
+
+    @When("^the user searches for patients with (male|female) gender and last name \"(.*)\"$")
+    public void patientSearchByGenderAndSurname(String gender, String surname) throws Exception
+    {
+        patients = fhirServer.searchPatientsByGenderAndSurname(gender, surname);
     }
 
     @Then("^the user should receive a list of (\\d) patients$")

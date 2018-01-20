@@ -9,7 +9,8 @@
 
 package org.ucl.fhirwork.integration.empi.model;
 
-import org.ucl.fhirwork.integration.data.Patient;
+import cucumber.api.java.en.Given;
+import org.ucl.fhirwork.integration.cucumber.Patient;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -21,6 +22,7 @@ public class Person
     private Identifier personIdentifiers;
     private String givenName;
     private String familyName;
+    private Gender gender;
 
     public Person()
     {
@@ -28,22 +30,26 @@ public class Person
         this.personIdentifiers = null;
         this.givenName = null;
         this.familyName = null;
+        this.gender = null;
     }
 
-    public Person(Patient patient)
-    {
-        this.personId = patient.getId();
-        this.givenName = patient.getFirst();
-        this.familyName = patient.getLast();
-        this.personIdentifiers = new Identifier(patient.getId(), new IdentifierDomain("2.16.840.1.113883.4.1"));
-    }
-
-    public Person(String personId, Identifier personIdentifiers, String givenName, String familyName)
+    public Person(String personId, Identifier personIdentifiers, String givenName, String familyName, Gender gender)
     {
         this.personId = personId;
         this.givenName = givenName;
         this.familyName = familyName;
         this.personIdentifiers = personIdentifiers;
+        this.gender = gender;
+    }
+
+    public static Person fromPatient(Patient patient)
+    {
+        return new Person(
+            patient.getId(),
+            Identifier.fromToken(patient.getId()),
+            patient.getFirst(),
+            patient.getLast(),
+            Gender.fromName(patient.getGender()));
     }
 
     public String getPersonId() {
@@ -60,6 +66,14 @@ public class Person
 
     public void setPersonIdentifiers(Identifier personIdentifiers) {
         this.personIdentifiers = personIdentifiers;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 
     public String getGivenName() {

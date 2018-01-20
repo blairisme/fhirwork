@@ -9,22 +9,29 @@
 
 package org.ucl.fhirwork.integration.fhir;
 
+import com.google.common.collect.ImmutableMap;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mashape.unirest.request.GetRequest;
+import com.mashape.unirest.request.HttpRequest;
 import org.ucl.fhirwork.integration.fhir.model.Bundle;
 import org.ucl.fhirwork.integration.fhir.model.BundleEntry;
 import org.ucl.fhirwork.integration.fhir.model.FhirPatient;
 import org.ucl.fhirwork.integration.serialization.JsonSerializer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class FhirServer
 {
     private static final String ACCEPT_JSON = "application/json";
     private static final String ACCEPT_HEADER = "accept";
+
+    private static final String GENDER_PARAMETER = "gender";
+    private static final String FAMILY_PARAMETER = "family";
+    private static final String IDENTIFIER_PARAMETER = "identifier";
 
     private static final String PATIENT_ENDPOINT = "fhir/Patient";
 
@@ -36,23 +43,52 @@ public class FhirServer
         this.server = server.endsWith("/") ? server : server + "/";
         this.serializer = new JsonSerializer();
     }
-    
+
     public List<FhirPatient> searchPatients() throws FhirServerException
     {
-        List<FhirPatient> result = new ArrayList<>();
-        Bundle bundle = get(PATIENT_ENDPOINT, Bundle.class);
+        Bundle bundle = get(PATIENT_ENDPOINT, Bundle.class, Collections.emptyMap());
+        return getPatients(bundle);
+    }
 
+    public List<FhirPatient> searchPatientsByIdentifier(String identifier) throws FhirServerException
+    {
+        Bundle bundle = get(PATIENT_ENDPOINT, Bundle.class, ImmutableMap.of(IDENTIFIER_PARAMETER, identifier));
+        return getPatients(bundle);
+    }
+
+    public List<FhirPatient> searchPatientsByGender(String gender) throws FhirServerException
+    {
+        Bundle bundle = get(PATIENT_ENDPOINT, Bundle.class, ImmutableMap.of(GENDER_PARAMETER, gender));
+        return getPatients(bundle);
+    }
+
+    public List<FhirPatient> searchPatientsBySurname(String surname) throws FhirServerException
+    {
+        Bundle bundle = get(PATIENT_ENDPOINT, Bundle.class, ImmutableMap.of(FAMILY_PARAMETER, surname));
+        return getPatients(bundle);
+    }
+
+    public List<FhirPatient> searchPatientsByGenderAndSurname(String gender, String surname) throws FhirServerException
+    {
+        Bundle bundle = get(PATIENT_ENDPOINT, Bundle.class, ImmutableMap.of(GENDER_PARAMETER, gender, FAMILY_PARAMETER, surname));
+        return getPatients(bundle);
+    }
+
+    private List<FhirPatient> getPatients(Bundle bundle)
+    {
+        List<FhirPatient> result = new ArrayList<>();
         for (BundleEntry bundleEntry: bundle.getEntry()){
             result.add(bundleEntry.getResource());
         }
         return result;
     }
 
-    private <T> T get(String endpoint, Class<T> type) throws FhirServerException
+    private <T> T get(String endpoint, Class<T> type, Map<String, Object> parameters) throws FhirServerException
     {
         try {
-            GetRequest request = Unirest.get(server + endpoint)
-                .header(ACCEPT_HEADER, ACCEPT_JSON);
+            HttpRequest request = Unirest.get(server + endpoint)
+                .header(ACCEPT_HEADER, ACCEPT_JSON)
+                .queryString(parameters);
             HttpResponse<String> response = request.asString();
 
             if (response.getStatus() != 200){

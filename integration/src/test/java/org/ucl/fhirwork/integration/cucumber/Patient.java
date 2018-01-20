@@ -7,15 +7,16 @@
  *      http://creativecommons.org/licenses/by/4.0/
  */
 
-package org.ucl.fhirwork.integration.data;
+package org.ucl.fhirwork.integration.cucumber;
 
 public class Patient
 {
     private String id;
     private String first;
     private String last;
+    private String gender;
 
-    public Patient(String id, String first, String last) {
+    public Patient(String id, String first, String last, String gender) {
         this.id = id;
         this.first = first;
         this.last = last;
@@ -31,5 +32,9 @@ public class Patient
 
     public String getLast() {
         return last;
+    }
+
+    public String getGender() {
+        return gender;
     }
 }

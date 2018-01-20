@@ -16,11 +16,14 @@ public class FhirPatient
     private String id;
     private List<Name> name;
     private List<Identifier> identifier;
+    private String gender;
 
-    public FhirPatient(String id, List<Name> name, List<Identifier> identifier) {
+    public FhirPatient(String id, List<Name> name, List<Identifier> identifier, String gender)
+    {
         this.id = id;
         this.name = name;
         this.identifier = identifier;
+        this.gender = gender;
     }
 
     public String getId() {
@@ -33,5 +36,9 @@ public class FhirPatient
 
     public List<Identifier> getIdentifier() {
         return identifier;
+    }
+
+    public String getGender() {
+        return gender;
     }
 }

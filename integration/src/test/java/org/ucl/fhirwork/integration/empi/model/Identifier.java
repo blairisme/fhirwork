@@ -27,6 +27,11 @@ public class Identifier
         this.identifierDomain = identifierDomain;
     }
 
+    public static Identifier fromToken(String token)
+    {
+        return new Identifier(token, new IdentifierDomain("2.16.840.1.113883.4.1"));
+    }
+
     public String getIdentifier() {
         return identifier;
     }

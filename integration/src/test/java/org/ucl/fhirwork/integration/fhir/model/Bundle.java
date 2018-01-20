@@ -9,6 +9,7 @@
 
 package org.ucl.fhirwork.integration.fhir.model;
 
+import java.util.Collections;
 import java.util.List;
 
 public class Bundle
@@ -20,6 +21,9 @@ public class Bundle
     }
 
     public List<BundleEntry> getEntry() {
-        return entry;
+        if (entry != null) {
+            return entry;
+        }
+        return Collections.emptyList();
     }
 }

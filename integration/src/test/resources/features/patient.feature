@@ -1,15 +1,45 @@
-Feature: Patient API
-    Tests features related to the patient API
+Feature: Patient Search
+    Users should be able to search for patients using the FHIRWork server.
+    Searches should return results matching single or multiple patient
+    attributes, as well as searching for all patients.
 
 Background:
   Given the system has the following patients:
-    | id    | first     | last          |
-    | 1     | frodo     | baggins       |
-    | 2     | samwise   | gamgee        |
-    | 3     | meriadoc  | brandybuck    |
-    | 4     | peregrin  | took          |
+    | id    | first     | last          | gender    |
+    | 1     | harry     | potter        | male      |
+    | 2     | hermione  | granger       | female    |
+    | 3     | ron       | weasley       | male      |
+    | 4     | james     | potter        | male      |
+    | 5     | lily      | potter        | female    |
 
-Scenario: Search patients without parameters
+Scenario: Search for patients without parameters
    When the user searches for patients
-   Then the user should receive a list of 4 patients
-   And the user should receive a patient named samwise
+   Then the user should receive a list of 5 patients
+   And the user should receive a patient named james
+
+Scenario: Search for patients by identifier (positive)
+    When the user searches for patients with id "SSN|2"
+    Then the user should receive a list of 1 patients
+    And the user should receive a patient named hermione
+
+Scenario: Search for patients by identifier (negative)
+    When the user searches for patients with id "SSN|999"
+    Then the user should receive a list of 0 patients
+
+Scenario: Search for patients by single attribute (positive)
+    When the user searches for patients with male gender
+    Then the user should receive a list of 3 patients
+    And the user should receive a patient named ron
+
+Scenario: Search for patients by single attribute (negative)
+    When the user searches for patients with last name "maelstrom"
+    Then the user should receive a list of 0 patients
+
+Scenario: Search for patients by multiple attributes (positive)
+    When the user searches for patients with male gender and last name "potter"
+    Then the user should receive a list of 2 patients
+    And the user should receive a patient named harry
+
+Scenario: Search for patients by multiple attributes (negative)
+    When the user searches for patients with male gender and last name "granger"
+    Then the user should receive a list of 0 patients

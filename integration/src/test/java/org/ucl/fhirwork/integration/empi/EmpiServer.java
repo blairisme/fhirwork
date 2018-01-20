@@ -15,7 +15,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
 import com.mashape.unirest.request.body.RequestBodyEntity;
-import org.ucl.fhirwork.integration.data.Patient;
+import org.ucl.fhirwork.integration.cucumber.Patient;
 import org.ucl.fhirwork.integration.empi.model.AuthenticationRequest;
 import org.ucl.fhirwork.integration.empi.model.People;
 import org.ucl.fhirwork.integration.empi.model.Person;
@@ -58,7 +58,7 @@ public class EmpiServer
 
     public void addPatient(Patient patient) throws EmpiServerException
     {
-        Person person = new Person(patient);
+        Person person = Person.fromPatient(patient);
         put(ADD_PERSON_ENDPOINT, person, Person.class);
     }
 
