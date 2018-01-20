@@ -12,11 +12,19 @@ package org.ucl.fhirwork.integration.empi;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mashape.unirest.request.HttpRequest;
+import com.mashape.unirest.request.HttpRequestWithBody;
 import com.mashape.unirest.request.body.RequestBodyEntity;
 import org.ucl.fhirwork.integration.data.Patient;
 import org.ucl.fhirwork.integration.empi.model.AuthenticationRequest;
+import org.ucl.fhirwork.integration.empi.model.People;
 import org.ucl.fhirwork.integration.empi.model.Person;
 import org.ucl.fhirwork.integration.serialization.XmlSerializer;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class EmpiServer
 {
@@ -24,8 +32,14 @@ public class EmpiServer
     private static final String CONTENT_TYPE_HEADER = "Content-Type";
     private static final String SESSION_KEY_HEADER = "OPENEMPI_SESSION_KEY";
 
+    private static final String FIRST_RECORD_PARAMETER = "firstRecord";
+    private static final String MAX_RECORDS_PARAMETER = "maxRecords";
+    private static final String PERSON_ID_PARAMETER = "personId";
+
     private static final String AUTHENTICATE_ENDPOINT = "openempi-admin/openempi-ws-rest/security-resource/authenticate";
     private static final String ADD_PERSON_ENDPOINT = "openempi-admin/openempi-ws-rest/person-manager-resource/addPerson";
+    private static final String REMOVE_PERSON_ENDPOINT = "openempi-admin/openempi-ws-rest/person-manager-resource/removePersonById";
+    private static final String LIST_PERSONS_ENDPOINT = "openempi-admin/openempi-ws-rest/person-query-resource/loadAllPersonsPaged";
 
     private String server;
     private String username;
@@ -45,10 +59,92 @@ public class EmpiServer
     public void addPatient(Patient patient) throws EmpiServerException
     {
         Person person = new Person(patient);
-        post(ADD_PERSON_ENDPOINT, person, Person.class);
+        put(ADD_PERSON_ENDPOINT, person, Person.class);
     }
 
-    private <T> void post(String endPoint, T value, Class<T> type) throws EmpiServerException
+    public void removeAllPatients() throws EmpiServerException
+    {
+        List<Person> patients = getPatients();
+        for (Person patient: patients){
+            removePatient(patient);
+        }
+    }
+
+    public void removePatient(Person person) throws EmpiServerException
+    {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PERSON_ID_PARAMETER, person.getPersonId());
+        post(REMOVE_PERSON_ENDPOINT, parameters);
+    }
+
+    public List<Person> getPatients() throws EmpiServerException
+    {
+        int index = 0;
+        int count = 100;
+        Person[] persons;
+        List<Person> result = new ArrayList<>();
+
+        while ((persons = getPatients(index, count)).length > 0){
+            index += count;
+            for (Person person: persons){
+                result.add(person);
+            }
+        }
+        return result;
+    }
+
+    private Person[] getPatients(int index, int count) throws EmpiServerException
+    {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(FIRST_RECORD_PARAMETER, index);
+        parameters.put(MAX_RECORDS_PARAMETER, count);
+
+        People people = get(LIST_PERSONS_ENDPOINT, People.class, parameters);
+        return people.getPerson();
+    }
+
+    private <T> T get(String endPoint, Class<T> type, Map<String, Object> parameters) throws EmpiServerException
+    {
+        String sessionKey = getSessionToken();
+
+        try {
+            HttpRequest request = Unirest.get(server + endPoint)
+                    .header(SESSION_KEY_HEADER, sessionKey)
+                    .header(CONTENT_TYPE_HEADER, CONTENT_TYPE_XML)
+                    .queryString(parameters);
+            HttpResponse<String> response = request.asString();
+
+            if (response.getStatus() != 200){
+                throw new EmpiServerException(response.getStatus());
+            }
+            return serializer.deserialize(response.getBody(), type);
+        }
+        catch (UnirestException exception){
+            throw new EmpiServerException(exception);
+        }
+    }
+
+    private void post(String endPoint, Map<String, Object> parameters) throws EmpiServerException
+    {
+        String sessionKey = getSessionToken();
+
+        try {
+            HttpRequestWithBody request = Unirest.post(server + endPoint)
+                    .header(SESSION_KEY_HEADER, sessionKey)
+                    .header(CONTENT_TYPE_HEADER, CONTENT_TYPE_XML)
+                    .queryString(parameters);
+            HttpResponse<String> response = request.asString();
+
+            if (response.getStatus() != 200 && response.getStatus() != 204){
+                throw new EmpiServerException(response.getStatus());
+            }
+        }
+        catch (UnirestException exception){
+            throw new EmpiServerException(exception);
+        }
+    }
+
+    private <T> void put(String endPoint, T value, Class<T> type) throws EmpiServerException
     {
         String sessionKey = getSessionToken();
         String requestBody = serializer.serialize(value, type);

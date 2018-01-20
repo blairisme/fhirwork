@@ -12,6 +12,7 @@ package org.ucl.fhirwork.integration.empi.model;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "authenticationRequest")
+@SuppressWarnings("unused")
 public class AuthenticationRequest
 {
     private String username;

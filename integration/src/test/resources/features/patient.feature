@@ -10,6 +10,6 @@ Background:
     | 4     | peregrin  | took          |
 
 Scenario: Search patients without parameters
-   When I search patients
-   Then The server response has status code 200
-   And the response is a bundle that contains the patients created
+   When the user searches for patients
+   Then the user should receive a list of 4 patients
+   And the user should receive a patient named samwise

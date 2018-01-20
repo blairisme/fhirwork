@@ -9,10 +9,13 @@
 
 package org.ucl.fhirwork.integration.serialization;
 
-public class SerializationException extends RuntimeException
+import com.google.gson.Gson;
+
+public class JsonSerializer
 {
-    public SerializationException(Throwable cause)
+    public <T> T deserialize(String content, Class<T> type)
     {
-        super(cause);
+        Gson gson = new Gson();
+        return gson.fromJson(content, type);
     }
 }
