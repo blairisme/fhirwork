@@ -31,8 +31,4 @@ test {
 
 task integrationTest(type: Test) {
   include '**/integration/**'
-
-  testLogging {
-    showStandardStreams = true
-  }
 }
