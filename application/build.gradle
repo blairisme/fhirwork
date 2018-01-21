@@ -1,14 +1,35 @@
+/*
+ * FHIRWork (c)
+ *
+ * This work is licensed under the Creative Commons Attribution 4.0
+ * International License. To view a copy of this license, visit
+ *
+ *      http://creativecommons.org/licenses/by/4.0/
+ *
+ * Author: Koonwei
+ * Author: Yuan-W
+ * Author: shruti22sinha
+ * Author: DidacMC
+ * Author: Blair Butterworth
+ */
+
+buildscript {
+  repositories {
+    jcenter()
+  }
+
+  dependencies {
+    classpath 'org.akhikhl.gretty:gretty:2.0.0'
+  }
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'jacoco'
 apply plugin: 'checkstyle'
-apply plugin: 'application'
-
-mainClassName = 'fhirconverter.converter.ConverterOpenempi'
 apply plugin: 'war'
-
-apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
+apply plugin: 'org.akhikhl.gretty'
 
 gretty {
     contextPath = '/'
@@ -27,32 +48,22 @@ tasks.withType(JavaCompile) {
 dependencies {
     compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
 
-    compile 'ca.uhn.hapi.fhir:hapi-fhir-base:2.5'
-    //compile 'ca.uhn.hapi.fhir:hapi-fhir-structures-dstu3:2.5'
+    compile group: 'ca.uhn.hapi.fhir', name:'hapi-fhir-base', version:'2.5'
     compile group: 'ca.uhn.hapi.fhir', name: 'hapi-fhir-structures-dstu2', version: '2.5'
-
-
-    testCompile "junit:junit:4.11"
     compile group: 'com.github.fge', name: 'json-patch', version: '1.9';
+    compile group: 'com.github.java-json-tools', name: 'json-schema-validator', version: '2.2.8'
+    compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+    compile group: 'com.mashape.unirest', name: 'unirest-java', version: '1.4.9'
+    compile group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.9.RELEASE'
     compile group: 'org.json', name: 'json', version: '20160810'
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.8.2'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.8.2'
-    compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
-    compile 'io.sentry:sentry-log4j2:1.2.2'
-    compile 'io.sentry:sentry-logback:1.2.2'
-    compile(group: "com.github.fge", name: "json-patch", version: "1.9");
-    compile(group: "com.github.java-json-tools", name: "json-schema-validator", version: "2.2.8");
-    compile 'org.thymeleaf:thymeleaf:latest.release'
+    compile group: 'org.springframework', name: 'spring-web', version: '5.0.2.RELEASE'
+    compile group: 'io.sentry', name: 'sentry-log4j2', version: '1.2.2'
+    compile group: 'io.sentry', name: 'sentry-logback', version: '1.2.2'
 
-    compile 'org.springframework:spring-web:latest.release'
-    compile 'com.mashape.unirest:unirest-java:1.4.9'
-
-    testCompile "junit:junit:4.11"
-    testCompile 'org.mockito:mockito-core:2.7.22'
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.0'
+    testCompile group: 'junit', name:'junit', version: '4.11'
+    testCompile group: 'org.mockito', name:'mockito-core', version: '2.7.22'
 }
 
 /*** code coverage configuration ***/
