@@ -18,7 +18,7 @@ import com.mashape.unirest.request.body.RequestBodyEntity;
 import org.ucl.fhirwork.integration.common.http.HttpStatus;
 import org.ucl.fhirwork.integration.fhir.model.Bundle;
 import org.ucl.fhirwork.integration.fhir.model.BundleEntry;
-import org.ucl.fhirwork.integration.fhir.model.FhirPatient;
+import org.ucl.fhirwork.integration.fhir.model.Patient;
 import org.ucl.fhirwork.integration.common.serialization.JsonSerializer;
 
 import java.util.ArrayList;
@@ -49,50 +49,50 @@ public class FhirServer
         this.serializer = new JsonSerializer();
     }
 
-    public void addPatient(FhirPatient patient) throws FhirServerException
+    public void addPatient(Patient patient) throws FhirServerException
     {
-        post(PATIENT_ENDPOINT, patient, FhirPatient.class, ImmutableMap.of("_format", "application/json"));
+        post(PATIENT_ENDPOINT, patient, Patient.class, ImmutableMap.of("_format", "application/json"));
     }
 
-    public List<FhirPatient> searchPatients() throws FhirServerException
+    public List<Patient> searchPatients() throws FhirServerException
     {
         Bundle bundle = get(PATIENT_ENDPOINT, Bundle.class, Collections.emptyMap());
         return getPatients(bundle);
     }
 
-    public List<FhirPatient> searchPatientsByIdentifier(String identifier) throws FhirServerException
+    public List<Patient> searchPatientsByIdentifier(String identifier) throws FhirServerException
     {
         Bundle bundle = get(PATIENT_ENDPOINT, Bundle.class, ImmutableMap.of(IDENTIFIER_PARAMETER, identifier));
         return getPatients(bundle);
     }
 
-    public List<FhirPatient> searchPatientsByGender(String gender) throws FhirServerException
+    public List<Patient> searchPatientsByGender(String gender) throws FhirServerException
     {
         Bundle bundle = get(PATIENT_ENDPOINT, Bundle.class, ImmutableMap.of(GENDER_PARAMETER, gender));
         return getPatients(bundle);
     }
 
-    public List<FhirPatient> searchPatientsByFirstName(String firstName) throws FhirServerException
+    public List<Patient> searchPatientsByFirstName(String firstName) throws FhirServerException
     {
         Bundle bundle = get(PATIENT_ENDPOINT, Bundle.class, ImmutableMap.of(GIVEN_PARAMETER, firstName));
         return getPatients(bundle);
     }
 
-    public List<FhirPatient> searchPatientsBySurname(String surname) throws FhirServerException
+    public List<Patient> searchPatientsBySurname(String surname) throws FhirServerException
     {
         Bundle bundle = get(PATIENT_ENDPOINT, Bundle.class, ImmutableMap.of(FAMILY_PARAMETER, surname));
         return getPatients(bundle);
     }
 
-    public List<FhirPatient> searchPatientsByGenderAndSurname(String gender, String surname) throws FhirServerException
+    public List<Patient> searchPatientsByGenderAndSurname(String gender, String surname) throws FhirServerException
     {
         Bundle bundle = get(PATIENT_ENDPOINT, Bundle.class, ImmutableMap.of(GENDER_PARAMETER, gender, FAMILY_PARAMETER, surname));
         return getPatients(bundle);
     }
 
-    private List<FhirPatient> getPatients(Bundle bundle)
+    private List<Patient> getPatients(Bundle bundle)
     {
-        List<FhirPatient> result = new ArrayList<>();
+        List<Patient> result = new ArrayList<>();
         for (BundleEntry bundleEntry: bundle.getEntry()){
             result.add(bundleEntry.getResource());
         }
