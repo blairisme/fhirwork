@@ -1,5 +1,8 @@
 # FHIRWork
 
+[![Build Status](https://travis-ci.org/blairisme/fhirwork.svg?branch=develop)](https://travis-ci.org/blairisme/fhirwork)
+[![Code Coverage](https://codecov.io/gh/blairisme/fhirwork/branch/develop/graph/badge.svg)](https://codecov.io/gh/blairisme/fhirwork)
+
 [FHIR](https://www.hl7.org/fhir/) compliant server backed by an [OpenEHR](https://www.openehr.org/) repository.
 
 ## Test Environment
