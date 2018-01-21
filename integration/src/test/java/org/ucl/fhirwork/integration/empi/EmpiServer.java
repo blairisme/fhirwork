@@ -15,11 +15,11 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
 import com.mashape.unirest.request.body.RequestBodyEntity;
-import org.ucl.fhirwork.integration.cucumber.Patient;
+import org.ucl.fhirwork.integration.common.http.HttpStatus;
 import org.ucl.fhirwork.integration.empi.model.AuthenticationRequest;
 import org.ucl.fhirwork.integration.empi.model.People;
 import org.ucl.fhirwork.integration.empi.model.Person;
-import org.ucl.fhirwork.integration.serialization.XmlSerializer;
+import org.ucl.fhirwork.integration.common.serialization.XmlSerializer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,9 +56,8 @@ public class EmpiServer
         this.serializer = new XmlSerializer();
     }
 
-    public void addPatient(Patient patient) throws EmpiServerException
+    public void addPerson(Person person) throws EmpiServerException
     {
-        Person person = Person.fromPatient(patient);
         put(ADD_PERSON_ENDPOINT, person, Person.class);
     }
 
@@ -114,7 +113,7 @@ public class EmpiServer
                     .queryString(parameters);
             HttpResponse<String> response = request.asString();
 
-            if (response.getStatus() != 200){
+            if (! HttpStatus.isSuccessful(response.getStatus())) {
                 throw new EmpiServerException(response.getStatus());
             }
             return serializer.deserialize(response.getBody(), type);
@@ -135,7 +134,7 @@ public class EmpiServer
                     .queryString(parameters);
             HttpResponse<String> response = request.asString();
 
-            if (response.getStatus() != 200 && response.getStatus() != 204){
+            if (! HttpStatus.isSuccessful(response.getStatus())) {
                 throw new EmpiServerException(response.getStatus());
             }
         }
@@ -156,7 +155,7 @@ public class EmpiServer
                     .body(requestBody);
             HttpResponse<String> response = request.asString();
 
-            if (response.getStatus() != 200){
+            if (! HttpStatus.isSuccessful(response.getStatus())) {
                 throw new EmpiServerException(response.getStatus());
             }
         }
@@ -184,7 +183,7 @@ public class EmpiServer
                     .body(requestBody);
             HttpResponse<String> response = request.asString();
 
-            if (response.getStatus() != 200){
+            if (! HttpStatus.isSuccessful(response.getStatus())) {
                 throw new EmpiServerException(response.getStatus());
             }
             return response.getBody();

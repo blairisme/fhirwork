@@ -18,6 +18,10 @@ public class Identifier {
         this.value = value;
     }
 
+    public static Identifier from(String id){
+        return new Identifier("SSN", id);
+    }
+
     public String getSystem() {
         return system;
     }

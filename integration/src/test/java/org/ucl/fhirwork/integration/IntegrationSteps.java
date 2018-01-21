@@ -15,9 +15,10 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import cucumber.runtime.java.StepDefAnnotation;
 import org.junit.Assert;
-import org.ucl.fhirwork.integration.cucumber.Patient;
+import org.ucl.fhirwork.integration.cucumber.Profile;
 import org.ucl.fhirwork.integration.empi.EmpiServer;
-import org.ucl.fhirwork.integration.fhir.model.FhirPatient;
+import org.ucl.fhirwork.integration.empi.model.Person;
+import org.ucl.fhirwork.integration.fhir.model.Patient;
 import org.ucl.fhirwork.integration.fhir.FhirServer;
 import org.ucl.fhirwork.integration.fhir.utils.NameUtils;
 
@@ -31,7 +32,7 @@ public class IntegrationSteps
 {
     private FhirServer fhirServer;
     private EmpiServer empiServer;
-    private List<FhirPatient> patients;
+    private List<Patient> patients;
 
     @Before
     public void setup()
@@ -41,13 +42,28 @@ public class IntegrationSteps
         empiServer = new EmpiServer("http://localhost:8080", "admin", "admin");
     }
 
-    @Given("^the system has the following patients:$")
-    public void initializePatients(List<Patient> patients) throws Exception
+    @Given("^the system has no patients$")
+    public void initializeEmpty() throws Exception
     {
         empiServer.removeAllPatients();
-        for (Patient patient: patients) {
-            empiServer.addPatient(patient);
+    }
+
+    @Given("^the system has the following patients:$")
+    public void initializePatients(List<Profile> profiles) throws Exception
+    {
+        empiServer.removeAllPatients();
+        for (Profile profile: profiles) {
+            Person person = Person.fromProfile(profile);
+            empiServer.addPerson(person);
         }
+    }
+
+    @When("^the user adds a patient with the following data:$")
+    public void createPatient(List<Profile> profiles) throws Exception
+    {
+        Profile profile = profiles.get(0);
+        Patient patient = Patient.fromProfile(profile);
+        fhirServer.addPatient(patient);
     }
 
     @When("^the user searches for patients$")
@@ -89,8 +105,15 @@ public class IntegrationSteps
     @Then("^the user should receive a patient named (.*)")
     public void assertSearchResult(String patientName)
     {
-        Predicate<FhirPatient> predicate = patient -> NameUtils.hasGivenName(patient, patientName);
-        FhirPatient patient = patients.stream().filter(predicate).findFirst().orElse(null);
+        Predicate<Patient> predicate = patient -> NameUtils.hasGivenName(patient, patientName);
+        Patient patient = patients.stream().filter(predicate).findFirst().orElse(null);
         Assert.assertNotNull(patient);
+    }
+
+    @Then("^the system should contain a patient named (.*)")
+    public void assertPatientExist(String patientName) throws  Exception
+    {
+        List<Patient> patients = fhirServer.searchPatientsByFirstName(patientName);
+        Assert.assertEquals(1, patients.size());
     }
 }

@@ -1,7 +1,5 @@
 Feature: Patient Search
-    Users should be able to search for patients using the FHIRWork server.
-    Searches should return results matching single or multiple patient
-    attributes, as well as searching for all patients.
+    This feature allows users to search for patients by patient attributes.
 
 Background:
   Given the system has the following patients:

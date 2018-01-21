@@ -9,14 +9,14 @@
 
 package org.ucl.fhirwork.integration.cucumber;
 
-public class Patient
+public class Profile
 {
     private String id;
     private String first;
     private String last;
     private String gender;
 
-    public Patient(String id, String first, String last, String gender) {
+    public Profile(String id, String first, String last, String gender) {
         this.id = id;
         this.first = first;
         this.last = last;

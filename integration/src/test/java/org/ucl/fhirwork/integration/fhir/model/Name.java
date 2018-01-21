@@ -9,9 +9,11 @@
 
 package org.ucl.fhirwork.integration.fhir.model;
 
+import java.util.Arrays;
 import java.util.List;
 
-public class Name {
+public class Name
+{
     private String use;
     private List<String> given;
     private List<String> family;
@@ -20,6 +22,14 @@ public class Name {
         this.use = use;
         this.given = given;
         this.family = family;
+    }
+
+    public static Name from(String firstName, String lastName)
+    {
+        return new Name(
+            "usual",
+            Arrays.asList(firstName),
+            Arrays.asList(lastName));
     }
 
     public String getUse() {

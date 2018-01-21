@@ -9,14 +9,14 @@
 
 package org.ucl.fhirwork.integration.fhir.utils;
 
-import org.ucl.fhirwork.integration.fhir.model.FhirPatient;
+import org.ucl.fhirwork.integration.fhir.model.Patient;
 import org.ucl.fhirwork.integration.fhir.model.Name;
 
 import java.util.Objects;
 
 public class NameUtils
 {
-    public static boolean hasGivenName(FhirPatient patient, String name)
+    public static boolean hasGivenName(Patient patient, String name)
     {
         for (Name patientName: patient.getName()) {
             for (String givenName: patientName.getGiven()){

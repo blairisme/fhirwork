@@ -10,7 +10,7 @@
 package org.ucl.fhirwork.integration.empi.model;
 
 import cucumber.api.java.en.Given;
-import org.ucl.fhirwork.integration.cucumber.Patient;
+import org.ucl.fhirwork.integration.cucumber.Profile;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -42,14 +42,14 @@ public class Person
         this.gender = gender;
     }
 
-    public static Person fromPatient(Patient patient)
+    public static Person fromProfile(Profile profile)
     {
         return new Person(
-            patient.getId(),
-            Identifier.fromToken(patient.getId()),
-            patient.getFirst(),
-            patient.getLast(),
-            Gender.fromName(patient.getGender()));
+            profile.getId(),
+            Identifier.fromToken(profile.getId()),
+            profile.getFirst(),
+            profile.getLast(),
+            Gender.fromName(profile.getGender()));
     }
 
     public String getPersonId() {

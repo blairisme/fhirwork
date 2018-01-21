@@ -14,10 +14,12 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
+import com.mashape.unirest.request.body.RequestBodyEntity;
+import org.ucl.fhirwork.integration.common.http.HttpStatus;
 import org.ucl.fhirwork.integration.fhir.model.Bundle;
 import org.ucl.fhirwork.integration.fhir.model.BundleEntry;
 import org.ucl.fhirwork.integration.fhir.model.FhirPatient;
-import org.ucl.fhirwork.integration.serialization.JsonSerializer;
+import org.ucl.fhirwork.integration.common.serialization.JsonSerializer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,8 +30,11 @@ public class FhirServer
 {
     private static final String ACCEPT_JSON = "application/json";
     private static final String ACCEPT_HEADER = "accept";
+    private static final String CONTENT_TYPE_JSON = "application/json";
+    private static final String CONTENT_TYPE_HEADER = "Content-Type";
 
     private static final String GENDER_PARAMETER = "gender";
+    private static final String GIVEN_PARAMETER = "given";
     private static final String FAMILY_PARAMETER = "family";
     private static final String IDENTIFIER_PARAMETER = "identifier";
 
@@ -42,6 +47,11 @@ public class FhirServer
     {
         this.server = server.endsWith("/") ? server : server + "/";
         this.serializer = new JsonSerializer();
+    }
+
+    public void addPatient(FhirPatient patient) throws FhirServerException
+    {
+        post(PATIENT_ENDPOINT, patient, FhirPatient.class, ImmutableMap.of("_format", "application/json"));
     }
 
     public List<FhirPatient> searchPatients() throws FhirServerException
@@ -59,6 +69,12 @@ public class FhirServer
     public List<FhirPatient> searchPatientsByGender(String gender) throws FhirServerException
     {
         Bundle bundle = get(PATIENT_ENDPOINT, Bundle.class, ImmutableMap.of(GENDER_PARAMETER, gender));
+        return getPatients(bundle);
+    }
+
+    public List<FhirPatient> searchPatientsByFirstName(String firstName) throws FhirServerException
+    {
+        Bundle bundle = get(PATIENT_ENDPOINT, Bundle.class, ImmutableMap.of(GIVEN_PARAMETER, firstName));
         return getPatients(bundle);
     }
 
@@ -91,10 +107,31 @@ public class FhirServer
                 .queryString(parameters);
             HttpResponse<String> response = request.asString();
 
-            if (response.getStatus() != 200){
+            if (! HttpStatus.isSuccessful(response.getStatus())) {
                 throw new FhirServerException(response.getStatus());
             }
             return serializer.deserialize(response.getBody(), type);
+        }
+        catch (UnirestException exception){
+            throw new FhirServerException(exception);
+        }
+    }
+
+    private <T> void post(String endPoint, T value, Class<T> type, Map<String, Object> parameters) throws FhirServerException
+    {
+        String requestBody = serializer.serialize(value, type);
+
+        try {
+            RequestBodyEntity request = Unirest.post(server + endPoint)
+                    .header(ACCEPT_HEADER, ACCEPT_JSON)
+                    .header(CONTENT_TYPE_HEADER, CONTENT_TYPE_JSON)
+                    .queryString(parameters)
+                    .body(requestBody);
+            HttpResponse<String> response = request.asString();
+
+            if (! HttpStatus.isSuccessful(response.getStatus())) {
+                throw new FhirServerException(response.getStatus());
+            }
         }
         catch (UnirestException exception){
             throw new FhirServerException(exception);

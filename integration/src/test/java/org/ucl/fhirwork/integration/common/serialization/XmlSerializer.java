@@ -7,7 +7,7 @@
  *      http://creativecommons.org/licenses/by/4.0/
  */
 
-package org.ucl.fhirwork.integration.serialization;
+package org.ucl.fhirwork.integration.common.serialization;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

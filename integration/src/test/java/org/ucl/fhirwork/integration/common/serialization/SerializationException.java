@@ -7,7 +7,7 @@
  *      http://creativecommons.org/licenses/by/4.0/
  */
 
-package org.ucl.fhirwork.integration.serialization;
+package org.ucl.fhirwork.integration.common.serialization;
 
 public class SerializationException extends RuntimeException
 {
