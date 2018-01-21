@@ -47,4 +47,4 @@ app.use('/', routes);
 app.use('/', patients);
 app.use('/', observations);
 //listen on port 3000
-app.listen(3001);
+app.listen(3000);
