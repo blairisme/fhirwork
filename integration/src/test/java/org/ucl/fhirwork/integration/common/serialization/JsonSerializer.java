@@ -11,7 +11,7 @@ package org.ucl.fhirwork.integration.common.serialization;
 
 import com.google.gson.Gson;
 
-public class JsonSerializer
+public class JsonSerializer implements Serializer
 {
     private Gson gson;
 

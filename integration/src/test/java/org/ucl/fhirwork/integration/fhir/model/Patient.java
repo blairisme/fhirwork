@@ -21,7 +21,6 @@ public class Patient
     private List<Identifier> identifier;
     //private String gender;
 
-
     public Patient(List<Name> name, List<Identifier> identifier, String gender)
     {
         this.name = name;

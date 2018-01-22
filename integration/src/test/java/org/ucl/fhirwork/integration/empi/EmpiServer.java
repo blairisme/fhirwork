@@ -9,187 +9,92 @@
 
 package org.ucl.fhirwork.integration.empi;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mashape.unirest.request.HttpRequest;
-import com.mashape.unirest.request.HttpRequestWithBody;
-import com.mashape.unirest.request.body.RequestBodyEntity;
-import org.ucl.fhirwork.integration.common.http.HttpStatus;
+import static org.ucl.fhirwork.integration.empi.EmpiEndpoint.*;
+import static org.ucl.fhirwork.integration.empi.EmpiHeader.*;
+import static org.ucl.fhirwork.integration.empi.EmpiParameter.*;
+import static org.ucl.fhirwork.integration.common.http.HttpHeader.*;
+import static org.ucl.fhirwork.integration.common.http.MimeType.*;
+
+import com.google.common.collect.ImmutableMap;
+import org.ucl.fhirwork.integration.common.http.RestServer;
+import org.ucl.fhirwork.integration.common.http.RestServerException;
 import org.ucl.fhirwork.integration.empi.model.AuthenticationRequest;
 import org.ucl.fhirwork.integration.empi.model.People;
 import org.ucl.fhirwork.integration.empi.model.Person;
 import org.ucl.fhirwork.integration.common.serialization.XmlSerializer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class EmpiServer
 {
-    private static final String CONTENT_TYPE_XML = "application/xml";
-    private static final String CONTENT_TYPE_HEADER = "Content-Type";
-    private static final String SESSION_KEY_HEADER = "OPENEMPI_SESSION_KEY";
-
-    private static final String FIRST_RECORD_PARAMETER = "firstRecord";
-    private static final String MAX_RECORDS_PARAMETER = "maxRecords";
-    private static final String PERSON_ID_PARAMETER = "personId";
-
-    private static final String AUTHENTICATE_ENDPOINT = "openempi-admin/openempi-ws-rest/security-resource/authenticate";
-    private static final String ADD_PERSON_ENDPOINT = "openempi-admin/openempi-ws-rest/person-manager-resource/addPerson";
-    private static final String REMOVE_PERSON_ENDPOINT = "openempi-admin/openempi-ws-rest/person-manager-resource/removePersonById";
-    private static final String LIST_PERSONS_ENDPOINT = "openempi-admin/openempi-ws-rest/person-query-resource/loadAllPersonsPaged";
-
-    private String server;
+    private RestServer server;
     private String username;
     private String password;
-    private String sessionToken;
-    private XmlSerializer serializer;
+    private String address;
 
-    public EmpiServer(String server, String username, String password)
+    public EmpiServer(String address, String username, String password)
     {
-        this.server = server.endsWith("/") ? server : server + "/";
+        this.address = address;
         this.username = username;
         this.password = password;
-        this.sessionToken = null;
-        this.serializer = new XmlSerializer();
     }
 
-    public void addPerson(Person person) throws EmpiServerException
+    public void addPerson(Person person) throws RestServerException
     {
-        put(ADD_PERSON_ENDPOINT, person, Person.class);
+        RestServer server = getServer();
+        server.put(AddPerson, person, Person.class);
     }
 
-    public void removeAllPatients() throws EmpiServerException
+    public void removePeople() throws RestServerException
     {
-        List<Person> patients = getPatients();
-        for (Person patient: patients){
-            removePatient(patient);
+        for (Person person: getPeople()){
+            removePerson(person);
         }
     }
 
-    public void removePatient(Person person) throws EmpiServerException
+    public void removePerson(Person person) throws RestServerException
     {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put(PERSON_ID_PARAMETER, person.getPersonId());
-        post(REMOVE_PERSON_ENDPOINT, parameters);
+        RestServer server = getServer();
+        server.post(RemovePerson, ImmutableMap.of(PersonId, person.getPersonId()));
     }
 
-    public List<Person> getPatients() throws EmpiServerException
+    public List<Person> getPeople() throws RestServerException
     {
         int index = 0;
         int count = 100;
-        Person[] persons;
+
+        Person[] people;
         List<Person> result = new ArrayList<>();
 
-        while ((persons = getPatients(index, count)).length > 0){
+        while ((people = getPeople(index, count)).length > 0){
             index += count;
-            for (Person person: persons){
+            for (Person person: people){
                 result.add(person);
             }
         }
         return result;
     }
 
-    private Person[] getPatients(int index, int count) throws EmpiServerException
+    public Person[] getPeople(int index, int count) throws RestServerException
     {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put(FIRST_RECORD_PARAMETER, index);
-        parameters.put(MAX_RECORDS_PARAMETER, count);
-
-        People people = get(LIST_PERSONS_ENDPOINT, People.class, parameters);
+        RestServer server = getServer();
+        People people = server.get(LoadAllPersons, People.class, ImmutableMap.of(FirstRecord, index, MaxRecords, count));
         return people.getPerson();
     }
 
-    private <T> T get(String endPoint, Class<T> type, Map<String, Object> parameters) throws EmpiServerException
+    private RestServer getServer() throws RestServerException
     {
-        String sessionKey = getSessionToken();
-
-        try {
-            HttpRequest request = Unirest.get(server + endPoint)
-                    .header(SESSION_KEY_HEADER, sessionKey)
-                    .header(CONTENT_TYPE_HEADER, CONTENT_TYPE_XML)
-                    .queryString(parameters);
-            HttpResponse<String> response = request.asString();
-
-            if (! HttpStatus.isSuccessful(response.getStatus())) {
-                throw new EmpiServerException(response.getStatus());
-            }
-            return serializer.deserialize(response.getBody(), type);
+        if (server == null) {
+            String token = getSessionToken();
+            server = new RestServer(address, new XmlSerializer(), ImmutableMap.of(ContentType, Xml, SessionKey, token));
         }
-        catch (UnirestException exception){
-            throw new EmpiServerException(exception);
-        }
+        return server;
     }
 
-    private void post(String endPoint, Map<String, Object> parameters) throws EmpiServerException
+    private String getSessionToken() throws RestServerException
     {
-        String sessionKey = getSessionToken();
-
-        try {
-            HttpRequestWithBody request = Unirest.post(server + endPoint)
-                    .header(SESSION_KEY_HEADER, sessionKey)
-                    .header(CONTENT_TYPE_HEADER, CONTENT_TYPE_XML)
-                    .queryString(parameters);
-            HttpResponse<String> response = request.asString();
-
-            if (! HttpStatus.isSuccessful(response.getStatus())) {
-                throw new EmpiServerException(response.getStatus());
-            }
-        }
-        catch (UnirestException exception){
-            throw new EmpiServerException(exception);
-        }
-    }
-
-    private <T> void put(String endPoint, T value, Class<T> type) throws EmpiServerException
-    {
-        String sessionKey = getSessionToken();
-        String requestBody = serializer.serialize(value, type);
-
-        try {
-            RequestBodyEntity request = Unirest.put(server + endPoint)
-                    .header(SESSION_KEY_HEADER, sessionKey)
-                    .header(CONTENT_TYPE_HEADER, CONTENT_TYPE_XML)
-                    .body(requestBody);
-            HttpResponse<String> response = request.asString();
-
-            if (! HttpStatus.isSuccessful(response.getStatus())) {
-                throw new EmpiServerException(response.getStatus());
-            }
-        }
-        catch (UnirestException exception){
-            throw new EmpiServerException(exception);
-        }
-    }
-
-    private String getSessionToken() throws EmpiServerException
-    {
-        if (sessionToken == null){
-            sessionToken = authenticate();
-        }
-        return sessionToken;
-    }
-
-    private String authenticate() throws EmpiServerException
-    {
-        try {
-            AuthenticationRequest authentication = new AuthenticationRequest(username, password);
-            String requestBody = serializer.serialize(authentication, AuthenticationRequest.class);
-
-            RequestBodyEntity request = Unirest.put(server + AUTHENTICATE_ENDPOINT)
-                    .header(CONTENT_TYPE_HEADER, CONTENT_TYPE_XML)
-                    .body(requestBody);
-            HttpResponse<String> response = request.asString();
-
-            if (! HttpStatus.isSuccessful(response.getStatus())) {
-                throw new EmpiServerException(response.getStatus());
-            }
-            return response.getBody();
-        }
-        catch (UnirestException exception){
-            throw new EmpiServerException(exception);
-        }
+        AuthenticationRequest authentication = new AuthenticationRequest(username, password);
+        RestServer server = new RestServer(address, new XmlSerializer(), ImmutableMap.of(ContentType, Xml));
+        return server.put(Authenticate, authentication, AuthenticationRequest.class);
     }
 }

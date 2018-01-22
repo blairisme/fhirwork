@@ -45,13 +45,13 @@ public class IntegrationSteps
     @Given("^the system has no patients$")
     public void initializeEmpty() throws Exception
     {
-        empiServer.removeAllPatients();
+        empiServer.removePeople();
     }
 
     @Given("^the system has the following patients:$")
     public void initializePatients(List<Profile> profiles) throws Exception
     {
-        empiServer.removeAllPatients();
+        empiServer.removePeople();
         for (Profile profile: profiles) {
             Person person = Person.fromProfile(profile);
             empiServer.addPerson(person);

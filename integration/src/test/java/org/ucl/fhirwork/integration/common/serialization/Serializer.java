@@ -7,12 +7,11 @@
  *      http://creativecommons.org/licenses/by/4.0/
  */
 
-package org.ucl.fhirwork.integration.common.http;
+package org.ucl.fhirwork.integration.common.serialization;
 
-public class HttpStatus
+public interface Serializer
 {
-    public static boolean isSuccessful(int code)
-    {
-        return (code >= 200 && code <= 299);
-    }
+    <T> String serialize(T value, Class<T> type);
+
+    <T> T deserialize(String value, Class<T> type);
 }

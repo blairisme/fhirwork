@@ -9,10 +9,15 @@
 
 package org.ucl.fhirwork.integration.common.http;
 
-public class HttpStatus
+public class RestServerException extends Exception
 {
-    public static boolean isSuccessful(int code)
+    public RestServerException(Exception cause)
     {
-        return (code >= 200 && code <= 299);
+        super(cause);
+    }
+
+    public RestServerException(int httpCode)
+    {
+        super("REST server error: status code " + httpCode);
     }
 }

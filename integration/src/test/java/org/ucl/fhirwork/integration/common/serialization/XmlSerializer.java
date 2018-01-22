@@ -16,7 +16,7 @@ import javax.xml.bind.Unmarshaller;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-public class XmlSerializer
+public class XmlSerializer implements Serializer
 {
     public <T> String serialize(T value, Class<T> type)
     {

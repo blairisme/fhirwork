@@ -9,15 +9,21 @@
 
 package org.ucl.fhirwork.integration.fhir;
 
-public class FhirServerException extends Exception
+import org.ucl.fhirwork.integration.common.http.RestEndpoint;
+
+public enum FhirEndpoint implements RestEndpoint
 {
-    public FhirServerException(Throwable cause)
+    Patient("fhir/Patient");
+
+    private String path;
+
+    private FhirEndpoint(String path)
     {
-        super(cause);
+        this.path = path;
     }
 
-    public FhirServerException(int httpCode)
+    public String getPath()
     {
-        super("FHIR server error: status code " + httpCode);
+        return path;
     }
 }
