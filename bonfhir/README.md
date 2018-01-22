@@ -11,7 +11,7 @@ Navigate to the _bonfhir_ directory
 2. npm start
 
 To run in the background as a daemon:
-1. forever start -c nodemon index.js
+1. forever start -c nodemon app.js
 
 ## Usage
 

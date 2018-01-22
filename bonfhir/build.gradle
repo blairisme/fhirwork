@@ -33,17 +33,17 @@ task installForever(type: NpmTask, dependsOn: npmInstall) {
 }
 
 task bonfhirStart(type: NodeTask, dependsOn: npmInstall) {
-  script = file('index.js')
+  script = file('app.js')
 }
 
 task bonfhirStartDaemon(dependsOn: installForever) {
   doLast{
     exec{
       if (Os.isFamily(Os.FAMILY_WINDOWS)){
-        commandLine 'cmd', '/c', "${nodeBinDir}/forever start index.js"
+        commandLine 'cmd', '/c', "${nodeBinDir}/forever start app.js"
       }
       else {
-        commandLine "${nodeBinDir}/forever", 'start', 'index.js'
+        commandLine "${nodeBinDir}/forever", 'start', 'app.js'
       }
     }
   }
@@ -53,10 +53,10 @@ task bonfhirStopDaemon(dependsOn: installForever) {
   doLast{
     exec{
       if (Os.isFamily(Os.FAMILY_WINDOWS)){
-        commandLine 'cmd', '/c', "${nodeBinDir}/forever stop index.js"
+        commandLine 'cmd', '/c', "${nodeBinDir}/forever stop app.js"
       }
       else {
-        commandLine "${nodeBinDir}/forever", 'start', 'index.js'
+        commandLine "${nodeBinDir}/forever", 'start', 'app.js'
       }
       ignoreExitValue true
     }
