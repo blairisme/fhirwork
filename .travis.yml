@@ -11,7 +11,7 @@ services:
   - docker
 
 script:
-  - gradle clean build check envStart integrationTest envStop jacocoTestReport
+  - gradle clean build check
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
