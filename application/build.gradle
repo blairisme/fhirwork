@@ -73,9 +73,12 @@ jacocoTestReport {
         xml.enabled = true
         html.enabled = true
     }
+    executionData = fileTree(dir: "${buildDir}/jacoco").matching {
+        include '**/*.exec'
+    }
 }
 
-check.dependsOn jacocoTestReport
+check.finalizedBy jacocoTestReport
 
 /*** style checking configuration ***/
 
@@ -85,21 +88,8 @@ checkstyle {
 
 project.tasks.remove(project.tasks['checkstyleTest']);
 
-/*** start application before integration test and shutdown afterwards ***/
-
 task appStartDaemon(dependsOn: 'appBeforeIntegrationTest'){
 }
 
 task appStopDaemon(dependsOn: 'appAfterIntegrationTest'){
-}
-
-gradle.projectsEvaluated {
-  rootProject.allprojects.each { subproject ->
-    subproject.tasks.each { task ->
-      if (task.name == 'integrationTest') {
-        task.dependsOn(tasks['appStartDaemon'])
-        task.finalizedBy(tasks['appStopDaemon'])
-      }
-    }
-  }
 }
