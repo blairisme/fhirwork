@@ -32,3 +32,19 @@ test {
 task integrationTest(type: Test) {
   include '**/integration/**'
 }
+
+check.dependsOn integrationTest
+
+def getTasksByName(def name){
+  return rootProject.allprojects.collect { subproject ->
+    subproject.tasks.findAll { it.name == name }
+  }.flatten()
+}
+
+gradle.projectsEvaluated {
+  integrationTest.dependsOn getTasksByName('envStart')
+  integrationTest.dependsOn getTasksByName('appStartDaemon')
+
+  integrationTest.finalizedBy getTasksByName('appStopDaemon')
+  integrationTest.finalizedBy getTasksByName('envStop')
+}
