@@ -42,9 +42,9 @@ def getTasksByName(def name){
 }
 
 gradle.projectsEvaluated {
-  integrationTest.dependsOn getTasksByName('envStart')
   integrationTest.dependsOn getTasksByName('appStartDaemon')
+  integrationTest.dependsOn getTasksByName('envStart')
 
-  integrationTest.finalizedBy getTasksByName('appStopDaemon')
   integrationTest.finalizedBy getTasksByName('envStop')
+  integrationTest.finalizedBy getTasksByName('appStopDaemon')
 }

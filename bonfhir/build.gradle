@@ -62,9 +62,10 @@ task bonfhirStopDaemon(dependsOn: installForever) {
     }
   }
 }
-
+/*
 task envStart(dependsOn: bonfhirStartDaemon){
 }
 
 task envStop(dependsOn: bonfhirStopDaemon){
 }
+/*
