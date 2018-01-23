@@ -29,11 +29,18 @@ test {
   exclude '**/integration/**'
 }
 
-task integrationTest(type: Test) {
+task integrationTest(type: Test, dependsOn: 'waitForEnvStartup') {
   include '**/integration/**'
 }
 
 check.dependsOn integrationTest
+
+task waitForEnvStartup(){
+  doLast{
+    sleep(5 * 1000)
+  }
+  onlyIf {return true}
+}
 
 def getTasksByName(def name){
   return rootProject.allprojects.collect { subproject ->
@@ -44,6 +51,9 @@ def getTasksByName(def name){
 gradle.projectsEvaluated {
   integrationTest.dependsOn getTasksByName('appStartDaemon')
   integrationTest.dependsOn getTasksByName('envStart')
+
+  waitForEnvStartup.dependsOn getTasksByName('appStartDaemon')
+  waitForEnvStartup.dependsOn getTasksByName('envStart')
 
   integrationTest.finalizedBy getTasksByName('envStop')
   integrationTest.finalizedBy getTasksByName('appStopDaemon')
