@@ -73,9 +73,12 @@ jacocoTestReport {
         xml.enabled = true
         html.enabled = true
     }
+    executionData = fileTree(dir: "${buildDir}/jacoco").matching {
+        include '**/*.exec'
+    }
 }
 
-check.dependsOn jacocoTestReport
+//check.dependsOn jacocoTestReport
 
 /*** style checking configuration ***/
 
