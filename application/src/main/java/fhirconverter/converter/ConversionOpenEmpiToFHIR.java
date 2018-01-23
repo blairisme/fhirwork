@@ -94,6 +94,7 @@ public class ConversionOpenEmpiToFHIR {
       				.setIfNoneExist("identifier=http://acme.org/mrns|12345"); */
 		return bundle;
 	}
+	
 	protected Patient personMapping(JSONObject node)  { //tried automated using generic objects methods, but inner classes methods differ too much. Unable to get it more automated. By koon.
 		Patient p = new Patient();
 		

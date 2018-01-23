@@ -41,7 +41,6 @@ public class ConversionOpenEmpiToFHIRTests {
 		String resourceJson = ctx.newJsonParser().encodeResourceToString(p.get(0));	
 		JSONObject resourceFhir = new JSONObject(resourceJson);
 		
-		
 		/* -- FHIR format -- */
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode resultJackson = mapper.readTree(resourceFhir.toString());
@@ -50,11 +49,11 @@ public class ConversionOpenEmpiToFHIRTests {
 		assertTrue("not in FHIR Format!", fhirSchemeRequirements);
 
 		/* -- Name -- */
-		ConversionFHIRToOpenEmpiTests helper = new ConversionFHIRToOpenEmpiTests();
-		String obtainedFamilyName = helper.getName(resourceFhir, 0);
-		String obtainedGivenName = helper.getName(resourceFhir, 1);
-		String obtainedMaidenName = helper.getName(resourceFhir, 2);
-		String obtainedMiddle = helper.getName(resourceFhir, 3);
+		ConverterTestHelper helper = new ConverterTestHelper();
+		String obtainedFamilyName = helper.getName(resourceFhir, ConverterTestHelper.FAMILYNAME);
+		String obtainedGivenName = helper.getName(resourceFhir, ConverterTestHelper.GIVENNAME);
+		String obtainedMaidenName = helper.getName(resourceFhir, ConverterTestHelper.MAIDENNAME);
+		String obtainedMiddle = helper.getName(resourceFhir, ConverterTestHelper.MIDDLE);
 		assertEquals("Family name is not correct " ,  inputJson.getJSONObject("person").optString("familyName"), obtainedFamilyName);
 		assertEquals("Given name is not correct " , inputJson.getJSONObject("person").optString("givenName"), obtainedGivenName);
 		assertEquals("Maiden name is not correct " , inputJson.getJSONObject("person").optString("mothersMaidenName"), obtainedMaidenName);
@@ -134,8 +133,6 @@ public class ConversionOpenEmpiToFHIRTests {
 		}
 		else
 			return identifierOpenEMPI;
-			
-		
 	}
 	
 }

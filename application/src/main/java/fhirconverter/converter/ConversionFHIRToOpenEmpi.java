@@ -58,7 +58,6 @@ public class ConversionFHIRToOpenEmpi {
 		return content;
 	}
 	
-
 	protected JSONObject setGender(JSONObject patient) {
 		JSONObject genderDetails = new JSONObject();
 		if(patient.has("gender")){
@@ -90,7 +89,7 @@ public class ConversionFHIRToOpenEmpi {
 		}
 		return genderDetails;
 	}
-	
+
 	protected JSONObject createName(JSONObject content,JSONObject details) {		
 			JSONObject temp = content;
 			/* - Family Name - */
@@ -110,33 +109,31 @@ public class ConversionFHIRToOpenEmpi {
 			temp = checkExistLengthAndPut("suffix", details, temp, "suffix", 0);
 			
 			return temp;
-		}
+	}
+	
+	protected JSONObject createAddress(JSONObject content,JSONObject address) {
+		JSONObject temp = content;
+		/* line[0]=Address 1 & Line[1] = Address 2 (if they exist) */
+		temp = checkExistLengthAndPut("line", address, temp, "address1", 0);
+		temp = checkExistLengthAndPut("line", address, temp, "address2", 1);
+
+		/* City */
+		temp = checkExistsAndPut(address.has("city"),"city", address, temp, "city", address.optString("city"));
 		
-		protected JSONObject createAddress(JSONObject content,JSONObject address) {
-			JSONObject temp = content;
-			/* line[0]=Address 1 & Line[1] = Address 2 (if they exist) */
-			temp = checkExistLengthAndPut("line", address, temp, "address1", 0);
-			temp = checkExistLengthAndPut("line", address, temp, "address2", 1);
-
-			/* City */
-			temp = checkExistsAndPut(address.has("city"),"city", address, temp, "city", address.optString("city"));
-			
-			/* Country */ 
-			temp = checkExistsAndPut(address.has("country"),"country", address,temp, "country", address.optString("country"));
-			
-			/* State */
-			temp = checkExistsAndPut(address.has("state"),"state", address, temp,"state", address.optString("state"));
-			
-			/* Postal Code */
-			temp = checkExistsAndPut(address.has("postalCode"),"postalCode", address, temp,"postalCode", address.optString("postalCode"));
-			return content;
-		}
-
+		/* Country */ 
+		temp = checkExistsAndPut(address.has("country"),"country", address,temp, "country", address.optString("country"));
+		
+		/* State */
+		temp = checkExistsAndPut(address.has("state"),"state", address, temp,"state", address.optString("state"));
+		
+		/* Postal Code */
+		temp = checkExistsAndPut(address.has("postalCode"),"postalCode", address, temp,"postalCode", address.optString("postalCode"));
+		return content;
+	}
+	
 	protected JSONObject setFullNames(JSONObject patient, JSONObject content) {
 		JSONObject temp = content;
-
 		if(patient.has("name")) {
-			
 			/* FHIR has multiple names */
 			JSONArray Namesarray = patient.optJSONArray("name");
 			
@@ -169,7 +166,9 @@ public class ConversionFHIRToOpenEmpi {
 		}
 		return temp;
 	}
-	protected JSONObject checkExistsAndPut(boolean condition,  String searchField,JSONObject ConditionObject,JSONObject receiver, String key, Object value) {
+	
+	//Modified at 18/01/21 by Chenghui, method type changed from protected to private
+	private JSONObject checkExistsAndPut(boolean condition,  String searchField,JSONObject ConditionObject,JSONObject receiver, String key, Object value) {
 		JSONObject temp = receiver;
 
 		if(condition) {
@@ -178,7 +177,8 @@ public class ConversionFHIRToOpenEmpi {
 		return temp;
 	}
 	
-	protected JSONObject checkExistLengthAndPut(String searchField,JSONObject ConditionObject, JSONObject receiver, String key, int threshold) {
+	//Modified at 18/01/21 by Chenghui, method type changed from protected to private
+	private JSONObject checkExistLengthAndPut(String searchField,JSONObject ConditionObject, JSONObject receiver, String key, int threshold) {
 		JSONObject temp = receiver;
 
 		if(ConditionObject.has(searchField)&&((ConditionObject.getJSONArray(searchField).length() > threshold))) {
@@ -186,6 +186,7 @@ public class ConversionFHIRToOpenEmpi {
 		}				
 		return temp;
 	}
+	
 	protected JSONObject setMaritalStatus(JSONObject patient, JSONObject content) {
 		JSONObject temp = content;
 
@@ -235,11 +236,11 @@ public class ConversionFHIRToOpenEmpi {
 		return temp;
 	}
 	
+	//Modified at 18/01/21 by Chenghui, added a condition to prevent possible failure when receiving an invalid input
 	protected JSONObject setAddresses(JSONObject patient, JSONObject content) {
 		JSONObject temp = content;
 
-		if(patient.has("address")) {
-			
+		if(patient.has("address") && patient.get("address") instanceof JSONArray) {
 			/* Multiple addresses in FHIR but OpenEMPI takes only one */
 			JSONArray addresses = patient.getJSONArray("address");
 			if(addresses.length()>0) {
@@ -249,10 +250,12 @@ public class ConversionFHIRToOpenEmpi {
 		}
 		return temp;
 	}
+	
+	//Modified at 18/01/21 by Chenghui, added a condition to prevent possible failure when receiving an invalid input
 	protected JSONObject setTelecom(JSONObject patient, JSONObject content) {
 		JSONObject temp = content;
 
-		if(patient.has("telecom")) {
+		if(patient.has("telecom") && patient.get("telecom") instanceof JSONArray) {
 			
 			/* Telecom is an array of all the contact details of the patient*/
 			JSONArray telecom = patient.getJSONArray("telecom");
@@ -268,9 +271,6 @@ public class ConversionFHIRToOpenEmpi {
 
 			}			
 		}
-		
-		
-		
 		return temp;
 	}
 	
@@ -282,9 +282,10 @@ public class ConversionFHIRToOpenEmpi {
 		return temp;
 	}
 	
+	//Modified at 18/01/21 by Chenghui, added a condition to prevent possible failure when receiving an invalid input
 	protected JSONObject setPersonIdentifier( JSONObject patient,JSONObject content) {
 		JSONObject temp = content;
-		if(patient.has("identifier")) {
+		if(patient.has("identifier") && patient.get("identifier") instanceof JSONArray) {
 			JSONArray personIdentifier = new JSONArray();
 	
 			/**

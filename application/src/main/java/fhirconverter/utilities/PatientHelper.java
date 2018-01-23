@@ -12,11 +12,22 @@ import fhirconverter.exceptions.OpenEMPISchemeNotMetException;
 public class PatientHelper {
 	private static final Logger logger = LogManager.getLogger(PatientHelper.class.getName());
 
+	OpenEMPIConnector caller;
+	
+	public PatientHelper()
+	{
+		this(new OpenEMPIConnector());
+	}
+	
+	public PatientHelper(OpenEMPIConnector caller)
+	{
+		this.caller = caller;
+	}
 	
 	public String retrieveNHSbyId(String id) throws Exception {
 		String nhsIdentifier = "";
 		
-		OpenEMPIConnector caller = new OpenEMPIConnector();
+		//OpenEMPIConnector caller = new OpenEMPIConnector();
 		String patientXML = caller.readPerson(id);
 		
 		JSONObject xmlJSONObj = XML.toJSONObject(patientXML);

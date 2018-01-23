@@ -11,15 +11,26 @@ import java.util.List;
 import java.util.Set;
 
 public class ObservationFHIR{
-	private PatientHelper patientHelper = new PatientHelper();
+	private PatientHelper patientHelper;
 	private Logger LOGGER = LogManager.getLogger(ObservationFHIR.class);
 
+	public ObservationFHIR(){
+		 this.patientHelper = new PatientHelper();
+	}
+	
+	public ObservationFHIR(PatientHelper patientHelper){
+		 this.patientHelper = patientHelper;
+	}
+	
 	public List<Observation> search(String patientId, ArrayList<String> searchParams) throws Exception{
+		//get NHS from openEMPI repository
 		String nhsNumber = patientHelper.retrieveNHSbyId(patientId);
-    HashMap<String,String> connectionCreds = Utils.getDataBase();
+		
+		HashMap<String,String> connectionCreds = Utils.getDataBase();
 		String domainName = connectionCreds.get("database");
 		LOGGER.debug("nhsNumber" + nhsNumber);
 
+		//connect to OpenEHR
 		OpenEHRConnector openEHRconnector = new OpenEHRConnector(domainName); // Future developers, Note this line of code is placed here to be thread safe.		
 		org.json.simple.JSONObject aqlPaths = Utils.readJsonFile("aql_path.json");
 		JSONObject aqlJSONObj =  new JSONObject(aqlPaths.toString());
