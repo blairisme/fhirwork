@@ -22,9 +22,6 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
 import fhirconverter.exceptions.ResourceNotFoundException;
 
-
-
-
 public class ConversionOpenEmpiToFHIRTests {
 	@Test
 	public void conversionTest() throws ResourceNotFoundException, Exception {
