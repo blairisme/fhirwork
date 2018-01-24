@@ -13,12 +13,19 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class PatientFHIR {
     private Logger LOGGER = LogManager.getLogger(PatientFHIR.class);
-	OpenEMPIConnector caller = new OpenEMPIConnector();
-
+	 OpenEMPIConnector caller; 
+	 public PatientFHIR(){
+		 this.caller = new OpenEMPIConnector();
+	 }
+	 public PatientFHIR(OpenEMPIConnector connector){
+		 this.caller = connector;
+	 }
     public Patient read(String id) throws Exception {
         String result = caller.readPerson(id);
         ConversionOpenEmpiToFHIR converter = new ConversionOpenEmpiToFHIR();
@@ -31,7 +38,7 @@ public class PatientFHIR {
             result = caller.searchPersonById(parameters);
         }else
             result = caller.searchPersonByAttributes(parameters);
-
+    
         LOGGER.debug("Search Results: " + result);
 
         ConversionOpenEmpiToFHIR converter = new ConversionOpenEmpiToFHIR();
@@ -59,6 +66,7 @@ public class PatientFHIR {
         String xmlNewRecord = XML.toString(records);
         LOGGER.debug("SEND TO OPENEMPIBASE: \n" + xmlNewRecord );
         String result = caller.updatePerson(xmlNewRecord);
+       
 		/*ConversionOpenEMPI_to_FHIR converterOpenEmpi = new ConversionOpenEMPI_to_FHIR();
 		JSONObject createdObject = converterOpenEmpi.conversion(result);
 		String replyCreatedNewRecord = "";
@@ -81,6 +89,7 @@ public class PatientFHIR {
 
     public String patch(String id, JsonPatch patient) throws Exception { //more testing needed! only gender done. by koon
         String result = caller.readPerson(id);
+   
         ConversionOpenEmpiToFHIR converterOpenEmpi = new ConversionOpenEmpiToFHIR();
 //		JSONObject xmlResults = converterOpenEmpi.conversion(result);
         Patient patientObj = converterOpenEmpi.conversion(result).get(0);
@@ -123,7 +132,8 @@ public class PatientFHIR {
 
                     convertedXML.put("personId", id);
                     convertedXMLvalidated.put("person", convertedXML);
-                    final String xmlPatch = XML.toString(convertedXMLvalidated);
+                    String xmlPatch = XML.toString(convertedXMLvalidated);
+               
                     return caller.updatePerson(xmlPatch);
                 }else{
                     throw new OpenEMPISchemeNotMetException("The Parameters does not confine to OpenEMPIScheme");
@@ -137,27 +147,30 @@ public class PatientFHIR {
         {
             throw new Exception("Patch operators are empty!");
         }
-    }
+     }
 
     public String create(JSONObject patient) throws Exception{
-        ConversionFHIRToOpenEmpi converter = new ConversionFHIRToOpenEmpi();
-        JSONObject newRecordOpenEMPI = converter.conversionToOpenEMPI(patient);
-        JSONObject records = new JSONObject();
-        records.put("person", newRecordOpenEMPI);
-        String xmlNewRecord = XML.toString(records);
-        String result = caller.addPerson(xmlNewRecord);
-        ConversionOpenEmpiToFHIR converterOpenEmpi = new ConversionOpenEmpiToFHIR();
+		ConversionFHIRToOpenEmpi converter = new ConversionFHIRToOpenEmpi();
+		JSONObject newRecordOpenEMPI = converter.conversionToOpenEMPI(patient);
+		JSONObject records = new JSONObject();
+		records.put("person", newRecordOpenEMPI);
+		String xmlNewRecord = XML.toString(records);
+		
+		System.out.println("caonima: "+ xmlNewRecord);
+		String result = caller.addPerson(xmlNewRecord);
+	
+		ConversionOpenEmpiToFHIR converterOpenEmpi = new ConversionOpenEmpiToFHIR();
 //		JSONObject createdObject = converterOpenEmpi.conversion(result);
-        Patient createdPatient = converterOpenEmpi.conversion(result).get(0);
-        String replyCreatedNewRecord = "";
+		Patient createdPatient = converterOpenEmpi.conversion(result).get(0);
+		String replyCreatedNewRecord = "";
 //		if(createdObject.has("id")){
 //			replyCreatedNewRecord = createdObject.getString("id");
 //		}
-        if(createdPatient.getId() != null)
-        {
-            replyCreatedNewRecord = createdPatient.getId().getIdPart();
-        }
-        return replyCreatedNewRecord; // Ask yuan if he wants all the fields or just certain.
+		if(createdPatient.getId() != null)
+		{
+		    replyCreatedNewRecord = createdPatient.getId().getIdPart();
+		}
+		return replyCreatedNewRecord; // Ask yuan if he wants all the fields or just certain.
     }
 
     public String delete(String id) throws Exception {

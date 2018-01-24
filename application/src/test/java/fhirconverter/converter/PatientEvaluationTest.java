@@ -3,8 +3,6 @@
  */
 package fhirconverter.converter;
 
-import java.io.File;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -16,7 +14,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.mashape.unirest.http.HttpResponse;
@@ -37,28 +34,24 @@ public class PatientEvaluationTest {
 	@Test
 	public void checkDataIntgrity() throws Exception {
 
-		URL requestUrl = Thread.currentThread().getContextClassLoader().getResource("PatientFHIRRequest.xml");
-        File requestFile = new File(requestUrl.toURI());
-
-        URL ch4Url = Thread.currentThread().getContextClassLoader().getResource("c4h.xml");
-        File ch4File = new File(ch4Url.toURI());
-		String createRequest = new String(Files.readAllBytes(Paths.get(ch4File.getPath())), "UTF-8");
-		String patientIdHAPI = patientCreateHAPI(createRequest);
-		String patientIdNHS = this.patientCreateNHS(createRequest);
+		String createRequest = new String(Files.readAllBytes(Paths.get("src/test/resources/PatientFHIRRequest.xml")), "UTF-8");
+//		String patientIdHAPI = this.patientCreateHAPI(createRequest);
+//		String patientIdNHS = this.patientCreateNHS(createRequest);
 		String readHAPIPatient = "";
 		String readNHSPatient = "";
 
-		if(!("").equals(patientIdHAPI)){
-			readHAPIPatient = this.patientReadHAPI(patientIdHAPI);
-		}else{
-			readHAPIPatient = new String(Files.readAllBytes(Paths.get(requestFile.getPath())), "UTF-8");
-		}
+//		if(!("").equals(patientIdHAPI)){
+//			readHAPIPatient = this.patientReadHAPI(patientIdHAPI);
+//			
+//		}else{
+			readHAPIPatient = new String(Files.readAllBytes(Paths.get("src/test/resources/PatientFHIRResponse.xml")), "UTF-8");
+//		}
 
-		if(!("").equals(patientIdNHS)){
-			readNHSPatient = this.patientReadHAPI(patientIdHAPI);
-		}else{
-			readNHSPatient = new String(Files.readAllBytes(Paths.get(ch4File.getPath())), "UTF-8");
-		}
+//		if(!("").equals(patientIdNHS)){
+//			readNHSPatient = this.patientReadHAPI(patientIdHAPI);
+//		}else{
+			readNHSPatient = new String(Files.readAllBytes(Paths.get("src/test/resources/c4h.xml")), "UTF-8");
+//		}
 
 		/* To calculate Growth Chart loss*/
 		float loss = this.calculateLossGCA(readHAPIPatient, readNHSPatient);
