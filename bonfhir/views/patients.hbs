@@ -1,4 +1,4 @@
-<form method="GET" action="">
+<form method="POST" action="/observations">
   <h1> Patients in the FHIR database </h1>
   <table>
     <div class="container">
@@ -13,16 +13,16 @@
               <th>Family name</th>
             </tr>
           </thead>
-          <!--Hard coding a flight for testing purposes-->
           {{#each patients}}
 
             <tbody>
               <tr>
-                <td>{{id}}</td>
+                <td><a href='/observations/${{id}}'>{{id}}</a></td>
                 <td>{{birthDate}}</td>
                 <td>{{given}}</td>
                 <td>{{family}}</td>
                 </tr>
+
               </tbody>
           {{/each}}
         </table>
