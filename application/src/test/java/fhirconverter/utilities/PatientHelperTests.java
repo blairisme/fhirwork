@@ -61,7 +61,6 @@ public class PatientHelperTests {
 		helper.retrieveNHSbyId(recordID);
 	}
 
-
 	private void testRetrieveNHS(String filename) throws Exception {
 		String xml = new String(Files.readAllBytes(Paths.get(RESOURCEFOLDER + filename)), "UTF-8");
 

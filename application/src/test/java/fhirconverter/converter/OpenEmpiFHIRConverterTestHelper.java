@@ -3,7 +3,7 @@ package fhirconverter.converter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class ConverterTestHelper {
+public class OpenEmpiFHIRConverterTestHelper {
 	static int FAMILYNAME = 0;
 	static int GIVENNAME = 1;
 	static int MAIDENNAME = 2;

@@ -82,11 +82,10 @@ public class ConversionFHIRToOpenEmpiTests {
 //	}
 	
 	@Test
-	public void conversionToOpenEmpiTest() throws Exception {
+	public void conversionToOpenEmpiFormatTest() throws Exception {
 		JSONObject patient = new JSONObject(this.resourcePatient.toString());
 		JSONObject resourceOpenEmpiFormat = this.converter.conversionToOpenEMPI(patient);
 		
-		/* -- OpenEMPI format -- */
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode resultJackson = mapper.readTree(resourceOpenEmpiFormat.toString());
         URL schemaUrl = Thread.currentThread().getContextClassLoader().getResource("openempiSchema.json");
@@ -128,10 +127,10 @@ public class ConversionFHIRToOpenEmpiTests {
 		JSONObject details = Namesarray.getJSONObject(0);
 		content = converter.createName(content,details);
 		
-		ConverterTestHelper helper = new ConverterTestHelper();
-		String expectedFamilyName = helper.getName(patient, ConverterTestHelper.FAMILYNAME);
-		String expectedGivenName = helper.getName(patient, ConverterTestHelper.GIVENNAME);
-		String expectedMiddle = helper.getName(patient, ConverterTestHelper.MIDDLE);
+		OpenEmpiFHIRConverterTestHelper helper = new OpenEmpiFHIRConverterTestHelper();
+		String expectedFamilyName = helper.getName(patient, OpenEmpiFHIRConverterTestHelper.FAMILYNAME);
+		String expectedGivenName = helper.getName(patient, OpenEmpiFHIRConverterTestHelper.GIVENNAME);
+		String expectedMiddle = helper.getName(patient, OpenEmpiFHIRConverterTestHelper.MIDDLE);
 		
 		assertEquals("Family name is not correct " , expectedFamilyName, content.optString("familyName"));
 		assertEquals("Given name is not correct " , expectedGivenName, content.optString("givenName"));
@@ -176,15 +175,15 @@ public class ConversionFHIRToOpenEmpiTests {
 	
 	@Test
 	public void setFullNamesWithValidInput(){
-		ConverterTestHelper helper = new ConverterTestHelper();
+		OpenEmpiFHIRConverterTestHelper helper = new OpenEmpiFHIRConverterTestHelper();
 		JSONObject content = new JSONObject();
 		JSONObject patient = new JSONObject(this.resourcePatient.toString());
 		JSONObject openEmpiFormat = converter.setFullNames(patient, content);
 		
-		String expectedFamilyName = helper.getName(patient, ConverterTestHelper.FAMILYNAME);
-		String expectedGivenName = helper.getName(patient, ConverterTestHelper.GIVENNAME);
-		String expectedMaidenName = helper.getName(patient, ConverterTestHelper.MAIDENNAME);
-		String expectedMiddle = helper.getName(patient, ConverterTestHelper.MIDDLE);
+		String expectedFamilyName = helper.getName(patient, OpenEmpiFHIRConverterTestHelper.FAMILYNAME);
+		String expectedGivenName = helper.getName(patient, OpenEmpiFHIRConverterTestHelper.GIVENNAME);
+		String expectedMaidenName = helper.getName(patient, OpenEmpiFHIRConverterTestHelper.MAIDENNAME);
+		String expectedMiddle = helper.getName(patient, OpenEmpiFHIRConverterTestHelper.MIDDLE);
 		assertEquals("Family name is not correct " , expectedFamilyName, openEmpiFormat.optString("familyName"));
 		assertEquals("Given name is not correct " , expectedGivenName, openEmpiFormat.optString("givenName"));
 		assertEquals("Maiden name is not correct " , expectedMaidenName, openEmpiFormat.optString("mothersMaidenName"));

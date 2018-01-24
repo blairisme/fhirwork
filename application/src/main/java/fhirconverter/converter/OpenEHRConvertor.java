@@ -184,7 +184,6 @@ public class OpenEHRConvertor {
 				logger.debug("*** Method: setParameters  | Value of " + key + " = " + resultSet.optString(jsonNode) + " ***");
 			}	
 		}
-		
 	}
 
 	/**

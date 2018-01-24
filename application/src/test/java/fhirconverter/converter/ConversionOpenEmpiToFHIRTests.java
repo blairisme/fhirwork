@@ -49,11 +49,11 @@ public class ConversionOpenEmpiToFHIRTests {
 		assertTrue("not in FHIR Format!", fhirSchemeRequirements);
 
 		/* -- Name -- */
-		ConverterTestHelper helper = new ConverterTestHelper();
-		String obtainedFamilyName = helper.getName(resourceFhir, ConverterTestHelper.FAMILYNAME);
-		String obtainedGivenName = helper.getName(resourceFhir, ConverterTestHelper.GIVENNAME);
-		String obtainedMaidenName = helper.getName(resourceFhir, ConverterTestHelper.MAIDENNAME);
-		String obtainedMiddle = helper.getName(resourceFhir, ConverterTestHelper.MIDDLE);
+		OpenEmpiFHIRConverterTestHelper helper = new OpenEmpiFHIRConverterTestHelper();
+		String obtainedFamilyName = helper.getName(resourceFhir, OpenEmpiFHIRConverterTestHelper.FAMILYNAME);
+		String obtainedGivenName = helper.getName(resourceFhir, OpenEmpiFHIRConverterTestHelper.GIVENNAME);
+		String obtainedMaidenName = helper.getName(resourceFhir, OpenEmpiFHIRConverterTestHelper.MAIDENNAME);
+		String obtainedMiddle = helper.getName(resourceFhir, OpenEmpiFHIRConverterTestHelper.MIDDLE);
 		assertEquals("Family name is not correct " ,  inputJson.getJSONObject("person").optString("familyName"), obtainedFamilyName);
 		assertEquals("Given name is not correct " , inputJson.getJSONObject("person").optString("givenName"), obtainedGivenName);
 		assertEquals("Maiden name is not correct " , inputJson.getJSONObject("person").optString("mothersMaidenName"), obtainedMaidenName);
