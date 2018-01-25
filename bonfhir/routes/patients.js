@@ -3,7 +3,7 @@ const router = express.Router();
 
 const rest = require('restler')
 router.get('/patients', function (req, res) {
-  var url = `http://fhirtest.uhn.ca/baseDstu2/Patient?_format=json`;
+  var url = `https://sb-fhir-stu3.smarthealthit.org/smartstu3/open/Patient?_format=json`;
   console.log(url);
   rest.get(url).on('complete', function(result) {
     if (result instanceof Error) {
@@ -27,7 +27,6 @@ router.get('/patients', function (req, res) {
           else {
             patient.birthDate = item.birthDate;
           }
-
           if(item.name === undefined) {
             patient.given = '';
             patient.family = '';
@@ -48,9 +47,10 @@ router.get('/patients', function (req, res) {
       	var patients = [];
     	};
     	// res.send(patients)
+      console.log(patients)
     	res.render('patients', { patients: patients})
     }
   });
-})
+});
 
 module.exports = router;
