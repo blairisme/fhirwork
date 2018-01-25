@@ -1,19 +1,23 @@
 package org.ucl.fhirwork.integration.cucumber;
 
-public class HealthRecord
+public class HealthData
 {
-    private String id;
     private String subject;
     private String namespace;
+    private String date;
+    private int height;
+    private int weight;
+    private int bmi;
+    private int headCircumference;
 
-    public HealthRecord(String id, String subject, String namespace) {
-        this.id = id;
+    public HealthData(String subject, String namespace, String date, int height, int weight, int bmi, int headCircumference) {
         this.subject = subject;
         this.namespace = namespace;
-    }
-
-    public String getId() {
-        return id;
+        this.date = date;
+        this.height = height;
+        this.weight = weight;
+        this.bmi = bmi;
+        this.headCircumference = headCircumference;
     }
 
     public String getSubject() {
@@ -22,5 +26,25 @@ public class HealthRecord
 
     public String getNamespace() {
         return namespace;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public int getBmi() {
+        return bmi;
+    }
+
+    public int getHeadCircumference() {
+        return headCircumference;
     }
 }
