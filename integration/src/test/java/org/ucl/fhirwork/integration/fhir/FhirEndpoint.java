@@ -13,7 +13,8 @@ import org.ucl.fhirwork.integration.common.http.RestEndpoint;
 
 public enum FhirEndpoint implements RestEndpoint
 {
-    Patient("fhir/Patient");
+    Observation ("fhir/Observation"),
+    Patient     ("fhir/Patient");
 
     private String path;
 

@@ -34,6 +34,27 @@ public class RestServer
         this.headers = convertHeaders(headers);
     }
 
+    public void setHeader(Object key, Object value)
+    {
+        headers.put(convert(key), convert(value));
+    }
+
+    public void delete(String endPoint) throws RestServerException
+    {
+        try {
+            HttpRequest request = Unirest.delete(server + endPoint)
+                    .headers(headers);
+            HttpResponse<String> response = request.asString();
+
+            if (! isSuccessful(response.getStatus())) {
+                throw new RestServerException(response.getStatus());
+            }
+        }
+        catch (UnirestException exception){
+            throw new RestServerException(exception);
+        }
+    }
+
     public <T> T get(RestEndpoint endPoint, Class<T> type, Map<Object, Object> parameters) throws RestServerException
     {
         try {
@@ -46,6 +67,40 @@ public class RestServer
                 throw new RestServerException(response.getStatus());
             }
             return serializer.deserialize(response.getBody(), type);
+        }
+        catch (UnirestException exception){
+            throw new RestServerException(exception);
+        }
+    }
+
+/*
+    public String getFoo(RestEndpoint endPoint, Map<Object, Object> parameters) throws RestServerException
+    {
+        try {
+            HttpRequest request = Unirest.get(server + endPoint.getPath())
+                    .headers(headers)
+                    .queryString(convertParameters(parameters));
+            HttpResponse<String> response = request.asString();
+
+            if (! isSuccessful(response.getStatus())) {
+                throw new RestServerException(response.getStatus());
+            }
+            return response.getBody();
+        }
+        catch (UnirestException exception){
+            throw new RestServerException(exception);
+        }
+    }
+*/
+
+    public boolean testGet(RestEndpoint endPoint, Map<Object, Object> parameters, int status) throws RestServerException
+    {
+        try {
+            HttpRequest request = Unirest.get(server + endPoint.getPath())
+                    .headers(headers)
+                    .queryString(convertParameters(parameters));
+            HttpResponse<String> response = request.asString();
+            return response.getStatus() == status;
         }
         catch (UnirestException exception){
             throw new RestServerException(exception);
@@ -70,7 +125,25 @@ public class RestServer
         }
     }
 
-    public void post(RestEndpoint endPoint, Map<Object, Object> parameters) throws RestServerException
+    public void post(RestEndpoint endPoint, String content, Map<Object, Object> parameters) throws RestServerException
+    {
+        try {
+            RequestBodyEntity request = Unirest.post(server + endPoint.getPath())
+                    .headers(headers)
+                    .queryString(convertParameters(parameters))
+                    .body(content);
+            HttpResponse<String> response = request.asString();
+
+            if (! isSuccessful(response.getStatus())) {
+                throw new RestServerException(response.getStatus());
+            }
+        }
+        catch (UnirestException exception){
+            throw new RestServerException(exception);
+        }
+    }
+
+    public <T> T post(RestEndpoint endPoint, Class<T> returnType, Map<Object, Object> parameters) throws RestServerException
     {
         try {
             HttpRequestWithBody request = Unirest.post(server + endPoint.getPath())
@@ -81,6 +154,25 @@ public class RestServer
             if (! isSuccessful(response.getStatus())) {
                 throw new RestServerException(response.getStatus());
             }
+            return serializer.deserialize(response.getBody(), returnType);
+        }
+        catch (UnirestException exception){
+            throw new RestServerException(exception);
+        }
+    }
+
+    public String post(RestEndpoint endPoint, Map<Object, Object> parameters) throws RestServerException
+    {
+        try {
+            HttpRequestWithBody request = Unirest.post(server + endPoint.getPath())
+                    .headers(headers)
+                    .queryString(convertParameters(parameters));
+            HttpResponse<String> response = request.asString();
+
+            if (! isSuccessful(response.getStatus())) {
+                throw new RestServerException(response.getStatus());
+            }
+            return response.getBody();
         }
         catch (UnirestException exception){
             throw new RestServerException(exception);

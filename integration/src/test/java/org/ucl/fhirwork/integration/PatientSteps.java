@@ -28,7 +28,7 @@ import java.util.function.Predicate;
 
 @StepDefAnnotation
 @SuppressWarnings("unused")
-public class IntegrationSteps
+public class PatientSteps
 {
     private FhirServer fhirServer;
     private EmpiServer empiServer;

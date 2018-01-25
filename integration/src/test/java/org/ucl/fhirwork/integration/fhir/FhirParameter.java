@@ -13,6 +13,7 @@ import org.ucl.fhirwork.integration.common.lang.StringCovertable;
 
 public enum FhirParameter implements StringCovertable
 {
+    Code        ("code"),
     Gender      ("gender"),
     Given       ("given"),
     Family      ("family"),

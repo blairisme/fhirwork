@@ -9,7 +9,7 @@
 
 package org.ucl.fhirwork.integration.fhir;
 
-import static org.ucl.fhirwork.integration.fhir.FhirEndpoint.*;
+import static org.ucl.fhirwork.integration.fhir.FhirEndpoint.Patient;
 import static org.ucl.fhirwork.integration.fhir.FhirParameter.*;
 import static org.ucl.fhirwork.integration.common.http.HttpHeader.*;
 import static org.ucl.fhirwork.integration.common.http.MimeType.*;
@@ -75,6 +75,18 @@ public class FhirServer
     {
         Bundle bundle = server.get(Patient, Bundle.class, ImmutableMap.of(Gender, gender, Family, surname));
         return getPatients(bundle);
+    }
+
+    public void searchObservation(String patient, String code) throws RestServerException
+    {
+        //String result = server.getFoo(FhirEndpoint.Observation, ImmutableMap.of(Code, code, "identifier", patient, "_format", "json"));
+        //result.length();
+
+        /*
+            url = "#{$fhir_server_base}/Observation?code=http://loinc.org|3141-9,http://loinc.org|8302-2,http://loinc.org|8287-5,http://loinc.org|58941-6&patient=#{patient_id}&_format=json"
+    @response = RestClient.get url, :content_type => :json, :accept => :json
+         */
+
     }
 
     private List<Patient> getPatients(Bundle bundle)
