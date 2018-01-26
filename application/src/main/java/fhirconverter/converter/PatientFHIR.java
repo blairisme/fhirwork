@@ -89,7 +89,7 @@ public class PatientFHIR {
 
     public String patch(String id, JsonPatch patient) throws Exception { //more testing needed! only gender done. by koon
         String result = caller.readPerson(id);
-   
+      
         ConversionOpenEmpiToFHIR converterOpenEmpi = new ConversionOpenEmpiToFHIR();
 //		JSONObject xmlResults = converterOpenEmpi.conversion(result);
         Patient patientObj = converterOpenEmpi.conversion(result).get(0);
@@ -109,13 +109,13 @@ public class PatientFHIR {
         if(patched != null)
         {
             LOGGER.debug(patched.toString());
-            boolean fhirSchemeRequirements = Utils.validateScheme(patched, "resource/Patient.schema.json");
+            boolean fhirSchemeRequirements = Utils.validateScheme(patched, "src/main/resources/Patient.schema.json");
             if(fhirSchemeRequirements){
                 JSONObject patchedResults = new JSONObject(patched.toString());
                 ConversionFHIRToOpenEmpi converterFHIR = new ConversionFHIRToOpenEmpi();
                 JSONObject convertedXML = converterFHIR.conversionToOpenEMPI(patchedResults);
                 final JsonNode jsonNodePatched = mapper.readTree(convertedXML.toString());
-                if(Utils.validateScheme(jsonNodePatched, "resource/openempiSchema.json")){
+                if(Utils.validateScheme(jsonNodePatched, "src/main/resources/openempiSchema.json")){
                     JSONObject convertedXMLvalidated = new JSONObject();
                     JSONObject xmlJsonObj = XML.toJSONObject(result);
                     JSONObject xmlPeopleObj = xmlJsonObj.getJSONObject("person");
@@ -133,7 +133,8 @@ public class PatientFHIR {
                     convertedXML.put("personId", id);
                     convertedXMLvalidated.put("person", convertedXML);
                     String xmlPatch = XML.toString(convertedXMLvalidated);
-               
+                
+                    		
                     return caller.updatePerson(xmlPatch);
                 }else{
                     throw new OpenEMPISchemeNotMetException("The Parameters does not confine to OpenEMPIScheme");
@@ -158,7 +159,7 @@ public class PatientFHIR {
 		
 		
 		String result = caller.addPerson(xmlNewRecord);
-		System.out.println("caonima: "+ result);
+
 		ConversionOpenEmpiToFHIR converterOpenEmpi = new ConversionOpenEmpiToFHIR();
 //		JSONObject createdObject = converterOpenEmpi.conversion(result);
 		Patient createdPatient = converterOpenEmpi.conversion(result).get(0);
