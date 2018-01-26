@@ -3,6 +3,10 @@
  */
 package fhirconverter.converter;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,6 +23,7 @@ import ca.uhn.fhir.model.dstu2.composite.CodingDt;
 import ca.uhn.fhir.model.dstu2.composite.QuantityDt;
 import ca.uhn.fhir.model.dstu2.resource.Observation;
 import ca.uhn.fhir.model.primitive.DateTimeDt;
+import fhirconverter.config.MappingConfig;
 
 import java.util.concurrent.ThreadLocalRandom;
 /**
@@ -36,14 +41,7 @@ public class OpenEHRConvertor {
 	 * @return Map<String, String>
 	 */
 	public static Map<String, String> codeMap() {
-		
-		Map<String, String> codeMap = new HashMap<>();
-		codeMap.put("3141-9", "Weight");
-		codeMap.put("8302-2", "Height");
-		codeMap.put("39156-5", "BMI");
-		codeMap.put("8287-5", "Head circumference");
-		codeMap.put("37362-1", "XR Bone age");
-		return codeMap;
+		return MappingConfig.getMappingConfig();
 	}
 
 	/**
