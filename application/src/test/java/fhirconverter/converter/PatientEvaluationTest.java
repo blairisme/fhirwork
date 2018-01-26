@@ -34,7 +34,7 @@ public class PatientEvaluationTest {
 	@Test
 	public void checkDataIntgrity() throws Exception {
 
-		String createRequest = new String(Files.readAllBytes(Paths.get("src/test/resources/PatientFHIRRequest.xml")), "UTF-8");
+//		String createRequest = new String(Files.readAllBytes(Paths.get("src/test/resources/PatientFHIRRequest.xml")), "UTF-8");
 //		String patientIdHAPI = this.patientCreateHAPI(createRequest);
 //		String patientIdNHS = this.patientCreateNHS(createRequest);
 		String readHAPIPatient = "";
@@ -60,81 +60,81 @@ public class PatientEvaluationTest {
 
 	}
 
-	public String patientCreateHAPI(String createRequest) throws Exception{
+//	private String patientCreateHAPI(String createRequest) throws Exception{
+//
+//		String patientId = "";
+//		try{
+//			HttpResponse<String> response = Unirest.post(baseURLHAPI +"/Patient")
+//					.header("Content-Type", "application/xml")
+//					.body(createRequest)
+//					.asString(); 
+//			if(response.getStatus() == 201){
+//				patientId = response.getHeaders().getFirst("Location").replace("http://fhirtest.uhn.ca/baseDstu3/Patient/", "");
+//				patientId = patientId.substring(0, patientId.indexOf("/"));
+//			}
+//			LOGGER.info("Patient Id created on HAPI FHIR server: " + patientId);
+//			return patientId;
+//		}catch(Exception e){
+//			LOGGER.info("Exception: " + e);
+//			LOGGER.info("Error in creating Patient on HAPI FHIR server, so will refer to a sample response");
+//			return patientId;
+//		} 
+//	}
+//
+//	private String patientCreateNHS(String createRequest) throws Exception{
+//
+//		String patientId = "";
+//		try{
+//			HttpResponse<String> response = Unirest.post(baseURL+"/Patient")
+//					.header("Content-Type", "application/xml")
+//					.body(createRequest)
+//					.asString(); 
+//			if(response.getStatus() == 201){
+//				patientId = response.getHeaders().getFirst("Location").replace("http://localhost:8090/fhir/Patient/", "");
+//				patientId = patientId.substring(0, patientId.indexOf("/"));
+//			}
+//			LOGGER.info("Patient Id created on NHS server: " + patientId);
+//			return patientId;
+//		}catch(Exception e){
+//			LOGGER.info("Exception: " + e);
+//			LOGGER.info("Error in creating Patient on NHS server, so will refer to a sample response");
+//			return patientId;
+//		} 
+//	}
+//
+//	private String patientRead(String patientId) throws Exception{
+//
+//		try{
+//			HttpResponse<String> response = Unirest.get(baseURL+"/Patient/" + patientId)
+//					.asString();
+//			if(response.getStatus() == 200)
+//				return response.getBody().toString();
+//			else
+//				return "";
+//		}catch(Exception e){
+//			LOGGER.info("Exception: " + e);
+//			LOGGER.info("Error in reading Patient on NHS server, so will refer to a sample response");
+//			return "";
+//		} 
+//	}
+//
+//	private String patientReadHAPI(String patientId) throws Exception{
+//
+//		try{
+//			HttpResponse<String> response = Unirest.get(baseURLHAPI +"/Patient/" + patientId)
+//					.asString();
+//			if(response.getStatus() == 200)
+//				return response.getBody().toString();
+//			else
+//				return "";
+//		}catch(Exception e){
+//			LOGGER.info("Exception: " + e);
+//			LOGGER.info("Error in reading Patient on HAPI FHIR server, so will refer to a sample response");
+//			return "";
+//		} 
+//	}	
 
-		String patientId = "";
-		try{
-			HttpResponse<String> response = Unirest.post(baseURLHAPI +"/Patient")
-					.header("Content-Type", "application/xml")
-					.body(createRequest)
-					.asString(); 
-			if(response.getStatus() == 201){
-				patientId = response.getHeaders().getFirst("Location").replace("http://fhirtest.uhn.ca/baseDstu3/Patient/", "");
-				patientId = patientId.substring(0, patientId.indexOf("/"));
-			}
-			LOGGER.info("Patient Id created on HAPI FHIR server: " + patientId);
-			return patientId;
-		}catch(Exception e){
-			LOGGER.info("Exception: " + e);
-			LOGGER.info("Error in creating Patient on HAPI FHIR server, so will refer to a sample response");
-			return patientId;
-		} 
-	}
-
-	public String patientCreateNHS(String createRequest) throws Exception{
-
-		String patientId = "";
-		try{
-			HttpResponse<String> response = Unirest.post(baseURL+"/Patient")
-					.header("Content-Type", "application/xml")
-					.body(createRequest)
-					.asString(); 
-			if(response.getStatus() == 201){
-				patientId = response.getHeaders().getFirst("Location").replace("http://localhost:8090/fhir/Patient/", "");
-				patientId = patientId.substring(0, patientId.indexOf("/"));
-			}
-			LOGGER.info("Patient Id created on NHS server: " + patientId);
-			return patientId;
-		}catch(Exception e){
-			LOGGER.info("Exception: " + e);
-			LOGGER.info("Error in creating Patient on NHS server, so will refer to a sample response");
-			return patientId;
-		} 
-	}
-
-	public String patientRead(String patientId) throws Exception{
-
-		try{
-			HttpResponse<String> response = Unirest.get(baseURL+"/Patient/" + patientId)
-					.asString();
-			if(response.getStatus() == 200)
-				return response.getBody().toString();
-			else
-				return "";
-		}catch(Exception e){
-			LOGGER.info("Exception: " + e);
-			LOGGER.info("Error in reading Patient on NHS server, so will refer to a sample response");
-			return "";
-		} 
-	}
-
-	public String patientReadHAPI(String patientId) throws Exception{
-
-		try{
-			HttpResponse<String> response = Unirest.get(baseURLHAPI +"/Patient/" + patientId)
-					.asString();
-			if(response.getStatus() == 200)
-				return response.getBody().toString();
-			else
-				return "";
-		}catch(Exception e){
-			LOGGER.info("Exception: " + e);
-			LOGGER.info("Error in reading Patient on HAPI FHIR server, so will refer to a sample response");
-			return "";
-		} 
-	}	
-
-	public float calculateLossGCA(String hapiFHIR, String code4Health) throws Exception{
+	private float calculateLossGCA(String hapiFHIR, String code4Health) throws Exception{
 
 		int hapiFields = 0;
 		int nHSFields = 0;
@@ -170,7 +170,7 @@ public class PatientEvaluationTest {
 
 	}
 
-	public Map<String, String> extractJsonFields(JSONObject json) throws Exception {
+	private Map<String, String> extractJsonFields(JSONObject json) throws Exception {
 
 		Map<String, String> hapiMap = new HashMap<>();
 		if(json.has("name") && !json.optJSONArray("name").equals("")){
@@ -199,7 +199,7 @@ public class PatientEvaluationTest {
 	}
 
 
-	public JSONObject prepareJSON(String response) throws Exception {
+	private JSONObject prepareJSON(String response) throws Exception {
 
 		JSONObject json = null;
 		if(response.substring(0, 1).equals("<")){
