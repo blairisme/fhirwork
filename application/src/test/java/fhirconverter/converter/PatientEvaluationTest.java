@@ -44,7 +44,7 @@ public class PatientEvaluationTest {
 //			readHAPIPatient = this.patientReadHAPI(patientIdHAPI);
 //			
 //		}else{
-			readHAPIPatient = new String(Files.readAllBytes(Paths.get("src/test/resources/PatientFHIRResponse.xml")), "UTF-8");
+			readHAPIPatient = new String(Files.readAllBytes(Paths.get("src/test/resources/PatientFHIRResponse.json")), "UTF-8");
 //		}
 
 //		if(!("").equals(patientIdNHS)){

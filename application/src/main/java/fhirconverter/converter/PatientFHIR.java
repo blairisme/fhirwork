@@ -156,9 +156,9 @@ public class PatientFHIR {
 		records.put("person", newRecordOpenEMPI);
 		String xmlNewRecord = XML.toString(records);
 		
-		System.out.println("caonima: "+ xmlNewRecord);
+		
 		String result = caller.addPerson(xmlNewRecord);
-	
+		System.out.println("caonima: "+ result);
 		ConversionOpenEmpiToFHIR converterOpenEmpi = new ConversionOpenEmpiToFHIR();
 //		JSONObject createdObject = converterOpenEmpi.conversion(result);
 		Patient createdPatient = converterOpenEmpi.conversion(result).get(0);

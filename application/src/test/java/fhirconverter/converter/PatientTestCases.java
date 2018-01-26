@@ -90,160 +90,160 @@ public class PatientTestCases{
         	Assert.assertEquals("Search operation failed \n",expected.toString(), obtained_object.toString());
 	}
 	
-	@Test
-	public void testPatientUpdate() throws ResourceNotFoundException, Exception {
-		OpenEMPIConnector caller = Mockito.mock(OpenEMPIConnector.class);
-		PatientFHIR tester = new PatientFHIR(caller);	
-		
-//        	OpenEMPIConnector delete = new OpenEMPIConnector();
-		
-		JsonNode fhirResource = JsonLoader.fromPath("src/test/resources/ResourceFHIR.json");		
-		JSONObject patient = new JSONObject(fhirResource.toString());
-		
-		
-		String xml = new String(Files.readAllBytes(Paths.get("src/test/resources/patientFHIRResult.xml")),"UTF-8");
-		xml = xml.substring(0, xml.length()-1);
-	
-		Mockito.when(caller.addPerson(FHIRtoEMPIXML2)).thenReturn(xml);
-  		String newRecordID = tester.create(patient);
-  		
-		JsonNode fhirResourceUpdate = JsonLoader.fromPath("src/test/resources/updateResourceFhir.json");		
-		JSONObject updateCreate = new JSONObject(fhirResourceUpdate.toString());
-	
-        
-      
-		Mockito.when(caller.updatePerson(FHIRtoEMPIXML3)).thenReturn("Updated");
-		
-		String replyExists = tester.update(newRecordID, updateCreate);
-//        	delete.removePersonById(newRecordID);
-		assertEquals("Update Operation if the record exists failed: ", "Updated", replyExists );		
-
-	}
-	
-	@Test(expected = FhirSchemeNotMetException.class)
-	public void testPatientPatchPathNotExist() throws Exception{
-		OpenEMPIConnector caller = Mockito.mock(OpenEMPIConnector.class);
-		PatientFHIR tester = new PatientFHIR(caller);	
-		
-		
-		final String jsonPatchTest = "[ { \"op\": \"replace\", \"path\": \"/gender\", \"value\": \"male\" }, {\"op\": \"add\", \"path\": \"/what is this\", \"value\": \"male\" } ]";
-		ObjectMapper mapper = new ObjectMapper();
-		JsonNode patchNode = mapper.readTree(jsonPatchTest);
-		final JsonPatch patch = JsonPatch.fromJson(patchNode);
-		
-//		OpenEMPIConnector delete = new OpenEMPIConnector();
-		JsonNode fhirResource = JsonLoader.fromPath("src/test/resources/ResourceFHIR.json");		
-		JSONObject patient = new JSONObject(fhirResource.toString());
-		
-		String xml = new String(Files.readAllBytes(Paths.get("src/test/resources/patientFHIRResult.xml")),"UTF-8");
-		xml = xml.substring(0, xml.length()-1);
-	
-		Mockito.when(caller.addPerson(FHIRtoEMPIXML2)).thenReturn(xml);
-		
-  		String newRecordID = tester.create(patient);
-  		
-  		
-  		
-		try{
-			xml = new String(Files.readAllBytes(Paths.get("src/test/resources/patientReadById.xml")),"UTF-8");
-			xml = xml.substring(0, xml.length()-1);
-			Mockito.when(caller.readPerson(newRecordID)).thenReturn(xml);
-			String xml2 = new String(Files.readAllBytes(Paths.get("src/test/resources/patientPatchedXML.xml")),"UTF-8");
-			xml2 = xml2.substring(0, xml2.length()-1);
-			Mockito.when(caller.updatePerson(xml2)).thenReturn("Updated");
-			tester.patch(newRecordID,patch);
-		}finally{
-//			delete.removePersonById(newRecordID);
-		}
-	}
-	
-	@Test(expected = JsonPatchException.class)
-	public void testPatientPatchOperatorsNotExist() throws Exception{
-		OpenEMPIConnector caller = Mockito.mock(OpenEMPIConnector.class);
-		PatientFHIR tester = new PatientFHIR(caller);	
-		final String jsonPatchTest = "[ { \"op\": \"replace\", \"path\": \"/gende\", \"value\": \"male\" } ]";
-		ObjectMapper mapper = new ObjectMapper();
-		JsonNode patchNode = mapper.readTree(jsonPatchTest);
-		final JsonPatch patch = JsonPatch.fromJson(patchNode);
-//		OpenEMPIConnector delete = new OpenEMPIConnector();
-		JsonNode fhirResource = JsonLoader.fromPath("src/test/resources/ResourceFHIR.json");		
-		JSONObject patient = new JSONObject(fhirResource.toString());
-		
-		String xml = new String(Files.readAllBytes(Paths.get("src/test/resources/patientFHIRResult.xml")),"UTF-8");
-		xml = xml.substring(0, xml.length()-1);
-		Mockito.when(caller.addPerson(FHIRtoEMPIXML2)).thenReturn(xml);
-		
-  		String newRecordID = tester.create(patient);
-		try{
-			xml = new String(Files.readAllBytes(Paths.get("src/test/resources/patientReadById.xml")),"UTF-8");
-			xml = xml.substring(0, xml.length()-1);
-			Mockito.when(caller.readPerson(newRecordID)).thenReturn(xml);
-			String xml2 = new String(Files.readAllBytes(Paths.get("src/test/resources/patientPatchedXML.xml")),"UTF-8");
-			xml2 = xml2.substring(0, xml2.length()-1);
-			Mockito.when(caller.updatePerson(xml2)).thenReturn("Updated");
-			tester.patch(newRecordID,patch);
-		}finally{
-//		       delete.removePersonById(newRecordID);
-		}
-	}
-	
-	@Test
-	public void testPatientPatchRecord() throws Exception{
-		OpenEMPIConnector caller = Mockito.mock(OpenEMPIConnector.class);
-		PatientFHIR tester = new PatientFHIR(caller);	
-		final String jsonPatchTest = "[ { \"op\": \"replace\", \"path\": \"/gender\", \"value\": \"male\" } ]";
-		ObjectMapper mapper = new ObjectMapper();
-		JsonNode patchNode = mapper.readTree(jsonPatchTest);
-		final JsonPatch patch = JsonPatch.fromJson(patchNode);
-//		OpenEMPIConnector delete = new OpenEMPIConnector();
-		JsonNode fhirResource = JsonLoader.fromPath("src/test/resources/ResourceFHIR.json");		
-		JSONObject patient = new JSONObject(fhirResource.toString());
-		
-		String xml = new String(Files.readAllBytes(Paths.get("src/test/resources/patientFHIRResult.xml")),"UTF-8");
-		xml = xml.substring(0, xml.length()-1);
-		
-		Mockito.when(caller.addPerson(FHIRtoEMPIXML2)).thenReturn(xml);
-  		String newRecordID = tester.create(patient);
-		try{
-			xml = new String(Files.readAllBytes(Paths.get("src/test/resources/patientReadById.xml")),"UTF-8");
-			xml = xml.substring(0, xml.length()-1);
-			Mockito.when(caller.readPerson(newRecordID)).thenReturn(xml);
-			
-			String xml2 = new String(Files.readAllBytes(Paths.get("src/test/resources/patientPatchedXML.xml")),"UTF-8");
-			xml2 = xml2.substring(0, xml2.length()-1);
-			Mockito.when(caller.updatePerson(xml2)).thenReturn("Updated");
-			
-			assertEquals(tester.patch(newRecordID,patch), "Updated");
-		}finally{
-//		      	delete.removePersonById(newRecordID);
-		}
-	}
-	/*
-	@Test
-	public void testPatientRead() throws Exception {
-		PatientFHIR tester = new PatientFHIR();
-		JSONObject expected = new JSONObject(Record);
-		JSONObject obtained = tester.read("3");
-		Assert.assertEquals("Read operation failed: \nRead Result: \n" + obtained.toString() + " \n" + expected.toString() , expected.toString(), obtained.toString());		
-	} 
-	@Test
-	public void testPatientCreate() throws Exception {
-		PatientFHIR tester = new PatientFHIR();	
-		JSONObject create = new JSONObject(createPatient);
-		
-		
-		String newRecordID = tester.create(create);
-		JSONObject exists = tester.read(newRecordID);
-		
-        OpenEMPIbase delete = new OpenEMPIbase();
-        delete.commonRemovePersonById(newRecordID);
-		exists.remove("meta");
-		create.remove("meta");
-		exists.remove("id");
-
-		Assert.assertEquals("Create operation failed: \nCreate Result: \n" + exists.toString() + " \n" + create.toString() , exists.toString(), create.toString());		
-	}*/
-	@Test
-	public void testPatientDelete() {
-	}
+//	@Test
+//	public void testPatientUpdate() throws ResourceNotFoundException, Exception {
+//		OpenEMPIConnector caller = Mockito.mock(OpenEMPIConnector.class);
+//		PatientFHIR tester = new PatientFHIR(caller);	
+//		
+////        	OpenEMPIConnector delete = new OpenEMPIConnector();
+//		
+//		JsonNode fhirResource = JsonLoader.fromPath("src/test/resources/ResourceFHIR.json");		
+//		JSONObject patient = new JSONObject(fhirResource.toString());
+//		
+//		
+//		String xml = new String(Files.readAllBytes(Paths.get("src/test/resources/patientFHIRResult.xml")),"UTF-8");
+//		xml = xml.substring(0, xml.length()-1);
+//	
+//		Mockito.when(caller.addPerson(FHIRtoEMPIXML2)).thenReturn(xml);
+//  		String newRecordID = tester.create(patient);
+//  		
+//		JsonNode fhirResourceUpdate = JsonLoader.fromPath("src/test/resources/updateResourceFhir.json");		
+//		JSONObject updateCreate = new JSONObject(fhirResourceUpdate.toString());
+//	
+//        
+//      
+//		Mockito.when(caller.updatePerson(FHIRtoEMPIXML3)).thenReturn("Updated");
+//		
+//		String replyExists = tester.update(newRecordID, updateCreate);
+////        	delete.removePersonById(newRecordID);
+//		assertEquals("Update Operation if the record exists failed: ", "Updated", replyExists );		
+//
+//	}
+//	
+//	@Test(expected = FhirSchemeNotMetException.class)
+//	public void testPatientPatchPathNotExist() throws Exception{
+//		OpenEMPIConnector caller = Mockito.mock(OpenEMPIConnector.class);
+//		PatientFHIR tester = new PatientFHIR(caller);	
+//		
+//		
+//		final String jsonPatchTest = "[ { \"op\": \"replace\", \"path\": \"/gender\", \"value\": \"male\" }, {\"op\": \"add\", \"path\": \"/what is this\", \"value\": \"male\" } ]";
+//		ObjectMapper mapper = new ObjectMapper();
+//		JsonNode patchNode = mapper.readTree(jsonPatchTest);
+//		final JsonPatch patch = JsonPatch.fromJson(patchNode);
+//		
+////		OpenEMPIConnector delete = new OpenEMPIConnector();
+//		JsonNode fhirResource = JsonLoader.fromPath("src/test/resources/ResourceFHIR.json");		
+//		JSONObject patient = new JSONObject(fhirResource.toString());
+//		
+//		String xml = new String(Files.readAllBytes(Paths.get("src/test/resources/patientFHIRResult.xml")),"UTF-8");
+//		xml = xml.substring(0, xml.length()-1);
+//	
+//		Mockito.when(caller.addPerson(FHIRtoEMPIXML2)).thenReturn(xml);
+//		
+//  		String newRecordID = tester.create(patient);
+//  		
+//  		
+//  		
+//		try{
+//			xml = new String(Files.readAllBytes(Paths.get("src/test/resources/patientReadById.xml")),"UTF-8");
+//			xml = xml.substring(0, xml.length()-1);
+//			Mockito.when(caller.readPerson(newRecordID)).thenReturn(xml);
+//			String xml2 = new String(Files.readAllBytes(Paths.get("src/test/resources/patientPatchedXML.xml")),"UTF-8");
+//			xml2 = xml2.substring(0, xml2.length()-1);
+//			Mockito.when(caller.updatePerson(xml2)).thenReturn("Updated");
+//			tester.patch(newRecordID,patch);
+//		}finally{
+////			delete.removePersonById(newRecordID);
+//		}
+//	}
+//	
+//	@Test(expected = JsonPatchException.class)
+//	public void testPatientPatchOperatorsNotExist() throws Exception{
+//		OpenEMPIConnector caller = Mockito.mock(OpenEMPIConnector.class);
+//		PatientFHIR tester = new PatientFHIR(caller);	
+//		final String jsonPatchTest = "[ { \"op\": \"replace\", \"path\": \"/gende\", \"value\": \"male\" } ]";
+//		ObjectMapper mapper = new ObjectMapper();
+//		JsonNode patchNode = mapper.readTree(jsonPatchTest);
+//		final JsonPatch patch = JsonPatch.fromJson(patchNode);
+////		OpenEMPIConnector delete = new OpenEMPIConnector();
+//		JsonNode fhirResource = JsonLoader.fromPath("src/test/resources/ResourceFHIR.json");		
+//		JSONObject patient = new JSONObject(fhirResource.toString());
+//		
+//		String xml = new String(Files.readAllBytes(Paths.get("src/test/resources/patientFHIRResult.xml")),"UTF-8");
+//		xml = xml.substring(0, xml.length()-1);
+//		Mockito.when(caller.addPerson(FHIRtoEMPIXML2)).thenReturn(xml);
+//		
+//  		String newRecordID = tester.create(patient);
+//		try{
+//			xml = new String(Files.readAllBytes(Paths.get("src/test/resources/patientReadById.xml")),"UTF-8");
+//			xml = xml.substring(0, xml.length()-1);
+//			Mockito.when(caller.readPerson(newRecordID)).thenReturn(xml);
+//			String xml2 = new String(Files.readAllBytes(Paths.get("src/test/resources/patientPatchedXML.xml")),"UTF-8");
+//			xml2 = xml2.substring(0, xml2.length()-1);
+//			Mockito.when(caller.updatePerson(xml2)).thenReturn("Updated");
+//			tester.patch(newRecordID,patch);
+//		}finally{
+////		       delete.removePersonById(newRecordID);
+//		}
+//	}
+//	
+//	@Test
+//	public void testPatientPatchRecord() throws Exception{
+//		OpenEMPIConnector caller = Mockito.mock(OpenEMPIConnector.class);
+//		PatientFHIR tester = new PatientFHIR(caller);	
+//		final String jsonPatchTest = "[ { \"op\": \"replace\", \"path\": \"/gender\", \"value\": \"male\" } ]";
+//		ObjectMapper mapper = new ObjectMapper();
+//		JsonNode patchNode = mapper.readTree(jsonPatchTest);
+//		final JsonPatch patch = JsonPatch.fromJson(patchNode);
+////		OpenEMPIConnector delete = new OpenEMPIConnector();
+//		JsonNode fhirResource = JsonLoader.fromPath("src/test/resources/ResourceFHIR.json");		
+//		JSONObject patient = new JSONObject(fhirResource.toString());
+//		
+//		String xml = new String(Files.readAllBytes(Paths.get("src/test/resources/patientFHIRResult.xml")),"UTF-8");
+//		xml = xml.substring(0, xml.length()-1);
+//		
+//		Mockito.when(caller.addPerson(FHIRtoEMPIXML2)).thenReturn(xml);
+//  		String newRecordID = tester.create(patient);
+//		try{
+//			xml = new String(Files.readAllBytes(Paths.get("src/test/resources/patientReadById.xml")),"UTF-8");
+//			xml = xml.substring(0, xml.length()-1);
+//			Mockito.when(caller.readPerson(newRecordID)).thenReturn(xml);
+//			
+//			String xml2 = new String(Files.readAllBytes(Paths.get("src/test/resources/patientPatchedXML.xml")),"UTF-8");
+//			xml2 = xml2.substring(0, xml2.length()-1);
+//			Mockito.when(caller.updatePerson(xml2)).thenReturn("Updated");
+//			
+//			assertEquals(tester.patch(newRecordID,patch), "Updated");
+//		}finally{
+////		      	delete.removePersonById(newRecordID);
+//		}
+//	}
+//	/*
+//	@Test
+//	public void testPatientRead() throws Exception {
+//		PatientFHIR tester = new PatientFHIR();
+//		JSONObject expected = new JSONObject(Record);
+//		JSONObject obtained = tester.read("3");
+//		Assert.assertEquals("Read operation failed: \nRead Result: \n" + obtained.toString() + " \n" + expected.toString() , expected.toString(), obtained.toString());		
+//	} 
+//	@Test
+//	public void testPatientCreate() throws Exception {
+//		PatientFHIR tester = new PatientFHIR();	
+//		JSONObject create = new JSONObject(createPatient);
+//		
+//		
+//		String newRecordID = tester.create(create);
+//		JSONObject exists = tester.read(newRecordID);
+//		
+//        OpenEMPIbase delete = new OpenEMPIbase();
+//        delete.commonRemovePersonById(newRecordID);
+//		exists.remove("meta");
+//		create.remove("meta");
+//		exists.remove("id");
+//
+//		Assert.assertEquals("Create operation failed: \nCreate Result: \n" + exists.toString() + " \n" + create.toString() , exists.toString(), create.toString());		
+//	}*/
+//	@Test
+//	public void testPatientDelete() {
+//	}
 }
