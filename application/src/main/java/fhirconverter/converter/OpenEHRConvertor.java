@@ -23,7 +23,7 @@ import ca.uhn.fhir.model.dstu2.composite.CodingDt;
 import ca.uhn.fhir.model.dstu2.composite.QuantityDt;
 import ca.uhn.fhir.model.dstu2.resource.Observation;
 import ca.uhn.fhir.model.primitive.DateTimeDt;
-import fhirconverter.config.MappingConfig;
+import fhirconverter.configuration.MappingConfig;
 
 import java.util.concurrent.ThreadLocalRandom;
 /**

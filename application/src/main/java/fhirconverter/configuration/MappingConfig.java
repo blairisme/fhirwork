@@ -1,4 +1,4 @@
-package fhirconverter.config;
+package fhirconverter.configuration;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -6,9 +6,14 @@ import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MappingConfig {
+public class MappingConfig extends Config {
+	
+	public MappingConfig(String filePath){
+		super("Mapping", filePath);
+	}
+	
 	public static Map<String, String> getMappingConfig(){
-		File file = new File(new FilePathMannager(false).getFilePath("mapping_config"));
+		File file = new File(new FilePathMannager().getFilePath("mapping_config"));
 		Map<String, String> codeMap = new HashMap<>();
         BufferedReader reader = null;
         try {
@@ -31,20 +36,22 @@ public class MappingConfig {
         }
 		return codeMap;
 	}
-	
-	public static void addMappingConfigToFile(String lonicCode, String text){
-		//TODO
+
+	@Override
+	public void addConfig(String key, String value) {
+		// TODO Auto-generated method stub
+		
 	}
-	
-	public static void removeMappingConfigFromFile(String lonicCode){
-		//TODO
+
+	@Override
+	public void removeConfig(String key) {
+		// TODO Auto-generated method stub
+		
 	}
-	
-	public static void changeMappingConfigInFile(String lonicCode, String text){
-		//TODO
-	}
-	
-	public static void tidyUpMappingConfigFile(){
-		//TODO
+
+	@Override
+	public void changeConfig(String key, String value) {
+		// TODO Auto-generated method stub
+		
 	}
 }
