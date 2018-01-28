@@ -12,7 +12,7 @@ public class OpenEHRConnector{
 	private String username;
 	private String password;
 	private String sessionCode;
-
+ 
 	OpenEHRConnector(String domainName) throws Exception{
 		HashMap<String,String> connectionCreds = Utils.getProperties(domainName);
 		baseURL = connectionCreds.get("baseURL");

@@ -16,7 +16,7 @@ public class ObservationFHIR{
 	private OpenEHRConnector openEHRconnector;
 	private OpenEHRConvertor openEHRconvertor;
 	private Logger LOGGER = LogManager.getLogger(ObservationFHIR.class);
-
+ 
 	public ObservationFHIR(){
 		initializeOpenEHRConnector();
 		this.patientHelper = new PatientHelper();

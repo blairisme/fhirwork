@@ -28,7 +28,7 @@ public class FHIRParser<V> {
         this.xmlParser.setParserErrorHandler(new StrictErrorHandler());
         this.valueClass = valueClass;
     }
-
+ 
     public JSONObject parseJSONResource(String jsonData) throws DataFormatException, ClassCastException{
 
         Object request = jsonParser.parseResource(jsonData);

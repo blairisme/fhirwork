@@ -44,7 +44,7 @@ public class OpenEMPIConnector {
     private String baseURL;
     private String username;
     private String password;
-
+ 
     private static final Logger LOGGER = LogManager.getLogger(OpenEMPIConnector.class.getName());
 
     /**
@@ -333,7 +333,7 @@ public class OpenEMPIConnector {
         String personId = "";
         if (!parameters.isEmpty() && parameters.contains("<personId>")) {
             personId = parameters.substring(parameters.indexOf("<personId>") + 10, parameters.indexOf("</personId>"));
-        }
+           }
         String loadPersonId = this.loadPerson(personId);
         try {
             if (loadPersonId == null || loadPersonId.equals("")) {

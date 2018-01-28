@@ -1,7 +1,7 @@
 package fhirconverter.mapper;
 
 import java.util.Vector;
-
+ 
 public class Mapper {
 	private Vector<MapperEntry> entryList;
 	public Mapper() {
@@ -15,6 +15,8 @@ public class Mapper {
 			entryList.add(entry);
 		}
 	}
+	
+	
 	public Object convert(Object obj, int type) {
 		
 		MapperEntry entry = entryList.get(type);

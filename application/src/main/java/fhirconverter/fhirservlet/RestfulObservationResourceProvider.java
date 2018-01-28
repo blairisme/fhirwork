@@ -26,7 +26,7 @@ public class RestfulObservationResourceProvider implements IResourceProvider {
     public Class<? extends IBaseResource> getResourceType() {
         return Observation.class;
     }
-
+ 
     @Search()
     public List<Observation> searchObservation(@RequiredParam(name = Observation.SP_CODE) TokenOrListParam observationCode,
                                        @RequiredParam(name = Observation.SP_PATIENT) ReferenceParam patient) {

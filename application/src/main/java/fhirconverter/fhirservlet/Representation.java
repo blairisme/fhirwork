@@ -7,7 +7,7 @@ public enum Representation{
     XML,
     JSON,
     UNKNOWN;
-
+ 
     private static Logger LOGGER = LogManager.getLogger(Representation.class);
 
     private static final String XML_STRINGS_REGEX = "xml|text/xml|application/xml|application/fhir xml";
