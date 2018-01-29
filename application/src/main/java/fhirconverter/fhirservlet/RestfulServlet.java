@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * This servlet is the actual FHIR server itself
  */
-@WebServlet(urlPatterns= {"/fhir/*"}, displayName="FHIR Server")
+//@WebServlet(urlPatterns= {"/fhir/*"}, displayName="FHIR Server")
 public class RestfulServlet extends RestfulServer {
 
     private static final long serialVersionUID = 1L;

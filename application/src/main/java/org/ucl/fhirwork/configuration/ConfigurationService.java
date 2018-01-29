@@ -23,6 +23,7 @@ public class ConfigurationService
         values.put(Configuration.Empi, new NetworkConfiguration("http://localhost:8080", "admin", "admin"));
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getConfiguration(Configuration key)
     {
         T result = (T)values.get(key);

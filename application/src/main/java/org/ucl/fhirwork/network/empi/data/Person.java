@@ -17,27 +17,28 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Person
 {
     private String personId;
-    private Identifier personIdentifiers;
+    //private Identifier personIdentifiers;
     private String givenName;
     private String familyName;
-    private Gender gender;
+    //private Gender gender;
 
     public Person()
     {
         this.personId = null;
-        this.personIdentifiers = null;
+        //this.personIdentifiers = null;
         this.givenName = null;
         this.familyName = null;
-        this.gender = null;
+        //this.gender = null;
     }
 
-    public Person(String personId, Identifier personIdentifiers, String givenName, String familyName, Gender gender)
+    //public Person(String personId, Identifier personIdentifiers, String givenName, String familyName, Gender gender)
+    public Person(String personId, String givenName, String familyName)
     {
         this.personId = personId;
         this.givenName = givenName;
         this.familyName = familyName;
-        this.personIdentifiers = personIdentifiers;
-        this.gender = gender;
+        //this.personIdentifiers = personIdentifiers;
+        //this.gender = gender;
     }
 
     public String getPersonId() {
@@ -48,21 +49,21 @@ public class Person
         this.personId = personId;
     }
 
-    public Identifier getPersonIdentifiers() {
-        return personIdentifiers;
-    }
-
-    public void setPersonIdentifiers(Identifier personIdentifiers) {
-        this.personIdentifiers = personIdentifiers;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
+//    public Identifier getPersonIdentifiers() {
+//        return personIdentifiers;
+//    }
+//
+//    public void setPersonIdentifiers(Identifier personIdentifiers) {
+//        this.personIdentifiers = personIdentifiers;
+//    }
+//
+//    public Gender getGender() {
+//        return gender;
+//    }
+//
+//    public void setGender(Gender gender) {
+//        this.gender = gender;
+//    }
 
     public String getGivenName() {
         return givenName;

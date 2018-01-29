@@ -8,7 +8,6 @@
  *      https://opensource.org/licenses/MIT
  */
 
-
 package org.ucl.fhirwork;
 
 import ca.uhn.fhir.context.FhirContext;
@@ -20,13 +19,11 @@ import ca.uhn.fhir.rest.server.interceptor.CorsInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import fhirconverter.fhirservlet.RestfulFamilyMemberHistoryResourceProvider;
-import fhirconverter.fhirservlet.RestfulObservationResourceProvider;
-import fhirconverter.fhirservlet.RestfulPatientResourceProvider;
 import org.springframework.web.cors.CorsConfiguration;
 import org.ucl.fhirwork.network.fhir.servlet.ObservationResourceProvider;
 import org.ucl.fhirwork.network.fhir.servlet.PatientResourceProvider;
 
+import javax.servlet.annotation.WebServlet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,6 +34,7 @@ import java.util.List;
  * @author Blair Butterworth
  * TODO: Attribute to previous team
  */
+@WebServlet(urlPatterns= {"/fhir/*"}, displayName="FHIR Server")
 public class Application extends RestfulServer
 {
     public Application()

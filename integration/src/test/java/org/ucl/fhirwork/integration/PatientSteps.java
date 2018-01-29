@@ -24,6 +24,7 @@ import org.ucl.fhirwork.integration.fhir.utils.NameUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 @StepDefAnnotation
@@ -113,7 +114,9 @@ public class PatientSteps
     @Then("^the system should contain a patient named (.*)")
     public void assertPatientExist(String patientName) throws  Exception
     {
-        List<Patient> patients = fhirServer.searchPatientsByFirstName(patientName);
-        Assert.assertEquals(1, patients.size());
+        List<Person> people = empiServer.getPeople();
+        Predicate<Person> predicate = person -> Objects.equals(person.getGivenName(), patientName);
+        Person person = people.stream().filter(predicate).findFirst().orElse(null);
+        Assert.assertNotNull(person);
     }
 }
