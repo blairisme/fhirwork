@@ -8,6 +8,7 @@
  *      https://opensource.org/licenses/MIT
  */
 
+
 package org.ucl.fhirwork;
 
 import ca.uhn.fhir.context.FhirContext;
@@ -26,7 +27,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.ucl.fhirwork.network.fhir.servlet.ObservationResourceProvider;
 import org.ucl.fhirwork.network.fhir.servlet.PatientResourceProvider;
 
-import javax.servlet.annotation.WebServlet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,7 +37,6 @@ import java.util.List;
  * @author Blair Butterworth
  * TODO: Attribute to previous team
  */
-/*@WebServlet(urlPatterns= {"/fhir/*"}, displayName="FHIRWork Server")
 public class Application extends RestfulServer
 {
     public Application()
@@ -90,4 +89,3 @@ public class Application extends RestfulServer
         registerInterceptor(corsInterceptor);
     }
 }
-*/
