@@ -52,7 +52,7 @@ public class DeletePatientExecutor implements Executor
         try
         {
             Person personOutput = empiServer.removePerson(personId);
-            return patientFactory.newPatient(personOutput);
+            return patientFactory.fromPerson(personOutput);
         }
         catch (RestException cause){
             throw new ExecutionException(cause);

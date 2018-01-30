@@ -56,7 +56,7 @@ public class UpdatePatientExecutor implements Executor
         {
             Person personInput = personFactory.fromPatient(patient);
             Person personOutput = empiServer.updatePerson(personInput);
-            return patientFactory.newPatient(personOutput);
+            return patientFactory.fromPerson(personOutput);
         }
         catch (RestException cause){
             throw new ExecutionException(cause);

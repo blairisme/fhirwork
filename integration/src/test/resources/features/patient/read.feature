@@ -9,10 +9,10 @@ Background:
     | 3     | ron       | weasley       | male      |
 
 Scenario: Read patient information by identifier (positive)
-     When the user searches for patients with id "2"
+     When the user searches for patients by id for patient "hermione"
      Then the user should receive a list of 1 patients
      And the user should receive a patient named hermione
 
  Scenario: Read patient information by identifier (negative)
-     When the user searches for patients with id "999"
+     When the user searches for patients by id for patient "donald duck"
      Then the user should receive a list of 0 patients

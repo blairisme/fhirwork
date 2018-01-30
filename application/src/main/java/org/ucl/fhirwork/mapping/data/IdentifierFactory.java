@@ -23,7 +23,7 @@ import org.ucl.fhirwork.network.empi.data.IdentifierDomain;
  */
 public class IdentifierFactory
 {
-    public Identifier fromId(IdentifierDt id)
+    public Identifier fromIdentifier(IdentifierDt id)
     {
         IdentifierDomain identifierDomain = new IdentifierDomain();
         identifierDomain.setIdentifierDomainName(id.getSystem());
@@ -35,17 +35,15 @@ public class IdentifierFactory
         return result;
     }
 
-    /*
-    public Identifier fromId(IdDt id)
+    public IdentifierDt fromIdentifier(Identifier identifier)
     {
-        IdentifierDomain identifierDomain = new IdentifierDomain();
-        identifierDomain.setIdentifierDomainName("FHIR");
+        IdentifierDomain domain = identifier.getIdentifierDomain();
+        String system = domain != null ? domain.getIdentifierDomainName() : null;
 
-        Identifier result = new Identifier();
-        result.setIdentifier(id.getIdPart());
-        result.setIdentifierDomain(identifierDomain);
+        IdentifierDt result = new IdentifierDt();
+        result.setValue(identifier.getIdentifier());
+        result.setSystem(system);
 
         return result;
     }
-    */
 }

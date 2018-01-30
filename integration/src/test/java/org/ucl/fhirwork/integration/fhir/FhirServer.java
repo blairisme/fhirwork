@@ -41,10 +41,9 @@ public class FhirServer
         server.post(Patient, patient, Patient.class, ImmutableMap.of(Format, Json));
     }
 
-    public List<Patient> readPatient(String patientId) throws RestServerException
+    public Patient readPatient(String patientId) throws RestServerException
     {
-        Bundle bundle = server.get(Patient.getPath() + "/" + patientId, Bundle.class, Collections.emptyMap());
-        return getPatients(bundle);
+        return server.get(Patient.getPath() + "/" + patientId, Patient.class, Collections.emptyMap());
     }
 
     public List<Patient> searchPatients() throws RestServerException

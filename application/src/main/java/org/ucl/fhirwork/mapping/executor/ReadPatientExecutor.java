@@ -52,7 +52,7 @@ public class ReadPatientExecutor implements Executor
         try
         {
             Person personOutput = empiServer.loadPerson(personId);
-            return patientFactory.newPatient(personOutput);
+            return patientFactory.fromPerson(personOutput);
         }
         catch (RestException cause){
             throw new ExecutionException(cause);

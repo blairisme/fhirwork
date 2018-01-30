@@ -55,7 +55,7 @@ public class CreatePatientExecutor implements Executor
         try {
             Person personInput = personFactory.fromPatient(patient);
             Person personOutput = empiServer.addPerson(personInput);
-            return patientFactory.newPatient(personOutput);
+            return patientFactory.fromPerson(personOutput);
         }
         catch (RestException cause){
             throw new ExecutionException(cause);

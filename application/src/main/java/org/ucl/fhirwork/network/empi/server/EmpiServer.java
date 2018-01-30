@@ -60,6 +60,7 @@ public class EmpiServer
         return response.asType(Person.class);
     }
 
+    //TODO: Handle code 204 operation success but person missing
     public Person loadPerson(String personId) throws RestException
     {
         RestRequest request = getServer().get(LoadPerson);

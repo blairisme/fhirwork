@@ -1,15 +1,23 @@
+/*
+ * FHIRWork (c) 2018 - Blair Butterworth, Abdul-Qadir Ali, Xialong Chen,
+ * Chenghui Fan, Alperen Karaoglu, Jiaming Zhou
+ *
+ * This work is licensed under the MIT License. To view a copy of this
+ * license, visit
+ *
+ *      https://opensource.org/licenses/MIT
+ */
+
 package org.ucl.fhirwork.mapping.data;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.dstu2.composite.IdentifierDt;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
-import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.parser.IParser;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.ucl.fhirwork.network.empi.data.Identifier;
-import org.ucl.fhirwork.network.empi.data.Person;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,20 +26,6 @@ import java.nio.charset.StandardCharsets;
 
 public class IdentifierFactoryTest
 {
-    /*
-    @Test
-    public void fromIdTest() throws IOException
-    {
-        IdentifierFactory identifierFactory = new IdentifierFactory();
-        Patient patient = readPatient("fhir/PatientExample.json");
-
-        IdDt id = patient.getId();
-        Identifier identifier = identifierFactory.fromId(id);
-
-        Assert.assertEquals("1", identifier.getIdentifier());
-        Assert.assertEquals("FHIR", identifier.getIdentifierDomain().getIdentifierDomainName());
-    }
-    */
     @Test
     public void fromIdentifierTest() throws IOException
     {
@@ -39,7 +33,7 @@ public class IdentifierFactoryTest
         Patient patient = readPatient("fhir/PatientExample.json");
 
         IdentifierDt id = patient.getIdentifier().get(0);
-        Identifier identifier = identifierFactory.fromId(id);
+        Identifier identifier = identifierFactory.fromIdentifier(id);
 
         Assert.assertEquals("568749875445698798988873", identifier.getIdentifier());
         Assert.assertEquals("OpenMRS", identifier.getIdentifierDomain().getIdentifierDomainName());

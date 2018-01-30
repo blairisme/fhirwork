@@ -21,7 +21,9 @@ import org.ucl.fhirwork.integration.empi.model.Person;
 import org.ucl.fhirwork.integration.fhir.model.Patient;
 import org.ucl.fhirwork.integration.fhir.FhirServer;
 import org.ucl.fhirwork.integration.fhir.utils.NameUtils;
+import sun.security.krb5.internal.PAData;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -73,10 +75,15 @@ public class PatientSteps
         patients = fhirServer.searchPatients();
     }
 
-    @When("^the user searches for patients with id \"(.*)\"$")
-    public void patientSearchById(String identifier) throws Exception
+    @When("^the user searches for patients by id for patient \"(.*)\"$")
+    public void patientSearchById(String patientName) throws Exception
     {
-        patients = fhirServer.readPatient(identifier);
+        for (Person person: empiServer.getPeople()){
+            if (Objects.equals(person.getGivenName(), patientName)){
+                Patient patient = fhirServer.readPatient(person.getPersonId());
+                patients = Arrays.asList(patient);
+            }
+        }
     }
 
     @When("^the user searches for patients with identifier \"(.*)\" and namespace \"(.*)\"$")

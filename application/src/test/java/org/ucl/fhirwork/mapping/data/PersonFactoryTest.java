@@ -16,6 +16,7 @@ import ca.uhn.fhir.parser.IParser;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.ucl.fhirwork.network.empi.data.Identifier;
 import org.ucl.fhirwork.network.empi.data.Person;
 
 import java.io.File;
@@ -33,6 +34,15 @@ public class PersonFactoryTest
 
         Patient patient = readPatient("fhir/PatientExample.json");
         Person person = personFactory.fromPatient(patient);
+
+        Assert.assertEquals("1", person.getPersonId());
+
+        Identifier[] identifiers = person.getPersonIdentifiers();
+        Assert.assertEquals(2, identifiers.length);
+        Assert.assertEquals("568749875445698798988873", identifiers[0].getIdentifier());
+        Assert.assertEquals("OpenMRS", identifiers[0].getIdentifierDomain().getIdentifierDomainName());
+        Assert.assertEquals("2b869d20-6ccc-11e7-a2fc-0242ac120003", identifiers[1].getIdentifier());
+        Assert.assertEquals("OpenEMPI", identifiers[1].getIdentifierDomain().getIdentifierDomainName());
 
         Assert.assertEquals("Kathrin Mary", person.getGivenName());
         Assert.assertEquals("Williams", person.getFamilyName());

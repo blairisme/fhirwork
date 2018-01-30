@@ -9,6 +9,10 @@
     {
       "system": "OpenMRS",
       "value": "568749875445698798988873"
+    },
+    {
+      "system": "OpenEMPI",
+      "value": "2b869d20-6ccc-11e7-a2fc-0242ac120003"
     }
   ],
   "name": [

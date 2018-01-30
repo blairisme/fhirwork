@@ -40,13 +40,6 @@ public class PersonFactory
         this.identifierFactory = identifierFactory;
     }
 
-    public Person fromId(IdDt id)
-    {
-        Person result = new Person();
-        setId(result, id);
-        return result;
-    }
-
     public Person fromPatient(Patient patient)
     {
         Person result = new Person();
@@ -72,7 +65,7 @@ public class PersonFactory
         List<IdentifierDt> identifiers = patient.getIdentifier();
         for (IdentifierDt identifier: identifiers)
         {
-            Identifier id = identifierFactory.fromId(identifier);
+            Identifier id = identifierFactory.fromIdentifier(identifier);
             converted.add(id);
         }
         person.setPersonIdentifiers(converted.toArray(new Identifier[0]));
