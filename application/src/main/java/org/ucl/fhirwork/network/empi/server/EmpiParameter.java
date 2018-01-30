@@ -10,6 +10,12 @@
 
 package org.ucl.fhirwork.network.empi.server;
 
+/**
+ * Options in this enumeration specify identifiers for REST query parameter
+ * key value pairs used in EMPI web service calls.
+ *
+ * @author Blair Butterworth
+ */
 public enum EmpiParameter
 {
     FirstRecord ("firstRecord"),

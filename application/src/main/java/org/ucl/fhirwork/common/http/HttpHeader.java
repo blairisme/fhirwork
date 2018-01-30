@@ -11,8 +11,8 @@
 package org.ucl.fhirwork.common.http;
 
 /**
- * Options in this enumeration specify identifiers for HTTP header
- * key value pairs.
+ * Options in this enumeration specify identifiers for HTTP header key value
+ * pairs.
  *
  * @author Blair Butterworth
  */

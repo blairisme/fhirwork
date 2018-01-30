@@ -19,8 +19,10 @@ import ca.uhn.fhir.rest.server.IResourceProvider;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.ucl.fhirwork.ApplicationService;
-import org.ucl.fhirwork.network.fhir.operations.CreatePatientOperation;
-import org.ucl.fhirwork.network.fhir.operations.ReadPatientOperation;
+import org.ucl.fhirwork.network.fhir.operations.patient.CreatePatientOperation;
+import org.ucl.fhirwork.network.fhir.operations.patient.DeletePatientOperation;
+import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
+import org.ucl.fhirwork.network.fhir.operations.patient.UpdatePatientOperation;
 
 import javax.inject.Inject;
 
@@ -51,7 +53,8 @@ public class PatientResourceProvider implements IResourceProvider
     }
 
     @Create
-    public MethodOutcome createPatient(@ResourceParam Patient patient) {
+    public MethodOutcome createPatient(@ResourceParam Patient patient)
+    {
         MethodOutcome result = new MethodOutcome();
         OperationOutcome outcome = new OperationOutcome();
 
@@ -67,13 +70,16 @@ public class PatientResourceProvider implements IResourceProvider
         return result;
     }
 
-    @Create
-    public MethodOutcome createPatientConditional(
-            @ResourceParam Patient thePatient,
-            @ConditionalUrlParam String theConditionalUrl)
+    @Delete
+    public void deletePatient(@IdParam IdDt patientId)
     {
-        //theConditional will have a value like "Patient?identifier=system%7C00001"
-        throw new UnsupportedOperationException();
+        try {
+            DeletePatientOperation operation = new DeletePatientOperation(patientId);
+            applicationService.execute(operation);
+        }
+        catch (Exception e) {
+            throw new ResourceNotFoundException(Patient.class, patientId);
+        }
     }
 
     @Read
@@ -93,6 +99,28 @@ public class PatientResourceProvider implements IResourceProvider
             @IdParam IdDt patientId,
             @ResourceParam Patient patient)
     {
+        MethodOutcome result = new MethodOutcome();
+        OperationOutcome outcome = new OperationOutcome();
+
+        try {
+            UpdatePatientOperation operation = new UpdatePatientOperation(patientId, patient);
+            Patient response = (Patient)applicationService.execute(operation);
+            result.setId(new IdDt("Patient", response.getId().getIdPart(), "1"));
+        }
+        catch (Throwable error) {
+            outcome.addIssue().setDiagnostics(error.getMessage());
+            result.setOperationOutcome(outcome);
+        }
+        return result;
+    }
+
+    /*
+    @Create
+    public MethodOutcome createPatientConditional(
+            @ResourceParam Patient thePatient,
+            @ConditionalUrlParam String theConditionalUrl)
+    {
+        //theConditional will have a value like "Patient?identifier=system%7C00001"
         throw new UnsupportedOperationException();
     }
 
@@ -107,12 +135,6 @@ public class PatientResourceProvider implements IResourceProvider
     }
 
     @Delete
-    public void deletePatient(@IdParam IdDt patientId)
-    {
-        throw new UnsupportedOperationException();
-    }
-
-    @Delete
     public void deletePatientConditional(
             @IdParam IdDt theId,
             @ConditionalUrlParam String theConditionalUrl)
@@ -120,4 +142,5 @@ public class PatientResourceProvider implements IResourceProvider
         //theConditional will have a value like "Patient?identifier=system%7C00001"
         throw new UnsupportedOperationException();
     }
+    */
 }

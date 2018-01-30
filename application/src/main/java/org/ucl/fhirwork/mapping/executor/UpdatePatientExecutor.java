@@ -10,40 +10,43 @@
 
 package org.ucl.fhirwork.mapping.executor;
 
-import ca.uhn.fhir.model.primitive.IdDt;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
 import org.ucl.fhirwork.common.http.RestException;
 import org.ucl.fhirwork.mapping.data.PatientFactory;
+import org.ucl.fhirwork.mapping.data.PersonFactory;
 import org.ucl.fhirwork.network.NetworkService;
 import org.ucl.fhirwork.network.empi.data.Person;
 import org.ucl.fhirwork.network.empi.server.EmpiServer;
-import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
+import org.ucl.fhirwork.network.fhir.operations.patient.UpdatePatientOperation;
 
 import javax.inject.Inject;
 
-public class ReadPatientExecutor implements Executor
+public class UpdatePatientExecutor implements Executor
 {
-    private String personId;
+    private Patient patient;
     private EmpiServer empiServer;
     private PatientFactory patientFactory;
+    private PersonFactory personFactory;
 
     @Inject
-    public ReadPatientExecutor(
+    public UpdatePatientExecutor(
             NetworkService networkService,
-            PatientFactory patientFactory)
+            PatientFactory patientFactory,
+            PersonFactory personFactory)
     {
         this.empiServer = networkService.getEmpiServer();
         this.patientFactory = patientFactory;
+        this.personFactory = personFactory;
     }
 
     @Override
     public void setOperation(Operation operation)
     {
-        ReadPatientOperation readPatient = (ReadPatientOperation)operation;
-        IdDt patientId = readPatient.getPatientId();
-        personId = patientId.getIdPart();
+        UpdatePatientOperation updatePatient = (UpdatePatientOperation)operation;
+        patient = updatePatient.getPatient();
     }
 
     @Override
@@ -51,7 +54,8 @@ public class ReadPatientExecutor implements Executor
     {
         try
         {
-            Person personOutput = empiServer.loadPerson(personId);
+            Person personInput = personFactory.fromPatient(patient);
+            Person personOutput = empiServer.updatePerson(personInput);
             return patientFactory.newPatient(personOutput);
         }
         catch (RestException cause){

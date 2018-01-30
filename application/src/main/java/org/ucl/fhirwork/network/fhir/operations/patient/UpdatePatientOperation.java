@@ -8,25 +8,32 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.network.fhir.operations;
+package org.ucl.fhirwork.network.fhir.operations.patient;
 
+import ca.uhn.fhir.model.dstu2.resource.Patient;
 import ca.uhn.fhir.model.primitive.IdDt;
 import org.ucl.fhirwork.common.framework.Operation;
 
 /**
- * Instances of this class represent the FHIR read patient operation.
+ * Instances of this class represent the FHIR update patient operation.
  *
  * @author Blair Butterworth
  */
-public class ReadPatientOperation implements Operation
+public class UpdatePatientOperation implements Operation
 {
     private IdDt patientId;
+    private Patient patient;
 
-    public ReadPatientOperation(IdDt patientId) {
+    public UpdatePatientOperation(IdDt patientId, Patient patient) {
         this.patientId = patientId;
+        this.patient = patient;
     }
 
     public IdDt getPatientId() {
         return patientId;
+    }
+
+    public Patient getPatient() {
+        return patient;
     }
 }

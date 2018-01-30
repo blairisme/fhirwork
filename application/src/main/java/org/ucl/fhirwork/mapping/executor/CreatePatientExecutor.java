@@ -20,7 +20,7 @@ import org.ucl.fhirwork.mapping.data.PersonFactory;
 import org.ucl.fhirwork.network.NetworkService;
 import org.ucl.fhirwork.network.empi.data.Person;
 import org.ucl.fhirwork.network.empi.server.EmpiServer;
-import org.ucl.fhirwork.network.fhir.operations.CreatePatientOperation;
+import org.ucl.fhirwork.network.fhir.operations.patient.CreatePatientOperation;
 
 import javax.inject.Inject;
 
@@ -53,7 +53,7 @@ public class CreatePatientExecutor implements Executor
     public Object invoke() throws ExecutionException
     {
         try {
-            Person personInput = personFactory.fromPerson(patient);
+            Person personInput = personFactory.fromPatient(patient);
             Person personOutput = empiServer.addPerson(personInput);
             return patientFactory.newPatient(personOutput);
         }

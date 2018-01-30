@@ -8,7 +8,7 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.network.fhir.operations;
+package org.ucl.fhirwork.network.fhir.operations.patient;
 
 import ca.uhn.fhir.model.dstu2.resource.Patient;
 import org.ucl.fhirwork.common.framework.Operation;

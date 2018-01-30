@@ -11,6 +11,7 @@
 package org.ucl.fhirwork.common.http;
 
 import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.request.GetRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
 import org.ucl.fhirwork.common.serialization.Serializer;
 
@@ -34,6 +35,17 @@ public class RestServer
         this.server = address.endsWith("/") ? address : address + "/"; // TODO: (blair) Use URL/URI class instead.
         this.serializer = serializer;
         this.headers = convertHeaders(headers);
+    }
+
+    public RestRequest get(RestResource resource)
+    {
+        return get(resource.getPath());
+    }
+
+    public RestRequest get(String path)
+    {
+        GetRequest request = Unirest.get(server + path).headers(headers);
+        return new RestRequest(request, serializer);
     }
 
     public RestRequest post(RestResource resource)

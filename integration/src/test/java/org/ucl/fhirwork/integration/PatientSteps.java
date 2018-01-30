@@ -74,9 +74,15 @@ public class PatientSteps
     }
 
     @When("^the user searches for patients with id \"(.*)\"$")
-    public void patientSearchByIdentifier(String identifier) throws Exception
+    public void patientSearchById(String identifier) throws Exception
     {
-        patients = fhirServer.searchPatientsByIdentifier(identifier);
+        patients = fhirServer.readPatient(identifier);
+    }
+
+    @When("^the user searches for patients with identifier \"(.*)\" and namespace \"(.*)\"$")
+    public void patientSearchByIdentifier(String identifier, String namespace) throws Exception
+    {
+        patients = fhirServer.searchPatientsByIdentifier(namespace + "|" + identifier);
     }
 
     @When("^the user searches for patients with (male|female) gender$")

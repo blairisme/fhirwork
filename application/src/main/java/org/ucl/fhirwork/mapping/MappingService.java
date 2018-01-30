@@ -13,9 +13,13 @@ package org.ucl.fhirwork.mapping;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
 import org.ucl.fhirwork.mapping.executor.CreatePatientExecutor;
+import org.ucl.fhirwork.mapping.executor.DeletePatientExecutor;
 import org.ucl.fhirwork.mapping.executor.ReadPatientExecutor;
-import org.ucl.fhirwork.network.fhir.operations.CreatePatientOperation;
-import org.ucl.fhirwork.network.fhir.operations.ReadPatientOperation;
+import org.ucl.fhirwork.mapping.executor.UpdatePatientExecutor;
+import org.ucl.fhirwork.network.fhir.operations.patient.CreatePatientOperation;
+import org.ucl.fhirwork.network.fhir.operations.patient.DeletePatientOperation;
+import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
+import org.ucl.fhirwork.network.fhir.operations.patient.UpdatePatientOperation;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -35,11 +39,15 @@ public class MappingService
     @Inject
     public MappingService(
             Provider<CreatePatientExecutor> createPatientProvider,
-            Provider<ReadPatientExecutor> readPatientProvider)
+            Provider<DeletePatientExecutor> deletePatientProvider,
+            Provider<ReadPatientExecutor> readPatientProvider,
+            Provider<UpdatePatientExecutor> updatePatientProvider)
     {
         this.executorFactories = new HashMap<>();
         this.executorFactories.put(CreatePatientOperation.class, createPatientProvider);
+        this.executorFactories.put(DeletePatientOperation.class, deletePatientProvider);
         this.executorFactories.put(ReadPatientOperation.class, readPatientProvider);
+        this.executorFactories.put(UpdatePatientOperation.class, updatePatientProvider);
     }
 
     public Executor getExecutor(Operation operation)

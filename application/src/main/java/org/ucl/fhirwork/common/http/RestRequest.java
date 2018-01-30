@@ -12,6 +12,7 @@ package org.ucl.fhirwork.common.http;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
 import org.ucl.fhirwork.common.serialization.Serializer;
 
@@ -28,9 +29,9 @@ import java.util.Map;
 public class RestRequest
 {
     private Serializer serializer;
-    private HttpRequestWithBody request;
+    private HttpRequest request;
 
-    RestRequest(HttpRequestWithBody request, Serializer serializer)
+    RestRequest(HttpRequest request, Serializer serializer)
     {
         this.request = request;
         this.serializer = serializer;
@@ -44,8 +45,12 @@ public class RestRequest
 
     public <T> RestRequest setBody(T value, Class<T> type)
     {
-        request.body(serializer.serialize(value, type));
-        return this;
+        if (request instanceof HttpRequestWithBody){
+            HttpRequestWithBody requestWithBody = (HttpRequestWithBody)request;
+            requestWithBody.body(serializer.serialize(value, type));
+            return this;
+        }
+        throw new IllegalArgumentException();
     }
 
     public RestResponse make(HandleFailure mode) throws RestException

@@ -41,6 +41,12 @@ public class FhirServer
         server.post(Patient, patient, Patient.class, ImmutableMap.of(Format, Json));
     }
 
+    public List<Patient> readPatient(String patientId) throws RestServerException
+    {
+        Bundle bundle = server.get(Patient.getPath() + "/" + patientId, Bundle.class, Collections.emptyMap());
+        return getPatients(bundle);
+    }
+
     public List<Patient> searchPatients() throws RestServerException
     {
         Bundle bundle = server.get(Patient, Bundle.class, Collections.emptyMap());
@@ -86,7 +92,6 @@ public class FhirServer
             url = "#{$fhir_server_base}/Observation?code=http://loinc.org|3141-9,http://loinc.org|8302-2,http://loinc.org|8287-5,http://loinc.org|58941-6&patient=#{patient_id}&_format=json"
     @response = RestClient.get url, :content_type => :json, :accept => :json
          */
-
     }
 
     private List<Patient> getPatients(Bundle bundle)

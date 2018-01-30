@@ -47,7 +47,7 @@ public class PersonFactory
         return result;
     }
 
-    public Person fromPerson(Patient patient)
+    public Person fromPatient(Patient patient)
     {
         Person result = new Person();
         setId(result, patient);

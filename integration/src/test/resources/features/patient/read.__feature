@@ -1,2 +1,18 @@
 Feature: Patient read
-    This feature allows users to get information on patients.
+    This feature allows users to obtain patient biographical information
+
+Background:
+  Given the system has the following patients:
+    | id    | first     | last          | gender    |
+    | 1     | harry     | potter        | male      |
+    | 2     | hermione  | granger       | female    |
+    | 3     | ron       | weasley       | male      |
+
+Scenario: Read patient information by identifier (positive)
+     When the user searches for patients with id "2"
+     Then the user should receive a list of 1 patients
+     And the user should receive a patient named hermione
+
+ Scenario: Read patient information by identifier (negative)
+     When the user searches for patients with id "999"
+     Then the user should receive a list of 0 patients

@@ -23,14 +23,14 @@ import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
 
 import javax.inject.Inject;
 
-public class ReadPatientExecutor implements Executor
+public class DeletePatientExecutor implements Executor
 {
     private String personId;
     private EmpiServer empiServer;
     private PatientFactory patientFactory;
 
     @Inject
-    public ReadPatientExecutor(
+    public DeletePatientExecutor(
             NetworkService networkService,
             PatientFactory patientFactory)
     {
@@ -51,7 +51,7 @@ public class ReadPatientExecutor implements Executor
     {
         try
         {
-            Person personOutput = empiServer.loadPerson(personId);
+            Person personOutput = empiServer.removePerson(personId);
             return patientFactory.newPatient(personOutput);
         }
         catch (RestException cause){

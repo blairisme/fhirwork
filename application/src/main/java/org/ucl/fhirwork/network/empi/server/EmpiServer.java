@@ -10,20 +10,24 @@
 
 package org.ucl.fhirwork.network.empi.server;
 
-import static org.ucl.fhirwork.network.empi.server.EmpiResource.AddPerson;
-import static org.ucl.fhirwork.network.empi.server.EmpiResource.Authenticate;
-import static org.ucl.fhirwork.network.empi.server.EmpiResource.FindPersonById;
 import static org.ucl.fhirwork.network.empi.server.EmpiHeader.SessionKey;
 import static org.ucl.fhirwork.common.http.HttpHeader.ContentType;
 import static org.ucl.fhirwork.common.http.MimeType.Xml;
+import static org.ucl.fhirwork.network.empi.server.EmpiParameter.PersonId;
+import static org.ucl.fhirwork.network.empi.server.EmpiResource.*;
 
 import com.google.common.collect.ImmutableMap;
 import org.ucl.fhirwork.common.http.*;
 import org.ucl.fhirwork.common.serialization.XmlSerializer;
 import org.ucl.fhirwork.network.empi.data.AuthenticationRequest;
-import org.ucl.fhirwork.network.empi.data.Identifier;
 import org.ucl.fhirwork.network.empi.data.Person;
 
+/**
+ * Instances of this class represent an EMPI server. Methods exists to create,
+ * read, update and delete patient data.
+ *
+ * @author Blair Butterworth
+ */
 public class EmpiServer
 {
     private RestServer server;
@@ -56,10 +60,28 @@ public class EmpiServer
         return response.asType(Person.class);
     }
 
-    public Person findPersonById(Identifier identifier) throws RestException
+    public Person loadPerson(String personId) throws RestException
     {
-        RestRequest request = getServer().post(FindPersonById);
-        request.setBody(identifier, Identifier.class);
+        RestRequest request = getServer().get(LoadPerson);
+        request.setParameters(ImmutableMap.of(PersonId, personId));
+
+        RestResponse response = request.make(HandleFailure.ByException);
+        return response.asType(Person.class);
+    }
+
+    public Person removePerson(String personId) throws RestException
+    {
+        RestRequest request = getServer().post(RemovePerson);
+        request.setParameters(ImmutableMap.of(PersonId, personId));
+
+        RestResponse response = request.make(HandleFailure.ByException);
+        return response.asType(Person.class);
+    }
+
+    public Person updatePerson(Person person) throws RestException
+    {
+        RestRequest request = getServer().put(UpdatePerson);
+        request.setBody(person, Person.class);
 
         RestResponse response = request.make(HandleFailure.ByException);
         return response.asType(Person.class);

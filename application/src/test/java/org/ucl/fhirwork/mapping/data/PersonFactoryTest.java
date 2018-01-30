@@ -32,7 +32,7 @@ public class PersonFactoryTest
         PersonFactory personFactory = new PersonFactory(identifierFactory);
 
         Patient patient = readPatient("fhir/PatientExample.json");
-        Person person = personFactory.fromPerson(patient);
+        Person person = personFactory.fromPatient(patient);
 
         Assert.assertEquals("Kathrin Mary", person.getGivenName());
         Assert.assertEquals("Williams", person.getFamilyName());

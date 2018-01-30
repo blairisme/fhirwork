@@ -60,15 +60,9 @@ public class Person
     private Identifier[] personIdentifiers;
     private String givenName;
     private String familyName;
-    //private Gender gender;
 
     public Person()
     {
-        this.personId = null;
-        this.personIdentifiers = null;
-        this.givenName = null;
-        this.familyName = null;
-        //this.gender = null;
     }
 
     public String getPersonId() {
@@ -86,14 +80,6 @@ public class Person
     public void setPersonIdentifiers(Identifier[] personIdentifiers) {
         this.personIdentifiers = personIdentifiers;
     }
-
-//    public Gender getGender() {
-//        return gender;
-//    }
-//
-//    public void setGender(Gender gender) {
-//        this.gender = gender;
-//    }
 
     public String getGivenName() {
         return givenName;

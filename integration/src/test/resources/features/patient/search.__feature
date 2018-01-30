@@ -16,12 +16,12 @@ Scenario: Search for patients without parameters
    And the user should receive a patient named james
 
 Scenario: Search for patients by identifier (positive)
-    When the user searches for patients with id "SSN|2"
+    When the user searches for patients with identifier "2" and namespace "SSN"
     Then the user should receive a list of 1 patients
     And the user should receive a patient named hermione
 
 Scenario: Search for patients by identifier (negative)
-    When the user searches for patients with id "SSN|999"
+    When the user searches for patients with identifier "999" and and namespace "SSN"
     Then the user should receive a list of 0 patients
 
 Scenario: Search for patients by single attribute (positive)
