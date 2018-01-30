@@ -10,23 +10,23 @@
 
 package org.ucl.fhirwork.network.fhir.operations;
 
-import ca.uhn.fhir.model.dstu2.resource.Patient;
+import ca.uhn.fhir.model.primitive.IdDt;
 import org.ucl.fhirwork.common.framework.Operation;
 
 /**
- * Instances of this class represent the FHIR create patient operation.
+ * Instances of this class represent the FHIR read patient operation.
  *
  * @author Blair Butterworth
  */
-public class CreatePatientOperation implements Operation
+public class ReadPatientOperation implements Operation
 {
-    private Patient patient;
+    private IdDt patientId;
 
-    public CreatePatientOperation(Patient patient) {
-        this.patient = patient;
+    public ReadPatientOperation(IdDt patientId) {
+        this.patientId = patientId;
     }
 
-    public Patient getPatient() {
-        return patient;
+    public IdDt getPatientId() {
+        return patientId;
     }
 }

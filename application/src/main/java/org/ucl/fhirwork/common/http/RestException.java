@@ -10,6 +10,13 @@
 
 package org.ucl.fhirwork.common.http;
 
+/**
+ * Instances of this exception are thrown when an unexpected error occurs while
+ * communicating with a REST server. The underlying reason for the error can be
+ * obtained using the {@link #getCause()} or {@link #getMessage()} methods.
+ *
+ * @author Blair Butterworth
+ */
 public class RestException extends Exception
 {
     public RestException(Exception cause)

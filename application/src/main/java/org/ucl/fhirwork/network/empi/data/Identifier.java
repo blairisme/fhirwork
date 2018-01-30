@@ -12,7 +12,7 @@ package org.ucl.fhirwork.network.empi.data;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "identifier")
+@XmlRootElement(name = "personIdentifier")
 @SuppressWarnings("unused")
 public class Identifier
 {
@@ -26,11 +26,6 @@ public class Identifier
     public Identifier(String identifier, IdentifierDomain identifierDomain) {
         this.identifier = identifier;
         this.identifierDomain = identifierDomain;
-    }
-
-    public static Identifier fromToken(String token)
-    {
-        return new Identifier(token, new IdentifierDomain("2.16.840.1.113883.4.1"));
     }
 
     public String getIdentifier() {

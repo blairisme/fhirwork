@@ -29,10 +29,16 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Instances of this class configure the system as a FHIR server.
+ * Instances of this class configure the system as a FHIR server, and specify
+ * the two entry points into the system, {@link PatientResourceProvider} and
+ * {@link ObservationResourceProvider}.
  *
  * @author Blair Butterworth
- * TODO: Attribute to previous team
+ * @author Didac Magrina
+ * @author Koon Wei Teo
+ * @author Evanthia Tingiri
+ * @author Shruti Sinha
+ * @author Yuan wei
  */
 @WebServlet(urlPatterns= {"/fhir/*"}, displayName="FHIR Server")
 public class Application extends RestfulServer
@@ -46,7 +52,7 @@ public class Application extends RestfulServer
     public void initialize()
     {
         setResourceProviders();
-        enableDescriptiveFhirErrors();
+        enableDescriptiveErrors();
         enableCrossOriginScripting();
         enableOutputSyntaxHighlighting();
     }
@@ -62,7 +68,7 @@ public class Application extends RestfulServer
         setResourceProviders(providers);
     }
 
-    private void enableDescriptiveFhirErrors()
+    private void enableDescriptiveErrors()
     {
         INarrativeGenerator narrativeGen = new DefaultThymeleafNarrativeGenerator();
         getFhirContext().setNarrativeGenerator(narrativeGen);

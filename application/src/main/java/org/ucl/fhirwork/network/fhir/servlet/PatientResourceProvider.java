@@ -14,12 +14,16 @@ import ca.uhn.fhir.model.dstu2.resource.OperationOutcome;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.annotation.Create;
+import ca.uhn.fhir.rest.annotation.IdParam;
+import ca.uhn.fhir.rest.annotation.Read;
 import ca.uhn.fhir.rest.annotation.ResourceParam;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.server.IResourceProvider;
+import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.ucl.fhirwork.ApplicationService;
 import org.ucl.fhirwork.network.fhir.operations.CreatePatientOperation;
+import org.ucl.fhirwork.network.fhir.operations.ReadPatientOperation;
 
 import javax.inject.Inject;
 
@@ -57,17 +61,17 @@ public class PatientResourceProvider implements IResourceProvider
         return result;
     }
 
-    /*
+
     @Read
-    public Patient getPatientById(@IdParam IdDt patientId)
+    public Patient readPatient(@IdParam IdDt patientId)
     {
         try {
-            GetPatientOperation executor = new GetPatientOperation(patientId);
-            return (Patient)system.execute(executor);
+            ReadPatientOperation operation = new ReadPatientOperation(patientId);
+            return (Patient)applicationService.execute(operation);
         }
         catch (Exception e) {
             throw new ResourceNotFoundException(Patient.class, patientId);
         }
     }
-    */
+
 }

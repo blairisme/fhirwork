@@ -11,25 +11,17 @@
 package org.ucl.fhirwork.common.http;
 
 /**
- * Options in this enumeration specify MIME types, identifiers of file formats.
+ * Implementors of this interface represent the address of an HTTP resource to
+ * which a REST call can be made.
  *
  * @author Blair Butterworth
  */
-public enum MimeType
+public interface RestResource
 {
-    Json    ("application/json"),
-    Xml     ("application/xml");
-
-    private String value;
-
-    MimeType(String value)
-    {
-        this.value = value;
-    }
-
-    @Override
-    public String toString()
-    {
-        return value;
-    }
+    /**
+     * Returns the path segment of the URL of the REST resource.
+     *
+     * @return a URL path segment. E.g., fhir/patients.
+     */
+    String getPath();
 }

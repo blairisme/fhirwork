@@ -10,7 +10,13 @@
 
 package org.ucl.fhirwork.common.http;
 
-public interface RestEndpoint
+/**
+ * Options in this enumeration specify strategies for handling errors.
+ *
+ * @author Blair Butterworth
+ */
+public enum HandleFailure
 {
-    public String getPath();
+    ByException,
+    ByErrorCode
 }

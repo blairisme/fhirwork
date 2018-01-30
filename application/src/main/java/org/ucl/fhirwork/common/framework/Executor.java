@@ -10,6 +10,12 @@
 
 package org.ucl.fhirwork.common.framework;
 
+/**
+ * Implementors of this interface perform the actions required to execute an
+ * operation.
+ *
+ * @author Blair Butterworth
+ */
 public interface Executor
 {
     public void setOperation(Operation operation);

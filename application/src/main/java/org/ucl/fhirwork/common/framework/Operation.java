@@ -10,6 +10,11 @@
 
 package org.ucl.fhirwork.common.framework;
 
+/**
+ * Implementors of this interface represent an action requested by the user.
+ *
+ * @author Blair Butterworth
+ */
 public interface Operation
 {
 }

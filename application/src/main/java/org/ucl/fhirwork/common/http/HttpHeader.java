@@ -10,6 +10,12 @@
 
 package org.ucl.fhirwork.common.http;
 
+/**
+ * Options in this enumeration specify identifiers for HTTP header
+ * key value pairs.
+ *
+ * @author Blair Butterworth
+ */
 public enum HttpHeader
 {
     Accept      ("accept"),
@@ -17,7 +23,7 @@ public enum HttpHeader
 
     private String value;
 
-    private HttpHeader(String value)
+    HttpHeader(String value)
     {
         this.value = value;
     }

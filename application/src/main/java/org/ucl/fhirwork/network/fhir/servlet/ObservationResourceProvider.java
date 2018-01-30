@@ -22,6 +22,7 @@ import org.ucl.fhirwork.ApplicationService;
 import javax.inject.Inject;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class ObservationResourceProvider implements IResourceProvider
 {
     private ApplicationService applicationService;
