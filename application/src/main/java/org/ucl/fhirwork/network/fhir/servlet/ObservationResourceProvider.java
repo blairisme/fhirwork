@@ -22,6 +22,13 @@ import org.ucl.fhirwork.ApplicationService;
 import javax.inject.Inject;
 import java.util.List;
 
+/**
+ * Instances of this class provide implement functions defined in the FHIR
+ * specification related to Observations. Once implemented these operation can
+ * be then be called by FHIR clients.
+ *
+ * @author Blair Butterworth
+ */
 @SuppressWarnings("unused")
 public class ObservationResourceProvider implements IResourceProvider
 {
@@ -39,11 +46,11 @@ public class ObservationResourceProvider implements IResourceProvider
         return Observation.class;
     }
 
-    @Search()
+    @Search
     public List<Observation> searchObservation(
             @RequiredParam(name = Observation.SP_CODE) TokenOrListParam codes,
-            @RequiredParam(name = Observation.SP_PATIENT) ReferenceParam patient) {
-
+            @RequiredParam(name = Observation.SP_PATIENT) ReferenceParam patient)
+    {
         throw new UnsupportedOperationException();
     }
 }

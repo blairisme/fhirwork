@@ -12,6 +12,13 @@ package org.ucl.fhirwork.common.serialization;
 
 import com.google.gson.Gson;
 
+/**
+ * Instances of this class serialize objects into their equivalent JSON
+ * representation. Methods are provided to convert Java objects into JSON
+ * and JSON into Java objects.
+ *
+ * @author Blair Butterworth
+ */
 public class JsonSerializer implements Serializer
 {
     private Gson gson;

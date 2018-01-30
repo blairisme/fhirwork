@@ -12,6 +12,22 @@ package org.ucl.fhirwork.network.empi.data;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * Instances of this class are used to obtain a session token for accessing
+ * EMPI web services. The authenticate EMPI REST web service accepts
+ * AuthenticationRequests using the following format.
+ *
+ * <pre>{@code
+ *
+ *  <authenticationRequest>
+ *      <password>admin</password>
+ *      <username>admin</username>
+ *  </authenticationRequest>
+ *
+ *}</pre>
+ *
+ * @author Blair Butterworth
+ */
 @XmlRootElement(name = "authenticationRequest")
 @SuppressWarnings("unused")
 public class AuthenticationRequest

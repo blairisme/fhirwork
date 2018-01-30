@@ -10,6 +10,13 @@
 
 package org.ucl.fhirwork.common.serialization;
 
+/**
+ * Implementors of this interface serialize objects into their equivalent
+ * textual representation. Methods are provided to convert objects into text
+ * and text into objects.
+ *
+ * @author Blair Butterworth
+ */
 public interface Serializer
 {
     <T> String serialize(T value, Class<T> type);

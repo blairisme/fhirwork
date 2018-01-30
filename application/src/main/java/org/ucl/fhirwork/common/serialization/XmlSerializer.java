@@ -17,6 +17,13 @@ import javax.xml.bind.Unmarshaller;
 import java.io.StringReader;
 import java.io.StringWriter;
 
+/**
+ * Instances of this class serialize objects into their equivalent XML
+ * representation. Methods are provided to convert Java objects into XML
+ * and XML into Java objects.
+ *
+ * @author Blair Butterworth
+ */
 public class XmlSerializer implements Serializer
 {
     public <T> String serialize(T value, Class<T> type)

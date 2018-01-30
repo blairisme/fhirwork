@@ -11,12 +11,17 @@
 package org.ucl.fhirwork.mapping.data;
 
 import ca.uhn.fhir.model.dstu2.composite.HumanNameDt;
+import ca.uhn.fhir.model.dstu2.composite.IdentifierDt;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
+import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.model.primitive.StringDt;
 import org.ucl.fhirwork.network.empi.data.Gender;
 import org.ucl.fhirwork.network.empi.data.Identifier;
 import org.ucl.fhirwork.network.empi.data.Person;
 
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -27,16 +32,50 @@ import java.util.List;
  */
 public class PersonFactory
 {
-    public Person newPerson(Patient patient)
+    private IdentifierFactory identifierFactory;
+
+    @Inject
+    public PersonFactory(IdentifierFactory identifierFactory)
+    {
+        this.identifierFactory = identifierFactory;
+    }
+
+    public Person fromId(IdDt id)
+    {
+        Person result = new Person();
+        setId(result, id);
+        return result;
+    }
+
+    public Person fromPerson(Patient patient)
     {
         Person result = new Person();
         setId(result, patient);
+        setIdentifiers(result, patient);
         setName(result, patient);
         return result;
     }
 
     private void setId(Person person, Patient patient)
     {
+        setId(person, patient.getId());
+    }
+
+    private void setId(Person person, IdDt id)
+    {
+        person.setPersonId(id.getIdPart());
+    }
+
+    private void setIdentifiers(Person person, Patient patient)
+    {
+        List<Identifier> converted = new ArrayList<>();
+        List<IdentifierDt> identifiers = patient.getIdentifier();
+        for (IdentifierDt identifier: identifiers)
+        {
+            Identifier id = identifierFactory.fromId(identifier);
+            converted.add(id);
+        }
+        person.setPersonIdentifiers(converted.toArray(new Identifier[0]));
     }
 
     private void setName(Person person, Patient patient)

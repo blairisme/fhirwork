@@ -10,7 +10,7 @@
 
 package org.ucl.fhirwork.mapping.executor;
 
-import ca.uhn.fhir.model.dstu2.resource.Patient;
+import ca.uhn.fhir.model.primitive.IdDt;
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
@@ -20,19 +20,19 @@ import org.ucl.fhirwork.mapping.data.PersonFactory;
 import org.ucl.fhirwork.network.NetworkService;
 import org.ucl.fhirwork.network.empi.data.Person;
 import org.ucl.fhirwork.network.empi.server.EmpiServer;
-import org.ucl.fhirwork.network.fhir.operations.CreatePatientOperation;
+import org.ucl.fhirwork.network.fhir.operations.ReadPatientOperation;
 
 import javax.inject.Inject;
 
-public class CreatePatientExecutor implements Executor
+public class ReadPatientExecutor implements Executor
 {
-    private Patient patient;
+    private IdDt identifier;
     private EmpiServer empiServer;
     private PatientFactory patientFactory;
     private PersonFactory personFactory;
 
     @Inject
-    public CreatePatientExecutor(
+    public ReadPatientExecutor(
             NetworkService networkService,
             PatientFactory patientFactory,
             PersonFactory personFactory)
@@ -45,15 +45,15 @@ public class CreatePatientExecutor implements Executor
     @Override
     public void setOperation(Operation operation)
     {
-        CreatePatientOperation createPatient = (CreatePatientOperation)operation;
-        patient = createPatient.getPatient();
+        ReadPatientOperation readPatient = (ReadPatientOperation)operation;
+        identifier = readPatient.getPatientId();
     }
 
     @Override
     public Object invoke() throws ExecutionException
     {
         try {
-            Person personInput = personFactory.fromPerson(patient);
+            Person personInput = personFactory.fromId(identifier);
             Person personOutput = empiServer.addPerson(personInput);
             return patientFactory.newPatient(personOutput);
         }

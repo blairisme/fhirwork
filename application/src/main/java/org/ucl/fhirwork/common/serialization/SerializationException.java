@@ -10,6 +10,13 @@
 
 package org.ucl.fhirwork.common.serialization;
 
+/**
+ * Instances of this exception are thrown when an unexpected error occurs while
+ * serializing or deserializing an object. The underlying reason for the error
+ * can be obtained using the {@link #getCause()} method.
+ *
+ * @author Blair Butterworth
+ */
 public class SerializationException extends RuntimeException
 {
     public SerializationException(Throwable cause)

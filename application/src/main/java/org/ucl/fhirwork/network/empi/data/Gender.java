@@ -12,6 +12,22 @@ package org.ucl.fhirwork.network.empi.data;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * Instances of this class represent a EMPI patients gender.
+ *
+ * <pre>{@code
+ *
+ * <gender>
+ *     <genderCd>1</genderCd>
+ *     <genderCode>F</genderCode>
+ *     <genderDescription>Female</genderDescription>
+ *     <genderName>Female</genderName>
+ * </gender>
+ *
+ * }</pre>
+ *
+ * @author Blair Butterworth
+ */
 @XmlRootElement(name = "identifier")
 @SuppressWarnings("unused")
 public class Gender
@@ -23,27 +39,6 @@ public class Gender
 
     public Gender()
     {
-        this("", "", "", "");
-    }
-
-    public Gender(String genderCd, String genderCode, String genderName, String genderDescription) {
-        this.genderCd = genderCd;
-        this.genderCode = genderCode;
-        this.genderName = genderName;
-        this.genderDescription = genderDescription;
-    }
-
-    public static Gender fromName(String name)
-    {
-        if (name.equalsIgnoreCase("male")){
-            return new Gender("2", "M", "male", "male");
-        }
-        else if (name.equalsIgnoreCase("female")){
-            return new Gender("1", "F", "female", "female");
-        }
-        else {
-            throw new UnsupportedOperationException();
-        }
     }
 
     public String getGenderCd() {

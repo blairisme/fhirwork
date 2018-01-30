@@ -13,10 +13,7 @@ package org.ucl.fhirwork.network.fhir.servlet;
 import ca.uhn.fhir.model.dstu2.resource.OperationOutcome;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
 import ca.uhn.fhir.model.primitive.IdDt;
-import ca.uhn.fhir.rest.annotation.Create;
-import ca.uhn.fhir.rest.annotation.IdParam;
-import ca.uhn.fhir.rest.annotation.Read;
-import ca.uhn.fhir.rest.annotation.ResourceParam;
+import ca.uhn.fhir.rest.annotation.*;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.server.IResourceProvider;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
@@ -27,6 +24,15 @@ import org.ucl.fhirwork.network.fhir.operations.ReadPatientOperation;
 
 import javax.inject.Inject;
 
+/**
+ * Instances of this class provide implement functions defined in the FHIR
+ * specification related to Patients. Once implemented these operation can
+ * be then be called by FHIR clients. For more information see:
+ *
+ *      http://hapifhir.io/doc_rest_operations.html
+ *
+ * @author Blair Butterworth
+ */
 @SuppressWarnings("unused")
 public class PatientResourceProvider implements IResourceProvider
 {
@@ -61,6 +67,14 @@ public class PatientResourceProvider implements IResourceProvider
         return result;
     }
 
+    @Create
+    public MethodOutcome createPatientConditional(
+            @ResourceParam Patient thePatient,
+            @ConditionalUrlParam String theConditionalUrl)
+    {
+        //theConditional will have a value like "Patient?identifier=system%7C00001"
+        throw new UnsupportedOperationException();
+    }
 
     @Read
     public Patient readPatient(@IdParam IdDt patientId)
@@ -74,4 +88,36 @@ public class PatientResourceProvider implements IResourceProvider
         }
     }
 
+    @Update
+    public MethodOutcome update(
+            @IdParam IdDt patientId,
+            @ResourceParam Patient patient)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    @Update
+    public MethodOutcome updatePatientConditional(
+            @ResourceParam Patient thePatient,
+            @IdParam IdDt theId,
+            @ConditionalUrlParam String theConditional)
+    {
+        //theConditional will have a value like "Patient?identifier=system%7C00001"
+        throw new UnsupportedOperationException();
+    }
+
+    @Delete
+    public void deletePatient(@IdParam IdDt patientId)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    @Delete
+    public void deletePatientConditional(
+            @IdParam IdDt theId,
+            @ConditionalUrlParam String theConditionalUrl)
+    {
+        //theConditional will have a value like "Patient?identifier=system%7C00001"
+        throw new UnsupportedOperationException();
+    }
 }
