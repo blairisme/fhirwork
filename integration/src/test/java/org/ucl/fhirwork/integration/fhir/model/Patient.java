@@ -16,6 +16,7 @@ import java.util.List;
 
 public class Patient
 {
+    private String id;
     private String resourceType;
     private List<Name> name;
     private List<Identifier> identifier;
@@ -47,5 +48,9 @@ public class Patient
 
     public String getResourceType() {
         return resourceType;
+    }
+
+    public void setId(String id){
+        this.id = id;
     }
 }

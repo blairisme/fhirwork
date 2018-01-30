@@ -164,11 +164,15 @@ public class RestServer
         }
     }
 
-    public <T> String put(RestEndpoint endPoint, T value, Class<T> type) throws RestServerException
+    public <T> String put(RestEndpoint endPoint, T value, Class<T> type) throws RestServerException {
+        return put(endPoint.getPath(), value, type);
+    }
+
+    public <T> String put(String path, T value, Class<T> type) throws RestServerException
     {
         try {
             String body = serializer.serialize(value, type);
-            RequestBodyEntity request = Unirest.put(server + endPoint.getPath())
+            RequestBodyEntity request = Unirest.put(server + path)
                     .headers(headers)
                     .body(body);
             HttpResponse<String> response = request.asString();

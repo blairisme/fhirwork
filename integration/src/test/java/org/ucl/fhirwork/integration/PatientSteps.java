@@ -15,6 +15,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import cucumber.runtime.java.StepDefAnnotation;
 import org.junit.Assert;
+import org.ucl.fhirwork.integration.common.http.RestServerException;
 import org.ucl.fhirwork.integration.cucumber.Profile;
 import org.ucl.fhirwork.integration.empi.EmpiServer;
 import org.ucl.fhirwork.integration.empi.model.Person;
@@ -78,11 +79,10 @@ public class PatientSteps
     @When("^the user searches for patients by id for patient \"(.*)\"$")
     public void patientSearchById(String patientName) throws Exception
     {
-        for (Person person: empiServer.getPeople()){
-            if (Objects.equals(person.getGivenName(), patientName)){
-                Patient patient = fhirServer.readPatient(person.getPersonId());
-                patients = Arrays.asList(patient);
-            }
+        String personId = getPersonIdByName(patientName);
+        if (personId != null){
+            Patient patient = fhirServer.readPatient(personId);
+            patients = Arrays.asList(patient);
         }
     }
 
@@ -110,6 +110,33 @@ public class PatientSteps
         patients = fhirServer.searchPatientsByGenderAndSurname(gender, surname);
     }
 
+    /*
+    @When("^the user deletes a patient anmes$")
+    public void updatePatient(List<Profile> profiles) throws Exception
+    {
+        for (Profile profile: profiles){
+            String personId = getPersonId(profile.getFirst());
+            if (personId == null) throw new IllegalStateException();
+
+            Patient patient = Patient.fromProfile(profile);
+            fhirServer.updatePatient(profile.getId(), patient);
+        }
+    }
+    */
+
+    @When("^the user updates a patient to the following data:$")
+    public void updatePatient(List<Profile> profiles) throws Exception
+    {
+        for (Profile profile: profiles){
+            String personId = getPersonIdByIdentifier(profile.getId());
+            if (personId == null) throw new IllegalStateException();
+
+            Patient patient = Patient.fromProfile(profile);
+            patient.setId(personId);
+            fhirServer.updatePatient(personId, patient);
+        }
+    }
+
     @Then("^the user should receive a list of (\\d) patients$")
     public void assertSearchList(int patientCount)
     {
@@ -131,5 +158,25 @@ public class PatientSteps
         Predicate<Person> predicate = person -> Objects.equals(person.getGivenName(), patientName);
         Person person = people.stream().filter(predicate).findFirst().orElse(null);
         Assert.assertNotNull(person);
+    }
+
+    private String getPersonIdByName(String patientName) throws RestServerException
+    {
+        for (Person person: empiServer.getPeople()){
+            if (Objects.equals(person.getGivenName(), patientName)){
+                return person.getPersonId();
+            }
+        }
+        return null;
+    }
+
+    private String getPersonIdByIdentifier(String identifier) throws RestServerException
+    {
+        for (Person person: empiServer.getPeople()){
+            if (Objects.equals(person.getPersonIdentifiers().getIdentifier(), identifier)){
+                return person.getPersonId();
+            }
+        }
+        return null;
     }
 }

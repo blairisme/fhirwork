@@ -1,4 +1,4 @@
-Feature: Patient read
+Feature: Read patient
     This feature allows users to obtain patient biographical information
 
 Background:

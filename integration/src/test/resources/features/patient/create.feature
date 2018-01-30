@@ -1,4 +1,4 @@
-Feature: Patient Creation
+Feature: Create Patient
     This feature allows users to add patient data to the system.
 
 Scenario: Add patient

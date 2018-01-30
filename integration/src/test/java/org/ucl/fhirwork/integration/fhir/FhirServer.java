@@ -46,6 +46,16 @@ public class FhirServer
         return server.get(Patient.getPath() + "/" + patientId, Patient.class, Collections.emptyMap());
     }
 
+    public void deletePatient(String patientId) throws RestServerException
+    {
+        server.delete(Patient.getPath() + "/" + patientId);
+    }
+
+    public void updatePatient(String patientId, Patient patient) throws RestServerException
+    {
+        server.put(Patient.getPath() + "/" + patientId, patient, Patient.class);
+    }
+
     public List<Patient> searchPatients() throws RestServerException
     {
         Bundle bundle = server.get(Patient, Bundle.class, Collections.emptyMap());
