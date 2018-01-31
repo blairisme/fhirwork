@@ -13,7 +13,7 @@ package org.ucl.fhirwork.network.empi.server;
 import org.ucl.fhirwork.common.http.RestResource;
 
 /**
- * Options in this enumeration represent the addresses of an EMPI REST web
+ * Options in this enumeration represent the addresses of EMPI REST web
  * services.
  *
  * @author Blair Butterworth
