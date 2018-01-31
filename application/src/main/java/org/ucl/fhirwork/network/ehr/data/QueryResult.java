@@ -10,17 +10,18 @@
 
 package org.ucl.fhirwork.network.ehr.data;
 
-public class SessionToken
-{
-    private String sessionId;
+import com.google.gson.annotations.SerializedName;
 
-    public SessionToken(String sessionId)
-    {
-        this.sessionId = sessionId;
+public class QueryResult
+{
+    @SerializedName("#0")
+    private Composition composition;
+
+    public QueryResult(Composition composition) {
+        this.composition = composition;
     }
 
-    public String getSessionId()
-    {
-        return sessionId;
+    public Composition getComposition() {
+        return composition;
     }
 }

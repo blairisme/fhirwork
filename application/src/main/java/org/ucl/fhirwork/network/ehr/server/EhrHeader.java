@@ -8,19 +8,21 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.network.ehr.data;
-
-public class SessionToken
+package org.ucl.fhirwork.network.ehr.server;
+public enum EhrHeader
 {
-    private String sessionId;
+    SessionId ("Ehr-Session");
 
-    public SessionToken(String sessionId)
+    private String value;
+
+    private EhrHeader(String value)
     {
-        this.sessionId = sessionId;
+        this.value = value;
     }
 
-    public String getSessionId()
+    @Override
+    public String toString()
     {
-        return sessionId;
+        return value;
     }
 }

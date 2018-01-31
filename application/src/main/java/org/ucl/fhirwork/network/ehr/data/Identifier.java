@@ -10,17 +10,15 @@
 
 package org.ucl.fhirwork.network.ehr.data;
 
-public class SessionToken
+public class Identifier
 {
-    private String sessionId;
+    private String value;
 
-    public SessionToken(String sessionId)
-    {
-        this.sessionId = sessionId;
+    public Identifier(String value) {
+        this.value = value;
     }
 
-    public String getSessionId()
-    {
-        return sessionId;
+    public String getValue() {
+        return value;
     }
 }

@@ -1,6 +1,17 @@
-package org.ucl.fhirwork.network.ehr.server;
 
-public enum EhrParameter {
+/*
+ * FHIRWork (c) 2018 - Blair Butterworth, Abdul-Qadir Ali, Xialong Chen,
+ * Chenghui Fan, Alperen Karaoglu, Jiaming Zhou
+ *
+ * This work is licensed under the MIT License. To view a copy of this
+ * license, visit
+ *
+ *      https://opensource.org/licenses/MIT
+ */
+
+package org.ucl.fhirwork.network.ehr.server;
+public enum EhrParameter
+{
 
     Aql                 ("aql"),
     EhrId               ("ehrId"),
@@ -9,11 +20,12 @@ public enum EhrParameter {
     SubjectNamespace    ("subjectNamespace"),
     TemplateId          ("templateId"),
     Password            ("password"),
-    Username            ("username"),
-    SessionId           ("Ehr-Session");
+    Username            ("username");
+
     private String value;
 
-    EhrParameter(String value)
+    private EhrParameter(String value)
+
     {
         this.value = value;
     }

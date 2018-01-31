@@ -12,28 +12,36 @@ package org.ucl.fhirwork.network.ehr.server;
 
 import com.google.common.collect.ImmutableMap;
 
+
 import org.ucl.fhirwork.common.http.*;
 import org.ucl.fhirwork.common.serialization.JsonSerializer;
 import org.ucl.fhirwork.network.ehr.data.SessionToken;
-import static org.ucl.fhirwork.common.http.HttpHeader.*;
-import static org.ucl.fhirwork.common.http.MimeType.*;
-import static org.ucl.fhirwork.network.ehr.server.EhrResource.*;
-import static org.ucl.fhirwork.network.ehr.server.EhrParameter.*;
 
-/**
- * Instances of this class represent an EHR server. Methods exists to create,
- * read, update and delete health records.
- *
- * @author Blair Butterworth
- */
+
+
+
+import org.ucl.fhirwork.network.ehr.data.QueryBundle;
+
+
+import static com.google.common.collect.ImmutableBiMap.of;
+import static org.ucl.fhirwork.common.http.HttpHeader.Accept;
+import static org.ucl.fhirwork.common.http.HttpHeader.ContentType;
+import static org.ucl.fhirwork.common.http.MimeType.Json;
+import static org.ucl.fhirwork.network.ehr.server.EhrHeader.SessionId;
+import static org.ucl.fhirwork.network.ehr.server.EhrParameter.Password;
+import static org.ucl.fhirwork.network.ehr.server.EhrParameter.Username;
+import static org.ucl.fhirwork.network.ehr.server.EhrResource.Session;
+
 public class EhrServer {
-    private RestServer restServer;
+    private RestServer server;
     private String sessionId;
     private String address;
     private String username;
     private String password;
 
-    public EhrServer() {
+    public EhrServer()
+    {
+
     }
 
     public void setUsername(String username) {
@@ -58,10 +66,38 @@ public class EhrServer {
         }
         return sessionId;
     }
+
     public void deleteSessionId() throws RestException {
-        RestServer rest = new RestServer(address, new JsonSerializer(),ImmutableMap.of(ContentType, Json, SessionId, sessionId));
+        RestServer rest = new RestServer(address, new JsonSerializer(), of(ContentType, Json, SessionId, sessionId));
         RestRequest request = rest.delete(Session);
         request.make(HandleFailure.ByException);
+    }
+
+    public QueryBundle query(String query) throws RestException
+    {
+        throw new UnsupportedOperationException(); // TODO
+    }
+
+    private RestServer getServer() throws RestException
+    {
+        if (server == null) {
+            SessionToken session = getSessionToken();
+            sessionId = session.getSessionId();
+            server = new RestServer(address, new JsonSerializer(), of(ContentType, Json, Accept, Json, SessionId, sessionId));
+        }
+        return server;
+    }
+
+    private SessionToken getSessionToken() throws RestException
+    {
+        RestServer server = new RestServer(address, new JsonSerializer(), of(ContentType, Json, Accept, Json));
+
+        RestRequest request = server.post(Session);
+        request.setParameters(ImmutableMap.of(Username, username, Password, password));
+
+        RestResponse response = request.make(HandleFailure.ByException);
+
+        return response.asType(SessionToken.class);
     }
 }
 
