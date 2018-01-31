@@ -70,13 +70,11 @@ public class EmpiServer
         return response.asType(Person.class);
     }
 
-    public Person removePerson(String personId) throws RestException
+    public void removePerson(String personId) throws RestException
     {
         RestRequest request = getServer().post(RemovePerson);
         request.setParameters(ImmutableMap.of(PersonId, personId));
-
-        RestResponse response = request.make(HandleFailure.ByException);
-        return response.asType(Person.class);
+        request.make(HandleFailure.ByException);
     }
 
     public Person updatePerson(Person person) throws RestException

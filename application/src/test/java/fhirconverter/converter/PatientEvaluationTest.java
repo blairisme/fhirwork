@@ -35,6 +35,7 @@ public class PatientEvaluationTest {
 	public static String baseURLHAPI = "http://fhirtest.uhn.ca/baseDstu3";
 
 	@Test
+	@Ignore
 	public void checkDataIntgrity() throws Exception {
 
 		URL requestUrl = Thread.currentThread().getContextClassLoader().getResource("PatientFHIRRequest.xml");

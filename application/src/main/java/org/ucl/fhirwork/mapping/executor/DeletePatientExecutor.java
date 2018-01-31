@@ -19,7 +19,7 @@ import org.ucl.fhirwork.mapping.data.PatientFactory;
 import org.ucl.fhirwork.network.NetworkService;
 import org.ucl.fhirwork.network.empi.data.Person;
 import org.ucl.fhirwork.network.empi.server.EmpiServer;
-import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
+import org.ucl.fhirwork.network.fhir.operations.patient.DeletePatientOperation;
 
 import javax.inject.Inject;
 
@@ -41,7 +41,7 @@ public class DeletePatientExecutor implements Executor
     @Override
     public void setOperation(Operation operation)
     {
-        ReadPatientOperation readPatient = (ReadPatientOperation)operation;
+        DeletePatientOperation readPatient = (DeletePatientOperation)operation;
         IdDt patientId = readPatient.getPatientId();
         personId = patientId.getIdPart();
     }
@@ -51,8 +51,8 @@ public class DeletePatientExecutor implements Executor
     {
         try
         {
-            Person personOutput = empiServer.removePerson(personId);
-            return patientFactory.fromPerson(personOutput);
+            empiServer.removePerson(personId);
+            return null;
         }
         catch (RestException cause){
             throw new ExecutionException(cause);

@@ -10,6 +10,12 @@
 
 package org.ucl.fhirwork.network.ehr.server;
 
+/**
+ * Instances of this class represent an EHR server. Methods exists to create,
+ * read, update and delete health records.
+ *
+ * @author Blair Butterworth
+ */
 public class EhrServer
 {
 }

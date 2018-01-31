@@ -30,6 +30,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+/**
+ * Instances of this class provide implements for Cucumber steps relating
+ * patient to patient features, create patient etc...
+ *
+ * @author Blair Butterworth
+ */
 @StepDefAnnotation
 @SuppressWarnings("unused")
 public class PatientSteps
@@ -47,13 +53,13 @@ public class PatientSteps
     }
 
     @Given("^the system has no patients$")
-    public void initializeEmpty() throws Exception
+    public void initializeEmpty() throws RestServerException
     {
         empiServer.removePeople();
     }
 
     @Given("^the system has the following patients:$")
-    public void initializePatients(List<Profile> profiles) throws Exception
+    public void initializePatients(List<Profile> profiles) throws RestServerException
     {
         empiServer.removePeople();
         for (Profile profile: profiles) {
@@ -63,7 +69,7 @@ public class PatientSteps
     }
 
     @When("^the user adds a patient with the following data:$")
-    public void createPatient(List<Profile> profiles) throws Exception
+    public void createPatient(List<Profile> profiles) throws RestServerException
     {
         Profile profile = profiles.get(0);
         Patient patient = Patient.fromProfile(profile);
@@ -71,13 +77,13 @@ public class PatientSteps
     }
 
     @When("^the user searches for patients$")
-    public void patientSearch() throws Exception
+    public void patientSearch() throws RestServerException
     {
         patients = fhirServer.searchPatients();
     }
 
     @When("^the user searches for patients by id for patient \"(.*)\"$")
-    public void patientSearchById(String patientName) throws Exception
+    public void patientSearchById(String patientName) throws RestServerException
     {
         String personId = getPersonIdByName(patientName);
         if (personId != null){
@@ -87,45 +93,39 @@ public class PatientSteps
     }
 
     @When("^the user searches for patients with identifier \"(.*)\" and namespace \"(.*)\"$")
-    public void patientSearchByIdentifier(String identifier, String namespace) throws Exception
+    public void patientSearchByIdentifier(String identifier, String namespace) throws RestServerException
     {
         patients = fhirServer.searchPatientsByIdentifier(namespace + "|" + identifier);
     }
 
     @When("^the user searches for patients with (male|female) gender$")
-    public void patientSearchByGender(String gender) throws Exception
+    public void patientSearchByGender(String gender) throws RestServerException
     {
         patients = fhirServer.searchPatientsByGender(gender);
     }
 
     @When("^the user searches for patients with last name \"(.*)\"$")
-    public void patientSearchBySurname(String surname) throws Exception
+    public void patientSearchBySurname(String surname) throws RestServerException
     {
         patients = fhirServer.searchPatientsBySurname(surname);
     }
 
     @When("^the user searches for patients with (male|female) gender and last name \"(.*)\"$")
-    public void patientSearchByGenderAndSurname(String gender, String surname) throws Exception
+    public void patientSearchByGenderAndSurname(String gender, String surname) throws RestServerException
     {
         patients = fhirServer.searchPatientsByGenderAndSurname(gender, surname);
     }
 
-    /*
-    @When("^the user deletes a patient anmes$")
-    public void updatePatient(List<Profile> profiles) throws Exception
+    @When("^the user deletes the patient named \"(.*)\"$")
+    public void deletePatient(String patientName) throws RestServerException
     {
-        for (Profile profile: profiles){
-            String personId = getPersonId(profile.getFirst());
-            if (personId == null) throw new IllegalStateException();
-
-            Patient patient = Patient.fromProfile(profile);
-            fhirServer.updatePatient(profile.getId(), patient);
-        }
+        String personId = getPersonIdByName(patientName);
+        if (personId == null) throw new IllegalStateException();
+        fhirServer.deletePatient(personId);
     }
-    */
 
     @When("^the user updates a patient to the following data:$")
-    public void updatePatient(List<Profile> profiles) throws Exception
+    public void updatePatient(List<Profile> profiles) throws RestServerException
     {
         for (Profile profile: profiles){
             String personId = getPersonIdByIdentifier(profile.getId());
@@ -151,20 +151,31 @@ public class PatientSteps
         Assert.assertNotNull(patient);
     }
 
-    @Then("^the system should contain a patient named (.*)")
-    public void assertPatientExist(String patientName) throws  Exception
+    @Then("^the system should contain a patient named \"(.*)\"")
+    public void assertPatientExists(String patientName) throws RestServerException
+    {
+        Person person = getPersonByName(patientName);
+        Assert.assertNotNull(person);
+    }
+
+    @Then("^the system should contain (\\d) patients$")
+    public void assertPatientCount(int count) throws RestServerException
     {
         List<Person> people = empiServer.getPeople();
-        Predicate<Person> predicate = person -> Objects.equals(person.getGivenName(), patientName);
-        Person person = people.stream().filter(predicate).findFirst().orElse(null);
-        Assert.assertNotNull(person);
+        Assert.assertEquals(count, people.size());
     }
 
     private String getPersonIdByName(String patientName) throws RestServerException
     {
+        Person person = getPersonByName(patientName);
+        return person != null ? person.getPersonId() : null;
+    }
+
+    private Person getPersonByName(String patientName) throws RestServerException
+    {
         for (Person person: empiServer.getPeople()){
             if (Objects.equals(person.getGivenName(), patientName)){
-                return person.getPersonId();
+                return person;
             }
         }
         return null;
