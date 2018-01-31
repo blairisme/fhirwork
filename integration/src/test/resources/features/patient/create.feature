@@ -1,4 +1,4 @@
-Feature: Patient Creation
+Feature: Create Patient
     This feature allows users to add patient data to the system.
 
 Scenario: Add patient
@@ -6,4 +6,4 @@ Scenario: Add patient
     When the user adds a patient with the following data:
         | id    | first     | last          | gender    |
         | 1     | harry     | potter        | male      |
-    Then the system should contain a patient named harry
+    Then the system should contain a patient named "harry"

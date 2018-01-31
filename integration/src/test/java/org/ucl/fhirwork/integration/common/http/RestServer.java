@@ -57,8 +57,13 @@ public class RestServer
 
     public <T> T get(RestEndpoint endPoint, Class<T> type, Map<Object, Object> parameters) throws RestServerException
     {
+        return get(endPoint.getPath(), type, parameters);
+    }
+
+    public <T> T get(String path, Class<T> type, Map<Object, Object> parameters) throws RestServerException
+    {
         try {
-            HttpRequest request = Unirest.get(server + endPoint.getPath())
+            HttpRequest request = Unirest.get(server + path)
                     .headers(headers)
                     .queryString(convertParameters(parameters));
             HttpResponse<String> response = request.asString();
@@ -72,26 +77,6 @@ public class RestServer
             throw new RestServerException(exception);
         }
     }
-
-/*
-    public String getFoo(RestEndpoint endPoint, Map<Object, Object> parameters) throws RestServerException
-    {
-        try {
-            HttpRequest request = Unirest.get(server + endPoint.getPath())
-                    .headers(headers)
-                    .queryString(convertParameters(parameters));
-            HttpResponse<String> response = request.asString();
-
-            if (! isSuccessful(response.getStatus())) {
-                throw new RestServerException(response.getStatus());
-            }
-            return response.getBody();
-        }
-        catch (UnirestException exception){
-            throw new RestServerException(exception);
-        }
-    }
-*/
 
     public boolean testGet(RestEndpoint endPoint, Map<Object, Object> parameters, int status) throws RestServerException
     {
@@ -179,11 +164,15 @@ public class RestServer
         }
     }
 
-    public <T> String put(RestEndpoint endPoint, T value, Class<T> type) throws RestServerException
+    public <T> String put(RestEndpoint endPoint, T value, Class<T> type) throws RestServerException {
+        return put(endPoint.getPath(), value, type);
+    }
+
+    public <T> String put(String path, T value, Class<T> type) throws RestServerException
     {
         try {
             String body = serializer.serialize(value, type);
-            RequestBodyEntity request = Unirest.put(server + endPoint.getPath())
+            RequestBodyEntity request = Unirest.put(server + path)
                     .headers(headers)
                     .body(body);
             HttpResponse<String> response = request.asString();

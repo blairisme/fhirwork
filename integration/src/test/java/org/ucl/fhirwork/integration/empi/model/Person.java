@@ -45,7 +45,7 @@ public class Person
     public static Person fromProfile(Profile profile)
     {
         return new Person(
-            profile.getId(),
+            null,
             Identifier.fromToken(profile.getId()),
             profile.getFirst(),
             profile.getLast(),
