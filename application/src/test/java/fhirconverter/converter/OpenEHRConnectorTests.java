@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import fhirconverter.exceptions.IdNotObtainedException;
 
-@Ignore //(Blair) Test broken when project inherited from previous team. TODO: Fix
+//(Blair) Test broken when project inherited from previous team. TODO: Fix
 public class OpenEHRConnectorTests{
 	@Test
 	public void getEHRidNumberTest() throws Exception{

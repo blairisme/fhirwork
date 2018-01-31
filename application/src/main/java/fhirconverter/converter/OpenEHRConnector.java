@@ -26,6 +26,7 @@ public class OpenEHRConnector{
 				HttpResponse<String> response = Unirest.post(baseURL+"/rest/v1/session?"+"username="+username+"&password="+password)
   								.asString(); 
 				JSONObject responseObj = new JSONObject(response.getBody());
+
 				if(responseObj.has("sessionId")){
 					return responseObj.getString("sessionId");
 			 	}else{

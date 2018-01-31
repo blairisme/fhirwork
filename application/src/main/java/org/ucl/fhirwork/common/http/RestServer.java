@@ -12,6 +12,7 @@ package org.ucl.fhirwork.common.http;
 
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.request.GetRequest;
+import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
 import org.ucl.fhirwork.common.serialization.Serializer;
 
@@ -67,6 +68,15 @@ public class RestServer
     public RestRequest put(String path)
     {
         HttpRequestWithBody request = Unirest.put(server + path).headers(headers);
+        return new RestRequest(request, serializer);
+    }
+
+    public RestRequest delete(RestResource resource){
+        return delete(resource.getPath());
+    }
+
+    public RestRequest delete(String path){
+        HttpRequest request = Unirest.delete(server + path).headers(headers);
         return new RestRequest(request, serializer);
     }
 
