@@ -12,27 +12,18 @@ public class ConfigMannager {
 	static String DATABASE = "Database";
 	
 	private String environment;
-	private ConfigFilePathMannager configFilePathMannager;
 	
 	//structure: <environment, <configType, configObject>>
 	private Map<String, Map<String, Config>>registeredConfig;
 	
 	public ConfigMannager(String environment){
-		this.configFilePathMannager = new ConfigFilePathMannager();
+		this.environment = environment;
 		
 	}
 	
+	@SuppressWarnings("unused")
 	private void loadConfig(String environment) {
-		MappingConfig mappingConfig = new MappingConfig(this.configFilePathMannager.getFilePath(this.environment, MAPPING));
-		if(mappingConfig == null) {
-			System.out.println("mappingConfig loading failed");
-		}
-		else {
-			Map<String, Config> mappingConfigs = this.registeredConfig.get(MAPPING);
-			mappingConfigs = mappingConfigs == null ? new HashMap<>() : mappingConfigs;
-			mappingConfigs.put(MAPPING, mappingConfig);
-			this.registeredConfig.put(this.environment, mappingConfigs);
-		}
+		
 	}
 	
 	public Object getMappingResult(String key) {
