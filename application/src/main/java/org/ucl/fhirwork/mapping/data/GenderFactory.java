@@ -10,6 +10,7 @@
 
 package org.ucl.fhirwork.mapping.data;
 
+import ca.uhn.fhir.model.dstu2.valueset.AdministrativeGenderEnum;
 import org.ucl.fhirwork.network.empi.data.Gender;
 
 /**
@@ -20,16 +21,25 @@ import org.ucl.fhirwork.network.empi.data.Gender;
  */
 public class GenderFactory
 {
-    public Gender fromName(String name)
+    public Gender fromEnum(AdministrativeGenderEnum gender)
     {
-        /*
-        if (name.equalsIgnoreCase("male")){
-            return new Gender("2", "M", "male", "male");
+        switch (gender){
+            case FEMALE: return new Gender("1", "F", "Female", "Female");
+            case MALE : return new Gender("2", "M", "Male", "Male");
+            case OTHER : return new Gender("3", "O", "Other", "Other");
+            case UNKNOWN : return new Gender("4", "U", "Unknown", "Unknown");
+            default: throw new IllegalArgumentException("Unsupported gender: " + gender);
         }
-        else if (name.equalsIgnoreCase("female")){
-            return new Gender("1", "F", "female", "female");
+    }
+
+    public AdministrativeGenderEnum fromGender(Gender gender)
+    {
+        switch (gender.getGenderCode()){
+            case "F": return AdministrativeGenderEnum.FEMALE;
+            case "M": return AdministrativeGenderEnum.MALE;
+            case "O": return AdministrativeGenderEnum.OTHER;
+            case "U": return AdministrativeGenderEnum.UNKNOWN;
+            default: throw new IllegalArgumentException("Unsupported gender: " + gender);
         }
-        */
-        throw new UnsupportedOperationException();
     }
 }

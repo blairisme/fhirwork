@@ -16,6 +16,7 @@ import ca.uhn.fhir.parser.IParser;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.ucl.fhirwork.network.empi.data.Gender;
 import org.ucl.fhirwork.network.empi.data.Identifier;
 import org.ucl.fhirwork.network.empi.data.Person;
 
@@ -29,8 +30,9 @@ public class PersonFactoryTest
     @Test
     public void fromPatientTest() throws IOException
     {
+        GenderFactory genderFactory = new GenderFactory();
         IdentifierFactory identifierFactory = new IdentifierFactory();
-        PersonFactory personFactory = new PersonFactory(identifierFactory);
+        PersonFactory personFactory = new PersonFactory(genderFactory, identifierFactory);
 
         Patient patient = readPatient("fhir/PatientExample.json");
         Person person = personFactory.fromPatient(patient);
@@ -46,6 +48,10 @@ public class PersonFactoryTest
 
         Assert.assertEquals("Kathrin Mary", person.getGivenName());
         Assert.assertEquals("Williams", person.getFamilyName());
+
+        Gender gender = person.getGender();
+        Assert.assertNotNull(gender);
+        Assert.assertEquals("Female", gender.getGenderName());
     }
 
     private Patient readPatient(String resource) throws IOException

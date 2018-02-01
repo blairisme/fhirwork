@@ -60,6 +60,7 @@ public class Person
     private Identifier[] personIdentifiers;
     private String givenName;
     private String familyName;
+    private Gender gender;
 
     public Person()
     {
@@ -95,5 +96,13 @@ public class Person
 
     public void setFamilyName(String familyName) {
         this.familyName = familyName;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 }
