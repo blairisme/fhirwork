@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * Instances of this class provide {@link Executor}s that perform the actions
@@ -34,7 +35,7 @@ import java.util.Map;
  */
 public class MappingService
 {
-    private Map<Class<?>, Provider<? extends Executor>> executorFactories;
+    private Map<Predicate<Operation>, Provider<? extends Executor>> executorFactories;
 
     @Inject
     public MappingService(
@@ -44,21 +45,30 @@ public class MappingService
             Provider<UpdatePatientExecutor> updatePatientProvider)
     {
         this.executorFactories = new HashMap<>();
-        this.executorFactories.put(CreatePatientOperation.class, createPatientProvider);
-        this.executorFactories.put(DeletePatientOperation.class, deletePatientProvider);
-        this.executorFactories.put(ReadPatientOperation.class, readPatientProvider);
-        this.executorFactories.put(UpdatePatientOperation.class, updatePatientProvider);
+        this.executorFactories.put(isType(CreatePatientOperation.class), createPatientProvider);
+        this.executorFactories.put(isType(DeletePatientOperation.class), deletePatientProvider);
+        this.executorFactories.put(isType(ReadPatientOperation.class), readPatientProvider);
+        this.executorFactories.put(isType(UpdatePatientOperation.class), updatePatientProvider);
     }
 
     public Executor getExecutor(Operation operation)
     {
-        Provider<? extends Executor> provider = executorFactories.get(operation.getClass());
-        if (provider != null)
+        for (Map.Entry<Predicate<Operation>, Provider<? extends Executor>> entry: executorFactories.entrySet())
         {
-            Executor executor = provider.get();
-            executor.setOperation(operation);
-            return executor;
+            Predicate<Operation> executorPredicate = entry.getKey();
+            if (executorPredicate.test(operation))
+            {
+                Provider<? extends Executor> factory = entry.getValue();
+                Executor executor = factory.get();
+                executor.setOperation(operation);
+                return executor;
+            }
         }
         throw new UnsupportedOperationException();
+    }
+
+    private static Predicate<Operation> isType(Class<?> type)
+    {
+        return (operation) -> operation.getClass() == type;
     }
 }
