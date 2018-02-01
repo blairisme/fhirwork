@@ -18,7 +18,8 @@ import com.github.fge.jackson.JsonLoader;
 import com.google.gson.annotations.Expose;
 
 public class MappingConfig extends Config {
-	private Map<String, String> codeMap;
+	//Stores the mapping configuration loaded from file
+	private Map<String, Object> codeMap;
 	
 	public MappingConfig(String filePath){
 		super("Mapping", filePath);
@@ -26,6 +27,8 @@ public class MappingConfig extends Config {
 		loadMappingConfig();
 	}
 	
+	//load configuration file content into Map<String, Object>codeMap, currently using Jackson 
+	//TODO: use gson instead
 	@SuppressWarnings("unchecked")
 	private void loadMappingConfig(){
 		ObjectMapper mapper = new ObjectMapper(); 
@@ -33,15 +36,24 @@ public class MappingConfig extends Config {
 		try {
 			this.codeMap = mapper.readValue(file, HashMap.class);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// TODO throw specific type of exception
 			e.printStackTrace();
 		}
 	}
 	
-	public Map<String, String> getMappingConfig(){
+	//get all the mapping configuration, probably not useful and may be deleted in the future
+	public Map<String, Object> getMappingConfig(){
 		return this.codeMap;
 	}
+	
+	//configMannager will call this method when receiving a searching request
+	public Object getMappingResult(String key) {
+		return this.codeMap.get(key);
+	}
 
+	//the methods below support modification to the configuration file/database when UI is implemented
+	//currently not used
+	
 	@Override
 	public void addConfig(String key, String value) {
 		// TODO Auto-generated method stub
@@ -56,6 +68,4 @@ public class MappingConfig extends Config {
 	public void changeConfig(String key, String value) {
 		// TODO Auto-generated method stub
 	}
-	
-	
 }

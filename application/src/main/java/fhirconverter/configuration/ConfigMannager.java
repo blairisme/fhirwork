@@ -3,21 +3,28 @@ package fhirconverter.configuration;
 import java.util.Map;
 
 public class ConfigMannager {
-	static int DEVELOPING = 0;
-	static int TESTING = 1;
-	static int PRODUCTION = 2;
+	//Specify environment
+	static String DEVELOPING = "Developing";
+	static String TESTING = "Testing";
+	static String PRODUCTION = "Production";
 	
 	private int environment;
-	private FilePathMannager filePathMannager;
-	private Map<Integer, Config>registeredConfig;
+	private ConfigFilePathMannager configFilePathMannager;
+	
+	//structure: <environment, <configType, configObject>>
+	private Map<Integer, Map<String, Config>>registeredConfig;
 	
 	public ConfigMannager(int environment){
 		this.environment = environment;
-		this.filePathMannager = new FilePathMannager();
+		this.configFilePathMannager = new ConfigFilePathMannager();
 	}
 	
-	public String getConfigFilePathByName(String configName){
-		return this.filePathMannager.getFilePath(configName);
+	private void loadConfig() {
+		
+	}
+	
+	public Object getMapping() {
+		return null;
 	}
 	
 	public void addConfig(String configType, String filePath, boolean isReadable, boolean isWritable){
