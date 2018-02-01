@@ -3,10 +3,6 @@
  */
 package fhirconverter.converter;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -41,7 +37,16 @@ public class OpenEHRConvertor {
 	 * @return Map<String, String>
 	 */
 	public static Map<String, String> codeMap() {
-		return MappingConfig.getMappingConfig();
+//		MappingConfig mappingConfig = new MappingConfig("src/main/resources/mappingConfig.json");
+//		return mappingConfig.getMappingConfig();
+		
+		Map<String, String> codeMap = new HashMap<>();
+		codeMap.put("3141-9", "Weight");
+		codeMap.put("8302-2", "Height");
+		codeMap.put("39156-5", "BMI");
+		codeMap.put("8287-5", "Head circumference");
+		codeMap.put("37362-1", "XR Bone age");
+		return codeMap;
 	}
 
 	/**
