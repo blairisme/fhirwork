@@ -35,6 +35,27 @@ public class IdentifierFactory
         return result;
     }
 
+    // TODO: Extract properly - should be FHIR token - http://hl7.org/fhir/search.html#token
+    public Identifier fromSearchParameter(String parameter)
+    {
+        String[] parameterSections = parameter.split("|");
+        if (parameterSections.length == 2)
+        {
+            String system = parameterSections[0];
+            String identifier = parameterSections[1];
+
+            IdentifierDomain identifierDomain = new IdentifierDomain();
+            identifierDomain.setIdentifierDomainName(system);
+
+            Identifier result = new Identifier();
+            result.setIdentifier(identifier);
+            result.setIdentifierDomain(identifierDomain);
+
+            return result;
+        }
+        throw new IllegalArgumentException();
+    }
+
     public IdentifierDt fromIdentifier(Identifier identifier)
     {
         IdentifierDomain domain = identifier.getIdentifierDomain();

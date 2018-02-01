@@ -12,10 +12,7 @@ package org.ucl.fhirwork.mapping;
 
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
-import org.ucl.fhirwork.mapping.executor.CreatePatientExecutor;
-import org.ucl.fhirwork.mapping.executor.DeletePatientExecutor;
-import org.ucl.fhirwork.mapping.executor.ReadPatientExecutor;
-import org.ucl.fhirwork.mapping.executor.UpdatePatientExecutor;
+import org.ucl.fhirwork.mapping.executor.*;
 import org.ucl.fhirwork.network.fhir.operations.patient.CreatePatientOperation;
 import org.ucl.fhirwork.network.fhir.operations.patient.DeletePatientOperation;
 import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
@@ -24,6 +21,7 @@ import org.ucl.fhirwork.network.fhir.operations.patient.UpdatePatientOperation;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -42,9 +40,11 @@ public class MappingService
             Provider<CreatePatientExecutor> createPatientProvider,
             Provider<DeletePatientExecutor> deletePatientProvider,
             Provider<ReadPatientExecutor> readPatientProvider,
-            Provider<UpdatePatientExecutor> updatePatientProvider)
+            Provider<UpdatePatientExecutor> updatePatientProvider,
+            Provider<DeletePatientConditionalExecutor> deleteConditionalProvider)
     {
-        this.executorFactories = new HashMap<>();
+        this.executorFactories = new LinkedHashMap<>();
+        this.executorFactories.put(isConditionalType(DeletePatientOperation.class), deleteConditionalProvider);
         this.executorFactories.put(isType(CreatePatientOperation.class), createPatientProvider);
         this.executorFactories.put(isType(DeletePatientOperation.class), deletePatientProvider);
         this.executorFactories.put(isType(ReadPatientOperation.class), readPatientProvider);
@@ -70,5 +70,20 @@ public class MappingService
     private static Predicate<Operation> isType(Class<?> type)
     {
         return (operation) -> operation.getClass() == type;
+    }
+
+    //TODO: (blair) this can be done better
+    private static Predicate<Operation> isConditionalType(Class<?> type)
+    {
+        return new Predicate<Operation>() {
+            @Override
+            public boolean test(Operation operation) {
+                if (operation instanceof DeletePatientOperation){
+                    DeletePatientOperation deleteOperation = (DeletePatientOperation)operation;
+                    return deleteOperation.getSearchParameters() != null;
+                }
+                return false;
+            }
+        };
     }
 }

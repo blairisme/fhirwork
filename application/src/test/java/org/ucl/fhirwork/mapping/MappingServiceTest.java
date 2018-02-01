@@ -14,10 +14,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.ucl.fhirwork.common.framework.Executor;
-import org.ucl.fhirwork.mapping.executor.CreatePatientExecutor;
-import org.ucl.fhirwork.mapping.executor.DeletePatientExecutor;
-import org.ucl.fhirwork.mapping.executor.ReadPatientExecutor;
-import org.ucl.fhirwork.mapping.executor.UpdatePatientExecutor;
+import org.ucl.fhirwork.mapping.executor.*;
 import org.ucl.fhirwork.network.fhir.operations.patient.DeletePatientOperation;
 
 import javax.inject.Provider;
@@ -31,8 +28,10 @@ public class MappingServiceTest
         Provider<DeletePatientExecutor> deletePatientProvider = createMockProvider(DeletePatientExecutor.class);
         Provider<ReadPatientExecutor> readPatientProvider = createMockProvider(ReadPatientExecutor.class);
         Provider<UpdatePatientExecutor> updatePatientProvider = createMockProvider(UpdatePatientExecutor.class);
+        Provider<DeletePatientConditionalExecutor> deleteConditionalProvider = createMockProvider(DeletePatientConditionalExecutor.class);
 
-        MappingService mappingService = new MappingService(createPatientProvider, deletePatientProvider, readPatientProvider, updatePatientProvider);
+        MappingService mappingService = new MappingService(
+                createPatientProvider, deletePatientProvider, readPatientProvider, updatePatientProvider, deleteConditionalProvider);
         Executor executor = mappingService.getExecutor(new DeletePatientOperation(null));
 
         Assert.assertNotNull(executor);
@@ -42,6 +41,7 @@ public class MappingServiceTest
         Mockito.verify(updatePatientProvider, Mockito.never()).get();
     }
 
+    @SuppressWarnings("unchecked")
     private <T> Provider<T> createMockProvider(Class<T> type)
     {
         T providedObject = Mockito.mock(type);

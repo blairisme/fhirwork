@@ -20,11 +20,12 @@ import ca.uhn.fhir.model.primitive.StringDt;
 import org.ucl.fhirwork.network.empi.data.Gender;
 import org.ucl.fhirwork.network.empi.data.Identifier;
 import org.ucl.fhirwork.network.empi.data.Person;
+import org.ucl.fhirwork.network.fhir.data.SearchParameter;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Instances of this class create {@link Person} instances, usually by
@@ -54,14 +55,30 @@ public class PersonFactory
         return result;
     }
 
-    private void setId(Person person, Patient patient)
+    public Person fromSearchParameters(Map<SearchParameter, String> searchParameters)
     {
-        setId(person, patient.getId());
+        Person result = new Person();
+        setId(result, searchParameters);
+        return result;
     }
 
-    private void setId(Person person, IdDt id)
+    private void setId(Person person, Patient patient)
     {
-        person.setPersonId(id.getIdPart());
+        IdDt identifier = patient.getId();
+        if (identifier != null){
+            person.setPersonId(identifier.getIdPart());
+        }
+    }
+
+    private void setId(Person person, Map<SearchParameter, String> searchParameters)
+    {
+        String identifierParameter = searchParameters.get(SearchParameter.Identifier);
+        if (identifierParameter != null)
+        {
+            Identifier identifier = identifierFactory.fromSearchParameter(identifierParameter);
+            Identifier[] identifiers = {identifier};
+            person.setPersonIdentifiers(identifiers);
+        }
     }
 
     private void setIdentifiers(Person person, Patient patient)

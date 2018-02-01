@@ -20,7 +20,12 @@ import com.google.common.collect.ImmutableMap;
 import org.ucl.fhirwork.common.http.*;
 import org.ucl.fhirwork.common.serialization.XmlSerializer;
 import org.ucl.fhirwork.network.empi.data.AuthenticationRequest;
+import org.ucl.fhirwork.network.empi.data.People;
 import org.ucl.fhirwork.network.empi.data.Person;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Instances of this class represent an EMPI server. Methods exists to create,
@@ -58,6 +63,25 @@ public class EmpiServer
 
         RestResponse response = request.make(HandleFailure.ByException);
         return response.asType(Person.class);
+    }
+
+    /**
+     * This method returns a {@link List} of {@link Person} records that match
+     * any of the person attributes that are provided in the search {@code
+     * Person} object which acts as a template.
+     *
+     * @return  a collection of people matching the given {@code Person}
+     *          template.
+     */
+    public List<Person> findPersonsByAttributes(Person person) throws RestException
+    {
+        RestRequest request = getServer().post(FindPersonsByAttributes);
+        request.setBody(person, Person.class);
+
+        RestResponse response = request.make(HandleFailure.ByException);
+        People people = response.asType(People.class);
+
+        return Arrays.asList(people.getPerson());
     }
 
     //TODO: Handle code 204 operation success but person missing
