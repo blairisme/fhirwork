@@ -13,20 +13,16 @@ package org.ucl.fhirwork.network.ehr.server;
 import com.google.common.collect.ImmutableMap;
 
 
-import com.sun.xml.internal.ws.api.server.SDDocument;
+
 import org.ucl.fhirwork.common.http.*;
 import org.ucl.fhirwork.common.serialization.JsonSerializer;
 import org.ucl.fhirwork.network.ehr.data.SessionToken;
-
-
-
-
+import org.ucl.fhirwork.network.ehr.data.HealthRecord;
+import org.ucl.fhirwork.network.ehr.data.Composition;
+import org.ucl.fhirwork.network.ehr.data.QueryResult;
 import org.ucl.fhirwork.network.ehr.data.QueryBundle;
 
-
-import java.io.IOException;
 import java.util.*;
-
 import static com.google.common.collect.ImmutableBiMap.of;
 import static org.ucl.fhirwork.common.http.HttpHeader.Accept;
 import static org.ucl.fhirwork.common.http.HttpHeader.ContentType;
@@ -35,8 +31,12 @@ import static org.ucl.fhirwork.network.ehr.server.EhrHeader.SessionId;
 import static org.ucl.fhirwork.network.ehr.server.EhrParameter.Aql;
 import static org.ucl.fhirwork.network.ehr.server.EhrParameter.Password;
 import static org.ucl.fhirwork.network.ehr.server.EhrParameter.Username;
+import static org.ucl.fhirwork.network.ehr.server.EhrParameter.SubjectId;
+import static org.ucl.fhirwork.network.ehr.server.EhrParameter.SubjectNamespace;
 import static org.ucl.fhirwork.network.ehr.server.EhrResource.Query;
 import static org.ucl.fhirwork.network.ehr.server.EhrResource.Session;
+import static org.ucl.fhirwork.network.ehr.server.EhrResource.Ehr;
+
 
 public class EhrServer {
     private RestServer server;
@@ -83,10 +83,16 @@ public class EhrServer {
 //
 //    }
 //
-//    public HealthRecord getEhr(String id, String namespace) throws RestServerException
-//    {
-//
-//
+    public HealthRecord getEhr(String id, String namespace) throws RestException {
+        RestServer server = getServer();
+        RestRequest request = server.get(Ehr);
+        request.setParameters(ImmutableMap.of(SubjectId, id, SubjectNamespace, namespace));
+        RestResponse response = request.make(HandleFailure.ByException);
+        HealthRecord result = response.asType(HealthRecord.class);
+        return result;
+    }
+
+
 //    public boolean ehrExists(String id, String namespace) throws RestServerException
 //    {
 //
@@ -96,16 +102,16 @@ public class EhrServer {
 //
 //    }
 //
-//    public List<Composition> getCompositions(String ehrId) throws RestServerException
-//    {
-//        List<Composition> compositions = new ArrayList<>();
-//        QueryBundle bundle = query("select a from EHR [ehr_id/value='" + ehrId + "'] contains COMPOSITION a");
-//
-//        for (QueryResult queryResult: bundle.getResultSet()) {
-//            compositions.add(queryResult.getComposition());
-//        }
-//        return compositions;
-//    }
+    public List<Composition> getCompositions(String ehrId) throws RestException
+    {
+        List<Composition> compositions = new ArrayList<>();
+        QueryBundle bundle = query("select a from EHR [ehr_id/value='" + ehrId + "'] contains COMPOSITION a");
+
+        for (QueryResult queryResult: bundle.getResultSet()) {
+            compositions.add(queryResult.getComposition());
+        }
+        return compositions;
+    }
 //
 //    public void removeComposition(Composition composition) throws RestServerException
 //    {
