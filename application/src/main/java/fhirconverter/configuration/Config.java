@@ -10,6 +10,9 @@ package fhirconverter.configuration;
 
 //	This is the class for all kinds of configs (bind to different files)
 public abstract class Config {
+	static final String MAPPING = "Mapping";
+	static final String DATABASE = "Database";
+	
 	private String configType;
 	private String filePath;
 //	private boolean isReadable;

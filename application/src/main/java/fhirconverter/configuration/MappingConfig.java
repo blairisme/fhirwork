@@ -11,7 +11,7 @@ public class MappingConfig extends Config {
 	private Map<String, Object> codeMap;
 	
 	public MappingConfig(String filePath){
-		super("Mapping", filePath);
+		super(MAPPING, filePath);
 		this.codeMap = new HashMap<>();
 		loadMappingConfig();
 	}
