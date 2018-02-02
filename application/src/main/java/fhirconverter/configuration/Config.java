@@ -4,9 +4,11 @@ package fhirconverter.configuration;
  * All the different types of configuration files will be loaded into system as
  * instance of objects in this class, stores the configType and the path of the file
  * that the config object loads.
- *
- * @author Abdul-qadir Ali
+ * instance of objects in this class
+ 
  * @author Chenghui Fan
+ * @author Abdul-Qadir Ali
+ * 
  */
 
 //	Considering having extra features that define the accessibility of the config file. (By Chenghui Fan 18/02/02)
@@ -19,6 +21,7 @@ public abstract class Config {
 //	private boolean isReadable;
 //	private boolean isWritable;
 	
+// A constructor that initialises the config class.	
 //	public Config(String configType, String filePath, boolean isReadable, boolean isWritable) {
 	
 	public Config(String configType, String filePath) {
@@ -29,6 +32,7 @@ public abstract class Config {
 //		this.isWritable = isWritable;
 	}
 	
+	// 
 	public String getFilePath(){
 		return this.filePath;
 	}

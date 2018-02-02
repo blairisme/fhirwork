@@ -1,14 +1,14 @@
 package fhirconverter.configuration;
-
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
-
 import com.google.gson.reflect.TypeToken;
 
 /**
- * (Description for this class)
- *
+ * This is the Mapping Configuration Class.
+ * Responsible for converting json files into HashMap objects and vice versa.
+ * Uses Gson for Serialisation and Deserialisation  of the Json files and the HashMap objects.
+
  * @author Abdul-qadir Ali
  * @author Chenghui Fan
  */
@@ -24,7 +24,7 @@ public class MappingConfig extends Config {
 		loadMappingConfig();
 	}
 	
-	//load configuration file content into Map<String, Object>codeMap
+	//loading configuration file content into Map<String, Object>codeMap
 	@SuppressWarnings("unchecked")
 	private void loadMappingConfig(){
 		gsonSerializer serializer = new gsonSerializer();
