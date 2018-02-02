@@ -20,12 +20,9 @@ import java.util.Map;
  */
 public class ConfigMannager {
 	//Specifying the various environments within the software system.
-	static String DEVELOPING = "Developing";
-	static String TESTING = "Testing";
-	static String PRODUCTION = "Production";
-	static String MAPPING = "Mapping";
-	static String DATABASE = "Database";
-
+	static final String DEVELOPING = "Developing";
+	static final String TESTING = "Testing";
+	static final String PRODUCTION = "Production";
 	
 	private String environment;
 	private ConfigFilePathMannager filePathMannager;
