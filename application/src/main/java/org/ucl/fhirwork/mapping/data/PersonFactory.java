@@ -13,16 +13,19 @@ package org.ucl.fhirwork.mapping.data;
 import ca.uhn.fhir.model.dstu2.composite.HumanNameDt;
 import ca.uhn.fhir.model.dstu2.composite.IdentifierDt;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
+import ca.uhn.fhir.model.dstu2.valueset.AdministrativeGenderEnum;
+import ca.uhn.fhir.model.primitive.BoundCodeDt;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.model.primitive.StringDt;
 import org.ucl.fhirwork.network.empi.data.Gender;
 import org.ucl.fhirwork.network.empi.data.Identifier;
 import org.ucl.fhirwork.network.empi.data.Person;
+import org.ucl.fhirwork.network.fhir.data.SearchParameter;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Instances of this class create {@link Person} instances, usually by
@@ -32,11 +35,13 @@ import java.util.List;
  */
 public class PersonFactory
 {
+    private GenderFactory genderFactory;
     private IdentifierFactory identifierFactory;
 
     @Inject
-    public PersonFactory(IdentifierFactory identifierFactory)
+    public PersonFactory(GenderFactory genderFactory, IdentifierFactory identifierFactory)
     {
+        this.genderFactory = genderFactory;
         this.identifierFactory = identifierFactory;
     }
 
@@ -46,17 +51,34 @@ public class PersonFactory
         setId(result, patient);
         setIdentifiers(result, patient);
         setName(result, patient);
+        setGender(result, patient);
+        return result;
+    }
+
+    public Person fromSearchParameters(Map<SearchParameter, String> searchParameters)
+    {
+        Person result = new Person();
+        setId(result, searchParameters);
         return result;
     }
 
     private void setId(Person person, Patient patient)
     {
-        setId(person, patient.getId());
+        IdDt identifier = patient.getId();
+        if (identifier != null){
+            person.setPersonId(identifier.getIdPart());
+        }
     }
 
-    private void setId(Person person, IdDt id)
+    private void setId(Person person, Map<SearchParameter, String> searchParameters)
     {
-        person.setPersonId(id.getIdPart());
+        String identifierParameter = searchParameters.get(SearchParameter.Identifier);
+        if (identifierParameter != null)
+        {
+            Identifier identifier = identifierFactory.fromSearchParameter(identifierParameter);
+            Identifier[] identifiers = {identifier};
+            person.setPersonIdentifiers(identifiers);
+        }
     }
 
     private void setIdentifiers(Person person, Patient patient)
@@ -112,5 +134,17 @@ public class PersonFactory
         }
         String result = builder.toString();
         return result.trim();
+    }
+
+    private void setGender(Person person, Patient patient)
+    {
+        BoundCodeDt<AdministrativeGenderEnum> genderContainer = patient.getGenderElement();
+        AdministrativeGenderEnum patientGender = genderContainer.getValueAsEnum();
+
+        if (patientGender != null)
+        {
+            Gender gender = genderFactory.fromEnum(patientGender);
+            person.setGender(gender);
+        }
     }
 }

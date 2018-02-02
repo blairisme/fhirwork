@@ -22,7 +22,6 @@ import org.ucl.fhirwork.integration.empi.model.Person;
 import org.ucl.fhirwork.integration.fhir.model.Patient;
 import org.ucl.fhirwork.integration.fhir.FhirServer;
 import org.ucl.fhirwork.integration.fhir.utils.NameUtils;
-import sun.security.krb5.internal.PAData;
 
 import java.util.Arrays;
 import java.util.Collections;

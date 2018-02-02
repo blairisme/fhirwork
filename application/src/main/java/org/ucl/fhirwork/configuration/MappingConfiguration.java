@@ -10,6 +10,17 @@
 
 package org.ucl.fhirwork.configuration;
 
+import java.util.List;
+
 public class MappingConfiguration
 {
+    public List<MappingSpecification> mappings;
+
+    public MappingConfiguration(List<MappingSpecification> mappings) {
+        this.mappings = mappings;
+    }
+
+    public List<MappingSpecification> getMappings() {
+        return mappings;
+    }
 }

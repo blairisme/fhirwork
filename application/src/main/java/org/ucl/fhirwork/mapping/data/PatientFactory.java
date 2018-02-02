@@ -13,7 +13,9 @@ package org.ucl.fhirwork.mapping.data;
 import ca.uhn.fhir.model.dstu2.composite.HumanNameDt;
 import ca.uhn.fhir.model.dstu2.composite.IdentifierDt;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
+import ca.uhn.fhir.model.dstu2.valueset.AdministrativeGenderEnum;
 import ca.uhn.fhir.model.primitive.IdDt;
+import org.ucl.fhirwork.network.empi.data.Gender;
 import org.ucl.fhirwork.network.empi.data.Identifier;
 import org.ucl.fhirwork.network.empi.data.Person;
 
@@ -30,11 +32,15 @@ import java.util.List;
  */
 public class PatientFactory
 {
+    private GenderFactory genderFactory;
     private IdentifierFactory identifierFactory;
 
     @Inject
-    public PatientFactory(IdentifierFactory identifierFactory)
+    public PatientFactory(
+            GenderFactory genderFactory,
+            IdentifierFactory identifierFactory)
     {
+        this.genderFactory = genderFactory;
         this.identifierFactory = identifierFactory;
     }
 
@@ -44,6 +50,7 @@ public class PatientFactory
         setId(result, person);
         setIdentifiers(result, person);
         setName(result, person);
+        setGender(result, person);
         return result;
     }
 
@@ -69,5 +76,15 @@ public class PatientFactory
         name.addGiven(person.getGivenName());
         name.addFamily(person.getFamilyName());
         patient.setName(Arrays.asList(name));
+    }
+
+    private void setGender(Patient patient, Person person)
+    {
+        Gender personGender = person.getGender();
+        if (personGender != null)
+        {
+            AdministrativeGenderEnum gender = genderFactory.fromGender(person.getGender());
+            patient.setGender(gender);
+        }
     }
 }

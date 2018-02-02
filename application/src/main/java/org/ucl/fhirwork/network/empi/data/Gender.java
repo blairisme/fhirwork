@@ -41,6 +41,13 @@ public class Gender
     {
     }
 
+    public Gender(String genderCd, String genderCode, String genderName, String genderDescription) {
+        this.genderCd = genderCd;
+        this.genderCode = genderCode;
+        this.genderName = genderName;
+        this.genderDescription = genderDescription;
+    }
+
     public String getGenderCd() {
         return genderCd;
     }

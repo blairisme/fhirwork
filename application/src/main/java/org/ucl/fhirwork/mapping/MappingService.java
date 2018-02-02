@@ -12,10 +12,7 @@ package org.ucl.fhirwork.mapping;
 
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
-import org.ucl.fhirwork.mapping.executor.CreatePatientExecutor;
-import org.ucl.fhirwork.mapping.executor.DeletePatientExecutor;
-import org.ucl.fhirwork.mapping.executor.ReadPatientExecutor;
-import org.ucl.fhirwork.mapping.executor.UpdatePatientExecutor;
+import org.ucl.fhirwork.mapping.executor.*;
 import org.ucl.fhirwork.network.fhir.operations.patient.CreatePatientOperation;
 import org.ucl.fhirwork.network.fhir.operations.patient.DeletePatientOperation;
 import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
@@ -24,7 +21,9 @@ import org.ucl.fhirwork.network.fhir.operations.patient.UpdatePatientOperation;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * Instances of this class provide {@link Executor}s that perform the actions
@@ -34,31 +33,57 @@ import java.util.Map;
  */
 public class MappingService
 {
-    private Map<Class<?>, Provider<? extends Executor>> executorFactories;
+    private Map<Predicate<Operation>, Provider<? extends Executor>> executorFactories;
 
     @Inject
     public MappingService(
             Provider<CreatePatientExecutor> createPatientProvider,
             Provider<DeletePatientExecutor> deletePatientProvider,
             Provider<ReadPatientExecutor> readPatientProvider,
-            Provider<UpdatePatientExecutor> updatePatientProvider)
+            Provider<UpdatePatientExecutor> updatePatientProvider,
+            Provider<DeletePatientConditionalExecutor> deleteConditionalProvider)
     {
-        this.executorFactories = new HashMap<>();
-        this.executorFactories.put(CreatePatientOperation.class, createPatientProvider);
-        this.executorFactories.put(DeletePatientOperation.class, deletePatientProvider);
-        this.executorFactories.put(ReadPatientOperation.class, readPatientProvider);
-        this.executorFactories.put(UpdatePatientOperation.class, updatePatientProvider);
+        this.executorFactories = new LinkedHashMap<>();
+        this.executorFactories.put(isConditionalType(DeletePatientOperation.class), deleteConditionalProvider);
+        this.executorFactories.put(isType(CreatePatientOperation.class), createPatientProvider);
+        this.executorFactories.put(isType(DeletePatientOperation.class), deletePatientProvider);
+        this.executorFactories.put(isType(ReadPatientOperation.class), readPatientProvider);
+        this.executorFactories.put(isType(UpdatePatientOperation.class), updatePatientProvider);
     }
 
     public Executor getExecutor(Operation operation)
     {
-        Provider<? extends Executor> provider = executorFactories.get(operation.getClass());
-        if (provider != null)
+        for (Map.Entry<Predicate<Operation>, Provider<? extends Executor>> entry: executorFactories.entrySet())
         {
-            Executor executor = provider.get();
-            executor.setOperation(operation);
-            return executor;
+            Predicate<Operation> executorPredicate = entry.getKey();
+            if (executorPredicate.test(operation))
+            {
+                Provider<? extends Executor> factory = entry.getValue();
+                Executor executor = factory.get();
+                executor.setOperation(operation);
+                return executor;
+            }
         }
         throw new UnsupportedOperationException();
+    }
+
+    private static Predicate<Operation> isType(Class<?> type)
+    {
+        return (operation) -> operation.getClass() == type;
+    }
+
+    //TODO: (blair) this can be done better
+    private static Predicate<Operation> isConditionalType(Class<?> type)
+    {
+        return new Predicate<Operation>() {
+            @Override
+            public boolean test(Operation operation) {
+                if (operation instanceof DeletePatientOperation){
+                    DeletePatientOperation deleteOperation = (DeletePatientOperation)operation;
+                    return deleteOperation.getSearchParameters() != null;
+                }
+                return false;
+            }
+        };
     }
 }

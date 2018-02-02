@@ -16,15 +16,19 @@ import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.annotation.*;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.server.IResourceProvider;
+import ca.uhn.fhir.rest.server.exceptions.NotImplementedOperationException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.ucl.fhirwork.ApplicationService;
+import org.ucl.fhirwork.network.fhir.data.SearchParameter;
 import org.ucl.fhirwork.network.fhir.operations.patient.CreatePatientOperation;
 import org.ucl.fhirwork.network.fhir.operations.patient.DeletePatientOperation;
 import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
 import org.ucl.fhirwork.network.fhir.operations.patient.UpdatePatientOperation;
+import org.ucl.fhirwork.network.fhir.utils.ConditionParser;
 
 import javax.inject.Inject;
+import java.util.Map;
 
 /**
  * Instances of this class provide implement functions defined in the FHIR
@@ -39,11 +43,15 @@ import javax.inject.Inject;
 public class PatientResourceProvider implements IResourceProvider
 {
     private ApplicationService applicationService;
+    private ConditionParser conditionParser;
 
     @Inject
-    public PatientResourceProvider(ApplicationService applicationService)
+    public PatientResourceProvider(
+            ApplicationService applicationService,
+            ConditionParser conditionParser)
     {
         this.applicationService = applicationService;
+        this.conditionParser = conditionParser;
     }
 
     @Override
@@ -73,8 +81,19 @@ public class PatientResourceProvider implements IResourceProvider
     @Delete
     public void deletePatient(@IdParam IdDt patientId)
     {
+        deletePatient(patientId, null);
+    }
+
+    @Delete
+    public void deletePatientConditional(@IdParam IdDt patientId, @ConditionalUrlParam String condition)
+    {
+        deletePatient(patientId, getSearchParameters(condition));
+    }
+
+    private void deletePatient(IdDt patientId, Map<SearchParameter, String> searchParameters)
+    {
         try {
-            DeletePatientOperation operation = new DeletePatientOperation(patientId);
+            DeletePatientOperation operation = new DeletePatientOperation(patientId, searchParameters);
             applicationService.execute(operation);
         }
         catch (Exception e) {
@@ -95,9 +114,7 @@ public class PatientResourceProvider implements IResourceProvider
     }
 
     @Update
-    public MethodOutcome update(
-            @IdParam IdDt patientId,
-            @ResourceParam Patient patient)
+    public MethodOutcome update(@IdParam IdDt patientId, @ResourceParam Patient patient)
     {
         MethodOutcome result = new MethodOutcome();
         OperationOutcome outcome = new OperationOutcome();
@@ -112,6 +129,16 @@ public class PatientResourceProvider implements IResourceProvider
             result.setOperationOutcome(outcome);
         }
         return result;
+    }
+
+    private Map<SearchParameter, String> getSearchParameters(String condition)
+    {
+        try{
+            return conditionParser.getSearchParameters(condition);
+        }
+        catch (IllegalArgumentException error){
+            throw new NotImplementedOperationException("Unsupported search parameter in service call: " + condition);
+        }
     }
 
     /*
@@ -129,15 +156,6 @@ public class PatientResourceProvider implements IResourceProvider
             @ResourceParam Patient thePatient,
             @IdParam IdDt theId,
             @ConditionalUrlParam String theConditional)
-    {
-        //theConditional will have a value like "Patient?identifier=system%7C00001"
-        throw new UnsupportedOperationException();
-    }
-
-    @Delete
-    public void deletePatientConditional(
-            @IdParam IdDt theId,
-            @ConditionalUrlParam String theConditionalUrl)
     {
         //theConditional will have a value like "Patient?identifier=system%7C00001"
         throw new UnsupportedOperationException();
