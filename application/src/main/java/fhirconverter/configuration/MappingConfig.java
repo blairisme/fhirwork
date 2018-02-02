@@ -16,8 +16,7 @@ public class MappingConfig extends Config {
 		loadMappingConfig();
 	}
 	
-	//load configuration file content into Map<String, Object>codeMap, currently using Jackson 
-	//TODO: use gson instead
+	//load configuration file content into Map<String, Object>codeMap
 	@SuppressWarnings("unchecked")
 	private void loadMappingConfig(){
 		gsonSerializer serializer = new gsonSerializer();

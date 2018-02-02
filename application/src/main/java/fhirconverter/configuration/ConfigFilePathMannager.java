@@ -5,6 +5,15 @@ import java.util.Map;
 
 import com.google.gson.reflect.TypeToken;
 
+/**
+ * This class handles all the interactions with other modules in the system.
+ * When constructed, it loads all the configuration files of the specified environment as Config objects.
+ * When recveiving requests, it arranges relevant Config object to handle the requests
+ *
+ * @author Abdul-qadir Ali
+ * @author Chenghui Fan
+ */
+
 //in progress by Chenghu Fan
 public class ConfigFilePathMannager {
 	//Specify environment
@@ -38,11 +47,10 @@ public class ConfigFilePathMannager {
 		return filePath.get(environment);
 	}
 	
-	//TODO: throw specific exception
+	@SuppressWarnings("unchecked")
 	private Map<String, Map<String, String>> loadFilePath(){
 		gsonSerializer serializer = new gsonSerializer();
 		Type type = new TypeToken<Map<String, Map<String, String>>>() {}.getType(); 
-		@SuppressWarnings("unchecked")
 		Map<String, Map<String, String>> convertedFilePath = (Map<String, Map<String, String>>) serializer.fromJsonFileToSpecifiedTypeObj(type, this.pathFileLocation);
 		return convertedFilePath;
 	}

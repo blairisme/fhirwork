@@ -21,7 +21,6 @@ public class ConfigMannager {
 		
 	}
 	
-	@SuppressWarnings("unused")
 	private void loadConfig(String environment) {
 		
 	}
