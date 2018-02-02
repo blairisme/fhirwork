@@ -28,7 +28,7 @@ public class ConfigMannager {
 		this.environment = environment;
 		this.registeredConfig = new HashMap<>();
 		this.filePathMannager = new ConfigFilePathMannager();
-		loadConfig(environment);
+		loadConfig();
 	}
 	
 	public Object getMappingResult(String key) {
@@ -39,8 +39,8 @@ public class ConfigMannager {
 			return null;
 	}
 	
-	private void loadConfig(String environment) {
-		Map<String, String> filePaths = this.filePathMannager.getFilePathsByEnvironment(environment);
+	private void loadConfig() {
+		Map<String, String> filePaths = this.filePathMannager.getFilePathsByEnvironment(this.environment);
 		
 		for(String key: filePaths.keySet()) {
 			switch(key) {
