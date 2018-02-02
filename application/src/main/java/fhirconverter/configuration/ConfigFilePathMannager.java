@@ -1,11 +1,18 @@
 package fhirconverter.configuration;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
+import java.lang.reflect.Type;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.reflect.TypeToken;
+
+/**
+ * This class handles all the interactions with other modules in the system.
+ * When constructed, it loads all the configuration files of the specified environment as Config objects.
+ * When recveiving requests, it arranges relevant Config object to handle the requests
+ *
+ * @author Abdul-qadir Ali
+ * @author Chenghui Fan
+ */
 
 //in progress by Chenghu Fan
 public class ConfigFilePathMannager {
@@ -36,23 +43,15 @@ public class ConfigFilePathMannager {
 		this.pathFileLocation = pathFileLocation;
 	}
 	
-	public String getFilePath(String environment, String fileName){
-		return filePath.get(environment).get(fileName);
+	public Map<String, String> getFilePathsByEnvironment(String environment){
+		return filePath.get(environment);
 	}
 	
-	//TODO: throw specific exception
 	@SuppressWarnings("unchecked")
 	private Map<String, Map<String, String>> loadFilePath(){
-		Map<String, Map<String, String>>inputFilePath = new HashMap<>();
-		File file = new File(this.pathFileLocation);
-		ObjectMapper mapper = new ObjectMapper(); 
-		try {
-			inputFilePath = mapper.readValue(file, HashMap.class);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			inputFilePath = null;
-		}
-        return inputFilePath;
+		gsonSerializer serializer = new gsonSerializer();
+		Type type = new TypeToken<Map<String, Map<String, String>>>() {}.getType(); 
+		Map<String, Map<String, String>> convertedFilePath = (Map<String, Map<String, String>>) serializer.fromJsonFileToSpecifiedTypeObj(type, this.pathFileLocation);
+		return convertedFilePath;
 	}
 }

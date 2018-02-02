@@ -1,21 +1,10 @@
 package fhirconverter.configuration;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URL;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONObject;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jackson.JsonLoader;
-import com.google.gson.annotations.Expose;
+import com.google.gson.reflect.TypeToken;
 
 public class MappingConfig extends Config {
 	//Stores the mapping configuration loaded from file
@@ -27,18 +16,16 @@ public class MappingConfig extends Config {
 		loadMappingConfig();
 	}
 	
-	//load configuration file content into Map<String, Object>codeMap, currently using Jackson 
-	//TODO: use gson instead
+	//load configuration file content into Map<String, Object>codeMap
 	@SuppressWarnings("unchecked")
 	private void loadMappingConfig(){
-		ObjectMapper mapper = new ObjectMapper(); 
-		File file = new File(this.getFilePath());
-		try {
-			this.codeMap = mapper.readValue(file, HashMap.class);
-		} catch (IOException e) {
-			// TODO throw specific type of exception
-			e.printStackTrace();
-		}
+		gsonSerializer serializer = new gsonSerializer();
+		Type type = new TypeToken<Map<String, Object>>() {}.getType(); 
+		Map<String, Object> convertedMappingConfig = (Map<String, Object>) serializer.fromJsonFileToSpecifiedTypeObj(type, this.getFilePath());
+		if(convertedMappingConfig == null)
+			System.out.println("loading mapping configuration file failed");
+		else
+			this.codeMap = convertedMappingConfig;
 	}
 	
 	//get all the mapping configuration, probably not useful and may be deleted in the future

@@ -1,5 +1,13 @@
 package fhirconverter.configuration;
 
+/**
+ * All the different types of configuration files will be loaded into system as
+ * instance of objects in this class
+ *
+ * @author Abdul-qadir Ali
+ * @author Chenghui Fan
+ */
+
 //	This is the class for all kinds of configs (bind to different files)
 public abstract class Config {
 	private String configType;
