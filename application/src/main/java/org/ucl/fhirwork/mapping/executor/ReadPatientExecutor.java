@@ -23,6 +23,12 @@ import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
 
 import javax.inject.Inject;
 
+/**
+ * Instances of this class convert the read patient FHIR operation into the
+ * appropriate EMPI service calls.
+ *
+ * @author Blair Butterworth
+ */
 public class ReadPatientExecutor implements Executor
 {
     private String personId;

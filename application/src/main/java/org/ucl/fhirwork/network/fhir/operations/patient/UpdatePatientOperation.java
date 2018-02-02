@@ -13,19 +13,28 @@ package org.ucl.fhirwork.network.fhir.operations.patient;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
 import ca.uhn.fhir.model.primitive.IdDt;
 import org.ucl.fhirwork.common.framework.Operation;
+import org.ucl.fhirwork.network.fhir.data.SearchParameter;
+import org.ucl.fhirwork.network.fhir.operations.common.ConditionalOperation;
+
+import java.util.Map;
 
 /**
  * Instances of this class represent the FHIR update patient operation.
  *
  * @author Blair Butterworth
  */
-public class UpdatePatientOperation implements Operation
+public class UpdatePatientOperation extends ConditionalOperation
 {
     private IdDt patientId;
     private Patient patient;
 
     public UpdatePatientOperation(IdDt patientId, Patient patient) {
         this.patientId = patientId;
+        this.patient = patient;
+    }
+
+    public UpdatePatientOperation(Patient patient, Map<SearchParameter, String> searchParameters) {
+        super(searchParameters);
         this.patient = patient;
     }
 

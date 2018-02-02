@@ -23,6 +23,12 @@ import org.ucl.fhirwork.network.fhir.operations.patient.DeletePatientOperation;
 
 import javax.inject.Inject;
 
+/**
+ * Instances of this class convert the delete patient FHIR operation into the
+ * appropriate EMPI service calls.
+ *
+ * @author Blair Butterworth
+ */
 public class DeletePatientExecutor implements Executor
 {
     private String personId;

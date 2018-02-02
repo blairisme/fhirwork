@@ -11,6 +11,7 @@ package org.ucl.fhirwork.mapping.executor;
 
 import ca.uhn.fhir.model.primitive.IdDt;
 import org.ucl.fhirwork.common.framework.ExecutionException;
+import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
 import org.ucl.fhirwork.common.http.RestException;
 import org.ucl.fhirwork.mapping.data.PatientFactory;
@@ -20,7 +21,13 @@ import org.ucl.fhirwork.network.empi.server.EmpiServer;
 import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
 import javax.inject.Inject;
 
-public class SearchPatientExecutor {
+/**
+ * Instances of this class convert the patient search FHIR operation into the
+ * appropriate EMPI service calls.
+ *
+ * @author Alperen Karaoglu
+ */
+public class SearchPatientExecutor implements Executor {
     private String personId;
     private EmpiServer empiServer;
     private PatientFactory patientFactory;
@@ -28,8 +35,7 @@ public class SearchPatientExecutor {
     @Inject
     public SearchPatientExecutor(
             NetworkService networkService,
-            PatientFactory patientFactory
-    )
+            PatientFactory patientFactory)
     {
         this.empiServer = networkService.getEmpiServer();
         this.patientFactory = patientFactory;
@@ -60,6 +66,5 @@ public class SearchPatientExecutor {
         catch (RestException cause){
             throw new ExecutionException(cause);
         }
-
     }
 }

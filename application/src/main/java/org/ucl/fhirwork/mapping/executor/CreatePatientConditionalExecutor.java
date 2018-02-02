@@ -25,7 +25,13 @@ import org.ucl.fhirwork.network.fhir.operations.patient.CreatePatientOperation;
 import javax.inject.Inject;
 import java.util.Map;
 
-public class CreatePatientConditionalExecutor implements Executor{
+/**
+ * Instances of this class convert the conditional create patient FHIR
+ * operation into the appropriate EMPI service calls.
+ *
+ * @author Alperen Karaoglu
+ */
+public class CreatePatientConditionalExecutor implements Executor {
     private Patient patient;
     private Map<SearchParameter, String> searchParameters;
     private EmpiServer empiServer;
