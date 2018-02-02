@@ -5,6 +5,13 @@ import java.util.Map;
 
 import com.google.gson.reflect.TypeToken;
 
+/**
+ * (Description for this class)
+ *
+ * @author Abdul-qadir Ali
+ * @author Chenghui Fan
+ */
+
 public class ConfigFilePathMannager {
 
 	static final String PATH_FILE_LOCATION = "src/main/resources/configFilePath.json";

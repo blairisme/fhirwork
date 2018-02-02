@@ -3,6 +3,15 @@ package fhirconverter.configuration;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+* This class handles all the interactions with other modules in the system.
+* When constructed, it loads all the configuration files of the specified environment as Config objects.
+* When recveiving requests, it arranges relevant Config object to handle the requests
+*
+* @author Abdul-qadir Ali
+* @author Chenghui Fan
+*/
+
 public class ConfigMannager {
 	//Specify environment
 	static final String DEVELOPING = "Developing";
