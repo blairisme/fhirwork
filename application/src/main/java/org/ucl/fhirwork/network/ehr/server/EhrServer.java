@@ -24,6 +24,9 @@ import org.ucl.fhirwork.network.ehr.data.SessionToken;
 import org.ucl.fhirwork.network.ehr.data.QueryBundle;
 
 
+import java.io.IOException;
+import java.util.*;
+
 import static com.google.common.collect.ImmutableBiMap.of;
 import static org.ucl.fhirwork.common.http.HttpHeader.Accept;
 import static org.ucl.fhirwork.common.http.HttpHeader.ContentType;
@@ -59,7 +62,56 @@ public class EhrServer {
         this.address = address;
     }
 
-
+//    public void addTemplate(TemplateReference template) throws IOException, RestServerException
+//    {
+//
+//    }
+//
+//    public List<Template> getTemplates() throws RestServerException
+//    {
+//
+//    }
+//
+//    public boolean templateExists(String templateId) throws RestServerException
+//    {
+//
+//
+//    }
+//
+//    public HealthRecord createEhr(String id, String namespace) throws RestServerException
+//    {
+//
+//    }
+//
+//    public HealthRecord getEhr(String id, String namespace) throws RestServerException
+//    {
+//
+//
+//    public boolean ehrExists(String id, String namespace) throws RestServerException
+//    {
+//
+//    }
+//    public <T extends FlatComposition> void createComposition(HealthRecord record, T composition, Class<T> type) throws RestServerException
+//    {
+//
+//    }
+//
+//    public List<Composition> getCompositions(String ehrId) throws RestServerException
+//    {
+//        List<Composition> compositions = new ArrayList<>();
+//        QueryBundle bundle = query("select a from EHR [ehr_id/value='" + ehrId + "'] contains COMPOSITION a");
+//
+//        for (QueryResult queryResult: bundle.getResultSet()) {
+//            compositions.add(queryResult.getComposition());
+//        }
+//        return compositions;
+//    }
+//
+//    public void removeComposition(Composition composition) throws RestServerException
+//    {
+//        RestServer server = getServer();
+//        server.delete("composition/" + composition.getUid().getValue());
+//    }
 
     public QueryBundle query(String query) throws RestException
     {
@@ -70,7 +122,6 @@ public class EhrServer {
         return result != null ? result : new QueryBundle();
 
     }
-
 
 
     private RestServer getServer() throws RestException
