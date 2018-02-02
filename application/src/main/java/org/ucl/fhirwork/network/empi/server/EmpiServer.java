@@ -94,6 +94,15 @@ public class EmpiServer
         return response.asType(Person.class);
     }
 
+    public boolean personExists(String personId) throws RestException
+    {
+        RestRequest request = getServer().get(LoadPerson);
+        request.setParameters(ImmutableMap.of(PersonId, personId));
+
+        RestResponse response = request.make(HandleFailure.ByException);
+        return response.getStatusCode() == 204;
+    }
+
     public void removePerson(String personId) throws RestException
     {
         RestRequest request = getServer().post(RemovePerson);
