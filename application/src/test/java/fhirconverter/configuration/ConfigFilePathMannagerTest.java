@@ -9,8 +9,8 @@ public class ConfigFilePathMannagerTest {
 	@Test
 	public void getFilePathTest() {
 		ConfigFilePathMannager filePathMannger = new ConfigFilePathMannager();
-		String output = filePathMannger.getFilePathsByEnvironment("Testing").get("MappingConfig");
+		String output = filePathMannger.getFilePathsByEnvironment("Testing").get("Mapping");
 		assertTrue("path not correctly load", output.equals("src/main/resources/mappingConfig.json"));
 	}
-
+	
 }
