@@ -8,6 +8,14 @@ import java.lang.reflect.Type;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+/**
+ * (Description for this class)
+ *
+ * @author Abdul-qadir Ali
+ * @author Chenghui Fan
+ */
+
+
 public class gsonSerializer {
 	public Object fromJsonFileToSpecifiedTypeObj(Type type, String filePath) {
 		Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create(); 

@@ -6,12 +6,20 @@ import java.util.Map;
 
 import com.google.gson.reflect.TypeToken;
 
+/**
+ * (Description for this class)
+ *
+ * @author Abdul-qadir Ali
+ * @author Chenghui Fan
+ */
+
+
 public class MappingConfig extends Config {
 	//Stores the mapping configuration loaded from file
 	private Map<String, Object> codeMap;
 	
 	public MappingConfig(String filePath){
-		super("Mapping", filePath);
+		super(MAPPING, filePath);
 		this.codeMap = new HashMap<>();
 		loadMappingConfig();
 	}
@@ -39,7 +47,7 @@ public class MappingConfig extends Config {
 	}
 
 	//the methods below support modification to the configuration file/database when UI is implemented
-	//currently not used
+	//unfinished
 	
 	@Override
 	public void addConfig(String key, String value) {
