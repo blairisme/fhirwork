@@ -5,10 +5,10 @@ import java.util.Map;
 import com.google.gson.reflect.TypeToken;
 
 /**
- * This is the Mapping Configuration Class.
- * Responsible for converting json files into HashMap objects and vice versa.
- * Uses Gson for Serialisation and Deserialisation  of the Json files and the HashMap objects.
-
+ * This class extends the Config class. Responsible for handling request for mapping results,
+ * fetching data from mapping configuration file and supporting operations to the mapping
+ * configuration file.
+ * 
  * @author Abdul-qadir Ali
  * @author Chenghui Fan
  */
@@ -16,43 +16,46 @@ import com.google.gson.reflect.TypeToken;
 
 public class MappingConfig extends Config {
 	//Stores the mapping configuration loaded from file
+	//Structure <key(LONIC code), value(String/jsonObject)>
 	private Map<String, Object> codeMap;
 	
 	public MappingConfig(String filePath){
 		super(MAPPING, filePath);
 		this.codeMap = new HashMap<>();
-		loadMappingConfig();
+		this.codeMap = loadMappingConfig();
 	}
 	
-	//loading configuration file content into Map<String, Object>codeMap
+	/**This method load the mapping configuration file (a JSON file) from the file system, 
+	 * using gson serializer to turn the format from JSON file to java Map object, the result
+	 * will be stored in the codeMap variable.
+	 * 
+	 * @return Map: The mapping configuration in the format of java Map <br/>
+	 * 				Returns null if the conversion from json file to Map object failed.
+	 * */
 	@SuppressWarnings("unchecked")
-	private void loadMappingConfig(){
+	private Map<String, Object> loadMappingConfig(){
 		gsonSerializer serializer = new gsonSerializer();
 		Type type = new TypeToken<Map<String, Object>>() {}.getType(); 
 		Map<String, Object> convertedMappingConfig = (Map<String, Object>) serializer.fromJsonFileToSpecifiedTypeObj(type, this.getFilePath());
-		if(convertedMappingConfig == null)
+		if(convertedMappingConfig == null) {
 			System.out.println("loading mapping configuration file failed");
+			return null;
+		}
 		else
-			this.codeMap = convertedMappingConfig;
+			return convertedMappingConfig;
 	}
 	
-	//get all the mapping configuration, probably not useful and may be deleted in the future
-	public Map<String, Object> getMappingConfig(){
-		return this.codeMap;
-	}
-	
-	//configMannager will call this method when receiving a searching request
+	/**This method is used for get mapping result by the key of the requested mapping rule
+	 * 
+	 * @param String: the key of the requested mapping
+	 * @return Object: the requested mapping result
+	 * */
 	public Object getMappingResult(String key) {
 		return this.codeMap.get(key);
 	}
 
 	//the methods below support modification to the configuration file/database when UI is implemented
 	//unfinished
-	
-	@Override
-	public void addConfig(String key, String value) {
-		// TODO Auto-generated method stub
-	}
 
 	@Override
 	public void removeConfig(String key) {
@@ -60,7 +63,14 @@ public class MappingConfig extends Config {
 	}
 
 	@Override
-	public void changeConfig(String key, String value) {
+	public void addConfig(String key, Object value) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void changeConfig(String key, Object value) {
+		// TODO Auto-generated method stub
+		
 	}
 }

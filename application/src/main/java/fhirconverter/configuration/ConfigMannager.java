@@ -3,23 +3,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
-<<<<<<< Updated upstream
-* This class handles all the interactions with other modules in the system.
-* When constructed, it loads all the configuration files of the specified environment as Config objects.
-* When recveiving requests, it arranges relevant Config object to handle the requests
-*
-
  * This is the Configuration Manager class.
- * Loads all the configuration files for specific environments config object when constructed
- * When receiving requests, it arranges relevant config objects to handle the request. .
- * Handles all interactions with the other modules in the system.
- 
+ * Loads all the configuration files for specific environments Config object when constructed
+ * When receiving requests, it arranges relevant Config objects to handle the requests.
+ * Responsible for the interactions with the other modules in the system.
+ * 
  * @author Chenghui Fan
  * @author Abdul-Qadir Ali
  *
  */
 public class ConfigMannager {
-	//Specifying the various environments within the software system.
+	//predefined names for some specific environments
 	static final String DEVELOPING = "Developing";
 	static final String TESTING = "Testing";
 	static final String PRODUCTION = "Production";
@@ -36,7 +30,8 @@ public class ConfigMannager {
 		this.filePathMannager = new ConfigFilePathMannager();
 		loadConfig();
 	}
-	// Obtaining mapping results in fulfilment of a given request
+	
+	// Obtaining mapping results in fulfillment of a given request
 	public Object getMappingResult(String key) {
 		Config mappingConfig = this.registeredConfig.get(Config.MAPPING);
 		if(mappingConfig instanceof MappingConfig)
