@@ -7,7 +7,6 @@
  *
  *      https://opensource.org/licenses/MIT
  */
-
 package org.ucl.fhirwork.mapping.executor;
 
 import ca.uhn.fhir.model.primitive.IdDt;
@@ -20,23 +19,21 @@ import org.ucl.fhirwork.network.NetworkService;
 import org.ucl.fhirwork.network.empi.data.Person;
 import org.ucl.fhirwork.network.empi.server.EmpiServer;
 import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
-
 import javax.inject.Inject;
 
 /**
- * Instances of this class convert the read patient FHIR operation into the
+ * Instances of this class convert the patient search FHIR operation into the
  * appropriate EMPI service calls.
  *
- * @author Blair Butterworth
+ * @author Alperen Karaoglu
  */
-public class ReadPatientExecutor implements Executor
-{
+public class SearchPatientExecutor implements Executor {
     private String personId;
     private EmpiServer empiServer;
     private PatientFactory patientFactory;
 
     @Inject
-    public ReadPatientExecutor(
+    public SearchPatientExecutor(
             NetworkService networkService,
             PatientFactory patientFactory)
     {
@@ -45,20 +42,26 @@ public class ReadPatientExecutor implements Executor
     }
 
     @Override
-    public void setOperation(Operation operation)
-    {
+    public void setOperation(Operation operation){
         ReadPatientOperation readPatient = (ReadPatientOperation)operation;
         IdDt patientId = readPatient.getPatientId();
         personId = patientId.getIdPart();
     }
 
+    /**
+     * If a patient is found we return it, otherwise we return a null object
+     */
     @Override
     public Object invoke() throws ExecutionException
     {
         try
         {
-            Person personOutput = empiServer.loadPerson(personId);
-            return patientFactory.fromPerson(personOutput);
+             if(empiServer.personExists(personId)){
+                 Person personOutput = empiServer.loadPerson((personId));
+                 return patientFactory.fromPerson(personOutput);
+             }else{
+                 return null;
+             }
         }
         catch (RestException cause){
             throw new ExecutionException(cause);

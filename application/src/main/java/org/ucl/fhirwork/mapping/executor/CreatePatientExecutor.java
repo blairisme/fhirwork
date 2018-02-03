@@ -24,6 +24,12 @@ import org.ucl.fhirwork.network.fhir.operations.patient.CreatePatientOperation;
 
 import javax.inject.Inject;
 
+/**
+ * Instances of this class convert the create patient FHIR operation into the
+ * appropriate EMPI service calls.
+ *
+ * @author Blair Butterworth
+ */
 public class CreatePatientExecutor implements Executor
 {
     private Patient patient;

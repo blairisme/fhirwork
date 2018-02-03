@@ -61,7 +61,7 @@ public class PatientResourceProvider implements IResourceProvider
     }
 
     @Create
-    public MethodOutcome createPatient(@ResourceParam Patient patient)
+    public MethodOutcome create(@ResourceParam Patient patient)
     {
         MethodOutcome result = new MethodOutcome();
         OperationOutcome outcome = new OperationOutcome();
@@ -79,18 +79,18 @@ public class PatientResourceProvider implements IResourceProvider
     }
 
     @Delete
-    public void deletePatient(@IdParam IdDt patientId)
+    public void delete(@IdParam IdDt patientId)
     {
-        deletePatient(patientId, null);
+        delete(patientId, null);
     }
 
     @Delete
-    public void deletePatientConditional(@IdParam IdDt patientId, @ConditionalUrlParam String condition)
+    public void deleteConditional(@IdParam IdDt patientId, @ConditionalUrlParam String condition)
     {
-        deletePatient(patientId, getSearchParameters(condition));
+        delete(patientId, getSearchParameters(condition));
     }
 
-    private void deletePatient(IdDt patientId, Map<SearchParameter, String> searchParameters)
+    private void delete(IdDt patientId, Map<SearchParameter, String> searchParameters)
     {
         try {
             DeletePatientOperation operation = new DeletePatientOperation(patientId, searchParameters);
@@ -102,7 +102,7 @@ public class PatientResourceProvider implements IResourceProvider
     }
 
     @Read
-    public Patient readPatient(@IdParam IdDt patientId)
+    public Patient read(@IdParam IdDt patientId)
     {
         try {
             ReadPatientOperation operation = new ReadPatientOperation(patientId);
@@ -131,6 +131,25 @@ public class PatientResourceProvider implements IResourceProvider
         return result;
     }
 
+    @Update
+    public MethodOutcome updateConditional(@ResourceParam Patient patient, @IdParam IdDt id, @ConditionalUrlParam String condition)
+    {
+        MethodOutcome result = new MethodOutcome();
+        OperationOutcome outcome = new OperationOutcome();
+        Map<SearchParameter, String> parameters = getSearchParameters(condition);
+
+        try {
+            UpdatePatientOperation operation = new UpdatePatientOperation(patient, parameters);
+            Patient response = (Patient)applicationService.execute(operation);
+            result.setId(new IdDt("Patient", response.getId().getIdPart(), "1"));
+        }
+        catch (Throwable error) {
+            outcome.addIssue().setDiagnostics(error.getMessage());
+            result.setOperationOutcome(outcome);
+        }
+        return result;
+    }
+
     private Map<SearchParameter, String> getSearchParameters(String condition)
     {
         try{
@@ -140,25 +159,4 @@ public class PatientResourceProvider implements IResourceProvider
             throw new NotImplementedOperationException("Unsupported search parameter in service call: " + condition);
         }
     }
-
-    /*
-    @Create
-    public MethodOutcome createPatientConditional(
-            @ResourceParam Patient thePatient,
-            @ConditionalUrlParam String theConditionalUrl)
-    {
-        //theConditional will have a value like "Patient?identifier=system%7C00001"
-        throw new UnsupportedOperationException();
-    }
-
-    @Update
-    public MethodOutcome updatePatientConditional(
-            @ResourceParam Patient thePatient,
-            @IdParam IdDt theId,
-            @ConditionalUrlParam String theConditional)
-    {
-        //theConditional will have a value like "Patient?identifier=system%7C00001"
-        throw new UnsupportedOperationException();
-    }
-    */
 }

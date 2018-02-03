@@ -13,6 +13,7 @@ package org.ucl.fhirwork.mapping;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
 import org.ucl.fhirwork.mapping.executor.*;
+import org.ucl.fhirwork.network.fhir.operations.common.ConditionalOperation;
 import org.ucl.fhirwork.network.fhir.operations.patient.CreatePatientOperation;
 import org.ucl.fhirwork.network.fhir.operations.patient.DeletePatientOperation;
 import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
@@ -41,10 +42,14 @@ public class MappingService
             Provider<DeletePatientExecutor> deletePatientProvider,
             Provider<ReadPatientExecutor> readPatientProvider,
             Provider<UpdatePatientExecutor> updatePatientProvider,
-            Provider<DeletePatientConditionalExecutor> deleteConditionalProvider)
+            Provider<CreatePatientConditionalExecutor> createConditionalProvider,
+            Provider<DeletePatientConditionalExecutor> deleteConditionalProvider,
+            Provider<UpdatePatientConditionalExecutor> updateConditionalProvider)
     {
         this.executorFactories = new LinkedHashMap<>();
+        this.executorFactories.put(isConditionalType(CreatePatientOperation.class), createConditionalProvider);
         this.executorFactories.put(isConditionalType(DeletePatientOperation.class), deleteConditionalProvider);
+        this.executorFactories.put(isConditionalType(UpdatePatientOperation.class), updateConditionalProvider);
         this.executorFactories.put(isType(CreatePatientOperation.class), createPatientProvider);
         this.executorFactories.put(isType(DeletePatientOperation.class), deletePatientProvider);
         this.executorFactories.put(isType(ReadPatientOperation.class), readPatientProvider);
@@ -72,18 +77,13 @@ public class MappingService
         return (operation) -> operation.getClass() == type;
     }
 
-    //TODO: (blair) this can be done better
-    private static Predicate<Operation> isConditionalType(Class<?> type)
+    private static Predicate<Operation> isConditionalType(Class<? extends ConditionalOperation> type)
     {
-        return new Predicate<Operation>() {
-            @Override
-            public boolean test(Operation operation) {
-                if (operation instanceof DeletePatientOperation){
-                    DeletePatientOperation deleteOperation = (DeletePatientOperation)operation;
-                    return deleteOperation.getSearchParameters() != null;
-                }
-                return false;
+        return (operation) -> {
+            if (operation.getClass() == type){
+                return ((ConditionalOperation)operation).getSearchParameters() != null;
             }
+            return false;
         };
     }
 }

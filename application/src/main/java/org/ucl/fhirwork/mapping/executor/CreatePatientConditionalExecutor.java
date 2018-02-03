@@ -7,57 +7,62 @@
  *
  *      https://opensource.org/licenses/MIT
  */
-
 package org.ucl.fhirwork.mapping.executor;
 
-import ca.uhn.fhir.model.primitive.IdDt;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
 import org.ucl.fhirwork.common.http.RestException;
 import org.ucl.fhirwork.mapping.data.PatientFactory;
+import org.ucl.fhirwork.mapping.data.PersonFactory;
 import org.ucl.fhirwork.network.NetworkService;
 import org.ucl.fhirwork.network.empi.data.Person;
 import org.ucl.fhirwork.network.empi.server.EmpiServer;
-import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
+import org.ucl.fhirwork.network.fhir.data.SearchParameter;
+import org.ucl.fhirwork.network.fhir.operations.patient.CreatePatientOperation;
 
 import javax.inject.Inject;
+import java.util.Map;
 
 /**
- * Instances of this class convert the read patient FHIR operation into the
- * appropriate EMPI service calls.
+ * Instances of this class convert the conditional create patient FHIR
+ * operation into the appropriate EMPI service calls.
  *
- * @author Blair Butterworth
+ * @author Alperen Karaoglu
  */
-public class ReadPatientExecutor implements Executor
-{
-    private String personId;
+public class CreatePatientConditionalExecutor implements Executor {
+    private Patient patient;
+    private Map<SearchParameter, String> searchParameters;
     private EmpiServer empiServer;
     private PatientFactory patientFactory;
+    private PersonFactory personFactory;
 
     @Inject
-    public ReadPatientExecutor(
+    public CreatePatientConditionalExecutor(
             NetworkService networkService,
-            PatientFactory patientFactory)
+            PatientFactory patientFactory,
+            PersonFactory personFactory)
     {
         this.empiServer = networkService.getEmpiServer();
         this.patientFactory = patientFactory;
+        this.personFactory = personFactory;
     }
 
     @Override
     public void setOperation(Operation operation)
     {
-        ReadPatientOperation readPatient = (ReadPatientOperation)operation;
-        IdDt patientId = readPatient.getPatientId();
-        personId = patientId.getIdPart();
+        CreatePatientOperation createPatient = (CreatePatientOperation)operation;
+        patient = createPatient.getPatient();
+        searchParameters = createPatient.getSearchParameters();
     }
 
     @Override
     public Object invoke() throws ExecutionException
     {
-        try
-        {
-            Person personOutput = empiServer.loadPerson(personId);
+        try {
+            Person personInput = personFactory.fromSearchParameters(searchParameters);
+            Person personOutput = empiServer.addPerson(personInput);
             return patientFactory.fromPerson(personOutput);
         }
         catch (RestException cause){

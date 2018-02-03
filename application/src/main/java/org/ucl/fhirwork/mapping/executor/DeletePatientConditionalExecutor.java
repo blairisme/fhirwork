@@ -25,6 +25,12 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Instances of this class convert the conditional delete patient FHIR
+ * operation into the appropriate EMPI service calls.
+ *
+ * @author Blair Butterworth
+ */
 public class DeletePatientConditionalExecutor implements Executor
 {
     private String personId;
