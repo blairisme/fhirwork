@@ -9,9 +9,12 @@ import org.ucl.fhirwork.network.ehr.server.EhrServer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetCompositionTest {
+public class GetCompositionTest
+{
     @Test
-    public void  getComositionTest() throws RestException{
+    public void  getComositionTest() throws RestException {
+        // Unit tests should not use an actual server, unit tests test a class in isolation.
+        /*
         EhrServer ehrServer = new EhrServer();
         ehrServer.setUsername("oprn_jarrod");
         ehrServer.setPassword("ZayFYCiO644");
@@ -21,7 +24,6 @@ public class GetCompositionTest {
         for(Composition result : compositions){
             System.out.println(result.getUid().getValue());
         }
-
-
+        */
     }
 }

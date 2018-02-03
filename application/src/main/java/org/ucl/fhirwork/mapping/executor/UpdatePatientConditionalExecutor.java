@@ -36,7 +36,7 @@ import java.util.Map;
 public class UpdatePatientConditionalExecutor  implements Executor
 {
     private Patient patient;
-    private Map<SearchParameter, String> parameters;
+    private Map<SearchParameter, Object> parameters;
     private EmpiServer empiServer;
     private PatientFactory patientFactory;
     private PersonFactory personFactory;
@@ -71,7 +71,7 @@ public class UpdatePatientConditionalExecutor  implements Executor
     }
 
     //TODO: Exception handling needs improvement
-    private Person findPerson(Map<SearchParameter, String> searchParameters) throws ExecutionException
+    private Person findPerson(Map<SearchParameter, Object> searchParameters) throws ExecutionException
     {
         try {
             Person template = personFactory.fromSearchParameters(searchParameters);

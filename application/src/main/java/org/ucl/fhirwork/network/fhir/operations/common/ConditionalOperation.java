@@ -23,16 +23,16 @@ import java.util.Map;
  */
 public abstract class ConditionalOperation implements Operation
 {
-    private Map<SearchParameter, String> searchParameters;
+    private Map<SearchParameter, Object> searchParameters;
 
     protected ConditionalOperation() {
     }
 
-    protected ConditionalOperation(Map<SearchParameter, String> searchParameters) {
+    protected ConditionalOperation(Map<SearchParameter, Object> searchParameters) {
         this.searchParameters = searchParameters;
     }
 
-    public Map<SearchParameter, String> getSearchParameters() {
+    public Map<SearchParameter, Object> getSearchParameters() {
         return searchParameters;
     }
 }

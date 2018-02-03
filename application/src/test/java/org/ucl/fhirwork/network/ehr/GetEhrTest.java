@@ -10,6 +10,8 @@ public class GetEhrTest {
 
     @Test
     public void getEhrTest() throws RestException{
+        // Unit tests should not use an actual server, unit tests test a class in isolation.
+        /*
         EhrServer ehrServer = new EhrServer();
         ehrServer.setUsername("oprn_jarrod");
         ehrServer.setPassword("ZayFYCiO644");
@@ -17,6 +19,6 @@ public class GetEhrTest {
         HealthRecord record = ehrServer.getEhr("9999999026","uk.nhs.nhs_number");
         System.out.println(record.getEhrId());
         Assert.assertNotNull(record);
-
+        */
     }
 }

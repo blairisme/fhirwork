@@ -1,0 +1,138 @@
+/*
+ * FHIRWork (c) 2018 - Blair Butterworth, Abdul-Qadir Ali, Xialong Chen,
+ * Chenghui Fan, Alperen Karaoglu, Jiaming Zhou
+ *
+ * This work is licensed under the MIT License. To view a copy of this
+ * license, visit
+ *
+ *      https://opensource.org/licenses/MIT
+ */
+
+package org.ucl.fhirwork.network.fhir.data;
+
+import ca.uhn.fhir.model.dstu2.valueset.AdministrativeGenderEnum;
+import ca.uhn.fhir.model.primitive.StringDt;
+import ca.uhn.fhir.rest.param.DateParam;
+import ca.uhn.fhir.rest.param.TokenParam;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
+
+import java.net.URI;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Instances of this class extract the search parameters from the URL used to
+ * invoke a FHIR web service call.
+ *
+ * @author Blair Butterworth
+ */
+public class SearchParameterBuilder
+{
+    private Map<SearchParameter, Object> parameters;
+
+    public SearchParameterBuilder()
+    {
+        this.parameters = new HashMap<>();
+    }
+
+    public void append(String conditional) throws IllegalArgumentException
+    {
+        for (NameValuePair queryParameter: getQueryParameters(conditional))
+        {
+            SearchParameter searchParameter = SearchParameter.fromString(queryParameter.getName());
+            append(searchParameter, queryParameter.getValue());
+        }
+    }
+
+    public void append(SearchParameter key, String value)
+    {
+        switch (key){
+            case GivenName:
+            case FamilyName: {
+                append(key, newString(value));
+                break;
+            }
+            case Gender: {
+                append(key, newGender(value));
+                break;
+            }
+            case Identifier: {
+                append(key, newToken(value));
+                break;
+            }
+            case BirthDate: {
+                append(key, newDate(value));
+                break;
+            }
+        }
+    }
+
+    public void append(SearchParameter key, TokenParam value)
+    {
+        if (value != null){
+            parameters.put(key, value);
+        }
+    }
+
+    public void append(SearchParameter key, DateParam value)
+    {
+        if (value != null){
+            parameters.put(key, value);
+        }
+    }
+
+    public void append(SearchParameter key, StringDt value)
+    {
+        if (value != null){
+            parameters.put(key, value);
+        }
+    }
+
+    public void append(SearchParameter key, AdministrativeGenderEnum value)
+    {
+        if (value != null){
+            parameters.put(key, value);
+        }
+    }
+
+    public Map<SearchParameter, Object> build()
+    {
+        return parameters;
+    }
+
+    private List<NameValuePair> getQueryParameters(String conditional)
+    {
+        URI syntheticUri = URI.create("http://fhir.com/" + conditional);
+        return URLEncodedUtils.parse(syntheticUri, "UTF-8");
+    }
+
+    // TODO: Extract properly - http://hl7.org/fhir/search.html#token
+    private TokenParam newToken(String value)
+    {
+        String[] parameterSections = value.split("\\|");
+        if (parameterSections.length == 2)
+        {
+            String system = parameterSections[0];
+            String identifier = parameterSections[1];
+            return new TokenParam(system, identifier);
+        }
+        throw new IllegalArgumentException(value);
+    }
+
+    private DateParam newDate(String value)
+    {
+        return new DateParam(value);
+    }
+
+    private AdministrativeGenderEnum newGender(String value)
+    {
+        return AdministrativeGenderEnum.forCode(value);
+    }
+
+    private StringDt newString(String value)
+    {
+        return new StringDt(value);
+    }
+}

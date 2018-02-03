@@ -44,11 +44,13 @@ public class MappingService
             Provider<UpdatePatientExecutor> updatePatientProvider,
             Provider<CreatePatientConditionalExecutor> createConditionalProvider,
             Provider<DeletePatientConditionalExecutor> deleteConditionalProvider,
+            Provider<ReadPatientConditionalExecutor> readConditionalProvider,
             Provider<UpdatePatientConditionalExecutor> updateConditionalProvider)
     {
         this.executorFactories = new LinkedHashMap<>();
         this.executorFactories.put(isConditionalType(CreatePatientOperation.class), createConditionalProvider);
         this.executorFactories.put(isConditionalType(DeletePatientOperation.class), deleteConditionalProvider);
+        this.executorFactories.put(isConditionalType(ReadPatientOperation.class), readConditionalProvider);
         this.executorFactories.put(isConditionalType(UpdatePatientOperation.class), updateConditionalProvider);
         this.executorFactories.put(isType(CreatePatientOperation.class), createPatientProvider);
         this.executorFactories.put(isType(DeletePatientOperation.class), deletePatientProvider);

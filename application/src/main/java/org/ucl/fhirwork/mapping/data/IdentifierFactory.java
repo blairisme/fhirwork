@@ -12,6 +12,7 @@ package org.ucl.fhirwork.mapping.data;
 
 import ca.uhn.fhir.model.dstu2.composite.IdentifierDt;
 import ca.uhn.fhir.model.primitive.IdDt;
+import ca.uhn.fhir.rest.param.TokenParam;
 import org.ucl.fhirwork.network.empi.data.Identifier;
 import org.ucl.fhirwork.network.empi.data.IdentifierDomain;
 
@@ -35,25 +36,16 @@ public class IdentifierFactory
         return result;
     }
 
-    // TODO: Extract properly - should be FHIR token - http://hl7.org/fhir/search.html#token
-    public Identifier fromSearchParameter(String parameter)
+    public Identifier fromSearchParameter(TokenParam token)
     {
-        String[] parameterSections = parameter.split("|");
-        if (parameterSections.length == 2)
-        {
-            String system = parameterSections[0];
-            String identifier = parameterSections[1];
+        IdentifierDomain identifierDomain = new IdentifierDomain();
+        identifierDomain.setIdentifierDomainName(token.getSystem());
 
-            IdentifierDomain identifierDomain = new IdentifierDomain();
-            identifierDomain.setIdentifierDomainName(system);
+        Identifier result = new Identifier();
+        result.setIdentifier(token.getValue());
+        result.setIdentifierDomain(identifierDomain);
 
-            Identifier result = new Identifier();
-            result.setIdentifier(identifier);
-            result.setIdentifierDomain(identifierDomain);
-
-            return result;
-        }
-        throw new IllegalArgumentException();
+        return result;
     }
 
     public IdentifierDt fromIdentifier(Identifier identifier)

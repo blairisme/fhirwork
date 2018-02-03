@@ -17,6 +17,7 @@ import ca.uhn.fhir.model.dstu2.valueset.AdministrativeGenderEnum;
 import ca.uhn.fhir.model.primitive.BoundCodeDt;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.model.primitive.StringDt;
+import ca.uhn.fhir.rest.param.TokenParam;
 import org.ucl.fhirwork.network.empi.data.Gender;
 import org.ucl.fhirwork.network.empi.data.Identifier;
 import org.ucl.fhirwork.network.empi.data.Person;
@@ -55,10 +56,13 @@ public class PersonFactory
         return result;
     }
 
-    public Person fromSearchParameters(Map<SearchParameter, String> searchParameters)
+    public Person fromSearchParameters(Map<SearchParameter, Object> searchParameters)
     {
         Person result = new Person();
         setId(result, searchParameters);
+        setFirstName(result, searchParameters);
+        setLastName(result, searchParameters);
+        setGender(result, searchParameters);
         return result;
     }
 
@@ -70,9 +74,9 @@ public class PersonFactory
         }
     }
 
-    private void setId(Person person, Map<SearchParameter, String> searchParameters)
+    private void setId(Person person, Map<SearchParameter, Object> searchParameters)
     {
-        String identifierParameter = searchParameters.get(SearchParameter.Identifier);
+        TokenParam identifierParameter = (TokenParam)searchParameters.get(SearchParameter.Identifier);
         if (identifierParameter != null)
         {
             Identifier identifier = identifierFactory.fromSearchParameter(identifierParameter);
@@ -114,6 +118,14 @@ public class PersonFactory
         }
     }
 
+    private void setFirstName(Person person, Map<SearchParameter, Object> searchParameters)
+    {
+        StringDt givenName = (StringDt)searchParameters.get(SearchParameter.GivenName);
+        if (givenName != null) {
+            person.setGivenName(givenName.getValue());
+        }
+    }
+
     private void setLastName(Person person, HumanNameDt name)
     {
         List<StringDt> familyNames = name.getFamily();
@@ -121,6 +133,14 @@ public class PersonFactory
         {
             String familyName = combineNames(familyNames);
             person.setFamilyName(familyName);
+        }
+    }
+
+    private void setLastName(Person person, Map<SearchParameter, Object> searchParameters)
+    {
+        StringDt familyName = (StringDt)searchParameters.get(SearchParameter.FamilyName);
+        if (familyName != null) {
+            person.setFamilyName(familyName.getValue());
         }
     }
 
@@ -144,6 +164,15 @@ public class PersonFactory
         if (patientGender != null)
         {
             Gender gender = genderFactory.fromEnum(patientGender);
+            person.setGender(gender);
+        }
+    }
+
+    private void setGender(Person person, Map<SearchParameter, Object> searchParameters)
+    {
+        AdministrativeGenderEnum genderEnum = (AdministrativeGenderEnum)searchParameters.get(SearchParameter.Gender);
+        if (genderEnum != null) {
+            Gender gender = genderFactory.fromEnum(genderEnum);
             person.setGender(gender);
         }
     }

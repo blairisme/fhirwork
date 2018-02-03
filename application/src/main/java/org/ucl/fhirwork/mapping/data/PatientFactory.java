@@ -44,6 +44,15 @@ public class PatientFactory
         this.identifierFactory = identifierFactory;
     }
 
+    public List<Patient> fromPeople(List<Person> people)
+    {
+        List<Patient> result = new ArrayList<>(people.size());
+        for (Person person: people){
+            result.add(fromPerson(person));
+        }
+        return result;
+    }
+
     public Patient fromPerson(Person person)
     {
         Patient result = new Patient();

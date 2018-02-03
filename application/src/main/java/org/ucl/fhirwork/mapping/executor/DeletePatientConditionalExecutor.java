@@ -34,7 +34,7 @@ import java.util.Map;
 public class DeletePatientConditionalExecutor implements Executor
 {
     private String personId;
-    private Map<SearchParameter, String> searchParameters;
+    private Map<SearchParameter, Object> searchParameters;
     private EmpiServer empiServer;
     private PersonFactory personFactory;
 

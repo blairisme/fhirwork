@@ -30,11 +30,12 @@ public class MappingServiceTest
         Provider<UpdatePatientExecutor> updatePatientProvider = createMockProvider(UpdatePatientExecutor.class);
         Provider<CreatePatientConditionalExecutor> createConditionalProvider = createMockProvider(CreatePatientConditionalExecutor.class);
         Provider<DeletePatientConditionalExecutor> deleteConditionalProvider = createMockProvider(DeletePatientConditionalExecutor.class);
+        Provider<ReadPatientConditionalExecutor> readConditionalProvider = createMockProvider(ReadPatientConditionalExecutor.class);
         Provider<UpdatePatientConditionalExecutor> updateConditionalProvider = createMockProvider(UpdatePatientConditionalExecutor.class);
 
         MappingService mappingService = new MappingService(
                 createPatientProvider, deletePatientProvider, readPatientProvider, updatePatientProvider,
-                createConditionalProvider, deleteConditionalProvider, updateConditionalProvider);
+                createConditionalProvider, deleteConditionalProvider, readConditionalProvider, updateConditionalProvider);
         Executor executor = mappingService.getExecutor(new DeletePatientOperation(null));
 
         Assert.assertNotNull(executor);

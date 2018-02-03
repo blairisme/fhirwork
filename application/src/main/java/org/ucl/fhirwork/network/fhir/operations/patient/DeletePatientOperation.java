@@ -30,7 +30,7 @@ public class DeletePatientOperation extends ConditionalOperation
         this.patientId = patientId;
     }
 
-    public DeletePatientOperation(IdDt patientId, Map<SearchParameter, String> searchParameters) {
+    public DeletePatientOperation(IdDt patientId, Map<SearchParameter, Object> searchParameters) {
         super(searchParameters);
         this.patientId = patientId;
     }

@@ -10,6 +10,8 @@
 
 package org.ucl.fhirwork.network.fhir.data;
 
+import ca.uhn.fhir.rest.param.TokenParam;
+
 /**
  * Options in this enumeration specify supported FHIR search parameter
  * identifiers. The full list of all possible search parameters can be found
@@ -21,7 +23,11 @@ package org.ucl.fhirwork.network.fhir.data;
  */
 public enum SearchParameter
 {
-    Identifier;
+    Identifier,
+    GivenName,
+    FamilyName,
+    Gender,
+    BirthDate;
 
     public static SearchParameter fromString(String text)
     {

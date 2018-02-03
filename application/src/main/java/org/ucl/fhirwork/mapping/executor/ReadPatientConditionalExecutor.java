@@ -9,59 +9,61 @@
  */
 package org.ucl.fhirwork.mapping.executor;
 
-import ca.uhn.fhir.model.primitive.IdDt;
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
 import org.ucl.fhirwork.common.http.RestException;
 import org.ucl.fhirwork.mapping.data.PatientFactory;
+import org.ucl.fhirwork.mapping.data.PersonFactory;
 import org.ucl.fhirwork.network.NetworkService;
 import org.ucl.fhirwork.network.empi.data.Person;
 import org.ucl.fhirwork.network.empi.server.EmpiServer;
+import org.ucl.fhirwork.network.fhir.data.SearchParameter;
 import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
+
 import javax.inject.Inject;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Instances of this class convert the patient search FHIR operation into the
  * appropriate EMPI service calls.
  *
  * @author Alperen Karaoglu
+ * @author Blair Butterworth
  */
-public class SearchPatientExecutor implements Executor {
-    private String personId;
+public class ReadPatientConditionalExecutor implements Executor
+{
+    private Map<SearchParameter, Object> searchParameters;
     private EmpiServer empiServer;
     private PatientFactory patientFactory;
+    private PersonFactory personFactory;
 
     @Inject
-    public SearchPatientExecutor(
+    public ReadPatientConditionalExecutor(
             NetworkService networkService,
-            PatientFactory patientFactory)
+            PatientFactory patientFactory,
+            PersonFactory personFactory)
     {
         this.empiServer = networkService.getEmpiServer();
         this.patientFactory = patientFactory;
+        this.personFactory = personFactory;
     }
 
     @Override
     public void setOperation(Operation operation){
         ReadPatientOperation readPatient = (ReadPatientOperation)operation;
-        IdDt patientId = readPatient.getPatientId();
-        personId = patientId.getIdPart();
+        searchParameters = readPatient.getSearchParameters();
     }
 
-    /**
-     * If a patient is found we return it, otherwise we return a null object
-     */
     @Override
     public Object invoke() throws ExecutionException
     {
         try
         {
-             if(empiServer.personExists(personId)){
-                 Person personOutput = empiServer.loadPerson((personId));
-                 return patientFactory.fromPerson(personOutput);
-             }else{
-                 return null;
-             }
+            Person template = personFactory.fromSearchParameters(searchParameters);
+            List<Person> people = empiServer.findPersonsByAttributes(template);
+            return patientFactory.fromPeople(people);
         }
         catch (RestException cause){
             throw new ExecutionException(cause);

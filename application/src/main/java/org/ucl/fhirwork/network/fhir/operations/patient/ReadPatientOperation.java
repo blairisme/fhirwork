@@ -12,18 +12,27 @@ package org.ucl.fhirwork.network.fhir.operations.patient;
 
 import ca.uhn.fhir.model.primitive.IdDt;
 import org.ucl.fhirwork.common.framework.Operation;
+import org.ucl.fhirwork.network.fhir.data.SearchParameter;
+import org.ucl.fhirwork.network.fhir.operations.common.ConditionalOperation;
+
+import java.util.Map;
 
 /**
  * Instances of this class represent the FHIR read patient operation.
  *
  * @author Blair Butterworth
  */
-public class ReadPatientOperation implements Operation
+public class ReadPatientOperation extends ConditionalOperation
 {
     private IdDt patientId;
 
     public ReadPatientOperation(IdDt patientId) {
         this.patientId = patientId;
+    }
+
+    public ReadPatientOperation(Map<SearchParameter, Object> parameters)
+    {
+        super(parameters);
     }
 
     public IdDt getPatientId() {

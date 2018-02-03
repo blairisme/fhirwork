@@ -8,8 +8,8 @@ Background:
     | 2     | hermione  | granger       | female    |
     | 3     | ron       | weasley       | male      |
 
-Scenario: Delete patient information
-     When the user deletes the patient named "harry"
-     Then the system should contain 2 patients
-     And the system should contain a patient named "hermione"
-     And the system should contain a patient named "ron"
+#Scenario: Delete patient information
+#     When the user deletes the patient named "harry"
+#     Then the system should contain 2 patients
+#     And the system should contain a patient named "hermione"
+#     And the system should contain a patient named "ron"

@@ -13,21 +13,23 @@ package org.ucl.fhirwork.network.fhir.servlet;
 import ca.uhn.fhir.model.dstu2.resource.OperationOutcome;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
 import ca.uhn.fhir.model.primitive.IdDt;
+import ca.uhn.fhir.model.primitive.StringDt;
 import ca.uhn.fhir.rest.annotation.*;
 import ca.uhn.fhir.rest.api.MethodOutcome;
+import ca.uhn.fhir.rest.param.DateParam;
+import ca.uhn.fhir.rest.param.TokenParam;
 import ca.uhn.fhir.rest.server.IResourceProvider;
+import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import ca.uhn.fhir.rest.server.exceptions.NotImplementedOperationException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.ucl.fhirwork.ApplicationService;
 import org.ucl.fhirwork.network.fhir.data.SearchParameter;
-import org.ucl.fhirwork.network.fhir.operations.patient.CreatePatientOperation;
-import org.ucl.fhirwork.network.fhir.operations.patient.DeletePatientOperation;
-import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
-import org.ucl.fhirwork.network.fhir.operations.patient.UpdatePatientOperation;
-import org.ucl.fhirwork.network.fhir.utils.ConditionParser;
+import org.ucl.fhirwork.network.fhir.operations.patient.*;
+import org.ucl.fhirwork.network.fhir.data.SearchParameterBuilder;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,15 +45,11 @@ import java.util.Map;
 public class PatientResourceProvider implements IResourceProvider
 {
     private ApplicationService applicationService;
-    private ConditionParser conditionParser;
 
     @Inject
-    public PatientResourceProvider(
-            ApplicationService applicationService,
-            ConditionParser conditionParser)
+    public PatientResourceProvider(ApplicationService applicationService)
     {
         this.applicationService = applicationService;
-        this.conditionParser = conditionParser;
     }
 
     @Override
@@ -81,19 +79,20 @@ public class PatientResourceProvider implements IResourceProvider
     @Delete
     public void delete(@IdParam IdDt patientId)
     {
-        delete(patientId, null);
+        try {
+            DeletePatientOperation operation = new DeletePatientOperation(patientId);
+            applicationService.execute(operation);
+        }
+        catch (Exception e) {
+            throw new ResourceNotFoundException(Patient.class, patientId);
+        }
     }
 
     @Delete
     public void deleteConditional(@IdParam IdDt patientId, @ConditionalUrlParam String condition)
     {
-        delete(patientId, getSearchParameters(condition));
-    }
-
-    private void delete(IdDt patientId, Map<SearchParameter, String> searchParameters)
-    {
         try {
-            DeletePatientOperation operation = new DeletePatientOperation(patientId, searchParameters);
+            DeletePatientOperation operation = new DeletePatientOperation(patientId, getSearchParameters(condition));
             applicationService.execute(operation);
         }
         catch (Exception e) {
@@ -110,6 +109,31 @@ public class PatientResourceProvider implements IResourceProvider
         }
         catch (Exception e) {
             throw new ResourceNotFoundException(Patient.class, patientId);
+        }
+    }
+
+    @Search
+    @SuppressWarnings("unchecked")
+    public List<Patient> readConditional(
+            @OptionalParam(name = Patient.SP_IDENTIFIER) TokenParam identifier,
+            @OptionalParam(name = Patient.SP_GIVEN) StringDt givenName,
+            @OptionalParam(name = Patient.SP_FAMILY) StringDt familyName,
+            @OptionalParam(name = Patient.SP_GENDER) StringDt gender,
+            @OptionalParam(name = Patient.SP_BIRTHDATE) DateParam birthDate)
+    {
+        try {
+            SearchParameterBuilder parameterBuilder = new SearchParameterBuilder();
+            parameterBuilder.append(SearchParameter.Identifier, identifier);
+            parameterBuilder.append(SearchParameter.GivenName, givenName);
+            parameterBuilder.append(SearchParameter.FamilyName, familyName);
+            parameterBuilder.append(SearchParameter.Gender, gender);
+            parameterBuilder.append(SearchParameter.BirthDate, birthDate);
+
+            ReadPatientOperation operation = new ReadPatientOperation(parameterBuilder.build());
+            return (List<Patient>)applicationService.execute(operation);
+        }
+        catch (Throwable error) {
+            throw new InternalErrorException(error);
         }
     }
 
@@ -136,7 +160,7 @@ public class PatientResourceProvider implements IResourceProvider
     {
         MethodOutcome result = new MethodOutcome();
         OperationOutcome outcome = new OperationOutcome();
-        Map<SearchParameter, String> parameters = getSearchParameters(condition);
+        Map<SearchParameter, Object> parameters = getSearchParameters(condition);
 
         try {
             UpdatePatientOperation operation = new UpdatePatientOperation(patient, parameters);
@@ -150,12 +174,14 @@ public class PatientResourceProvider implements IResourceProvider
         return result;
     }
 
-    private Map<SearchParameter, String> getSearchParameters(String condition)
+    private Map<SearchParameter, Object> getSearchParameters(String condition)
     {
-        try{
-            return conditionParser.getSearchParameters(condition);
+        try {
+            SearchParameterBuilder parameterBuilder = new SearchParameterBuilder();
+            parameterBuilder.append(condition);
+            return parameterBuilder.build();
         }
-        catch (IllegalArgumentException error){
+        catch (IllegalArgumentException error) {
             throw new NotImplementedOperationException("Unsupported search parameter in service call: " + condition);
         }
     }

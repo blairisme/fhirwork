@@ -33,7 +33,7 @@ public class UpdatePatientOperation extends ConditionalOperation
         this.patient = patient;
     }
 
-    public UpdatePatientOperation(Patient patient, Map<SearchParameter, String> searchParameters) {
+    public UpdatePatientOperation(Patient patient, Map<SearchParameter, Object> searchParameters) {
         super(searchParameters);
         this.patient = patient;
     }

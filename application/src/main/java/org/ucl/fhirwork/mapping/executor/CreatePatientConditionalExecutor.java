@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class CreatePatientConditionalExecutor implements Executor {
     private Patient patient;
-    private Map<SearchParameter, String> searchParameters;
+    private Map<SearchParameter, Object> searchParameters;
     private EmpiServer empiServer;
     private PatientFactory patientFactory;
     private PersonFactory personFactory;
