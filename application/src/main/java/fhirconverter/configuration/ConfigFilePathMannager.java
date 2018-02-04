@@ -26,8 +26,8 @@ public class ConfigFilePathMannager {
 	/**This method is for getting all the locations of the configuration files that belong to
 	 * the specified environment
 	 *
-	 * @param String environment: The name of the specified environment
-	 * @return Map: A java Map object that stores the locations of the configuration files <br/>
+	 * @param environment - The name of the specified environment
+	 * @return File Paths - A java Map object that stores the locations of the configuration files <br/>
 	 * The structure of the returned Map: (key: configFileType) (value: the location of the configFile) <br/>
 	 * This method returns null if no records of the configuration file locations that belong to the specified 
 	 * environment has been found 

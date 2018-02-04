@@ -29,7 +29,7 @@ public class MappingConfig extends Config {
 	 * using gson serializer to turn the format from JSON file to java Map object, the result
 	 * will be stored in the codeMap variable.
 	 * 
-	 * @return Map: The mapping configuration in the format of java Map <br/>
+	 * @return Mapping configuration - The mapping configuration in the format of java Map <br/>
 	 * 				Returns null if the conversion from json file to Map object failed.
 	 * */
 	@SuppressWarnings("unchecked")
@@ -47,8 +47,8 @@ public class MappingConfig extends Config {
 	
 	/**This method is used for get mapping result by the key of the requested mapping rule
 	 * 
-	 * @param String: the key of the requested mapping
-	 * @return Object: the requested mapping result
+	 * @param key - the key of the requested mapping
+	 * @return Object - the requested mapping result
 	 * */
 	public Object getMappingResult(String key) {
 		return this.codeMap.get(key);
