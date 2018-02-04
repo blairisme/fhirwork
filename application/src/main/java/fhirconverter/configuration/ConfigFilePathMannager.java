@@ -38,7 +38,7 @@ public class ConfigFilePathMannager {
 	
 	@SuppressWarnings("unchecked")
 	private Map<String, Map<String, String>> loadFilePath(){
-		gsonSerializer serializer = new gsonSerializer();
+		JsonSerializer serializer = new JsonSerializer();
 		Type type = new TypeToken<Map<String, Map<String, String>>>() {}.getType(); 
 		Map<String, Map<String, String>> convertedFilePath = (Map<String, Map<String, String>>) serializer.fromJsonFileToSpecifiedTypeObj(type, PATH_FILE_LOCATION);
 		return convertedFilePath;

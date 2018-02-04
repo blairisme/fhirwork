@@ -34,7 +34,7 @@ public class MappingConfig extends Config {
 	 * */
 	@SuppressWarnings("unchecked")
 	private Map<String, Object> loadMappingConfig(){
-		gsonSerializer serializer = new gsonSerializer();
+		JsonSerializer serializer = new JsonSerializer();
 		Type type = new TypeToken<Map<String, Object>>() {}.getType(); 
 		Map<String, Object> convertedMappingConfig = (Map<String, Object>) serializer.fromJsonFileToSpecifiedTypeObj(type, this.getFilePath());
 		if(convertedMappingConfig == null) {
@@ -48,7 +48,8 @@ public class MappingConfig extends Config {
 	/**This method is used for get mapping result by the key of the requested mapping rule
 	 * 
 	 * @param key - the key of the requested mapping
-	 * @return Object - the requested mapping result
+	 * @return Object - the requested mapping result <br/>
+	 * 		The method returns null if no match found
 	 * */
 	public Object getMappingResult(String key) {
 		return this.codeMap.get(key);
@@ -57,18 +58,15 @@ public class MappingConfig extends Config {
 	//the methods below support modification to the configuration file/database when UI is implemented
 	//unfinished
 
-	@Override
 	public void removeConfig(String key) {
 		// TODO Auto-generated method stub
 	}
 
-	@Override
 	public void addConfig(String key, Object value) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void changeConfig(String key, Object value) {
 		// TODO Auto-generated method stub
 		

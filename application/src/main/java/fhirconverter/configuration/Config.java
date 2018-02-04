@@ -34,14 +34,4 @@ public abstract class Config {
 	public String getConfigType(){
 		return this.configType;
 	}
-	
-	//methods below will be used for supporting the modification to the configuration file
-	//different config objects would have different implementation
-	
-	public abstract void addConfig(String key, Object value);
-	
-	public abstract void removeConfig(String key);
-	
-	public abstract void changeConfig(String key, Object value);
-	
 }

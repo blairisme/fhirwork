@@ -16,7 +16,7 @@ import com.google.gson.GsonBuilder;
  * @author Chenghui Fan
  */
 
-public class gsonSerializer {
+public class JsonSerializer {
 	
 	/**This method implements a gson serializer for converting a JSON file to a specified java 
 	 * type that can be supported by gson.
