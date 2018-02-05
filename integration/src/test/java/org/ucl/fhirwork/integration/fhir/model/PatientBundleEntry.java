@@ -9,12 +9,12 @@
 
 package org.ucl.fhirwork.integration.fhir.model;
 
-public class BundleEntry
+public class PatientBundleEntry
 {
     private String fullUrl;
     private Patient resource;
 
-    public BundleEntry(String fullUrl, Patient resource) {
+    public PatientBundleEntry(String fullUrl, Patient resource) {
         this.fullUrl = fullUrl;
         this.resource = resource;
     }

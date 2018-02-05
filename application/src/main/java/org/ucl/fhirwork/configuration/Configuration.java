@@ -12,6 +12,7 @@ package org.ucl.fhirwork.configuration;
 
 public enum Configuration
 {
+    Ehr,
     Empi,
     Mapping
 }

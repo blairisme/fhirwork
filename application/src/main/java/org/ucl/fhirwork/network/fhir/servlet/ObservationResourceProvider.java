@@ -11,13 +11,19 @@
 package org.ucl.fhirwork.network.fhir.servlet;
 
 import ca.uhn.fhir.model.dstu2.resource.Observation;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
 import ca.uhn.fhir.rest.annotation.RequiredParam;
 import ca.uhn.fhir.rest.annotation.Search;
 import ca.uhn.fhir.rest.param.ReferenceParam;
 import ca.uhn.fhir.rest.param.TokenOrListParam;
 import ca.uhn.fhir.rest.server.IResourceProvider;
+import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.ucl.fhirwork.ApplicationService;
+import org.ucl.fhirwork.network.fhir.data.SearchParameter;
+import org.ucl.fhirwork.network.fhir.data.SearchParameterBuilder;
+import org.ucl.fhirwork.network.fhir.operations.observation.ReadObservationOperation;
+import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -47,10 +53,17 @@ public class ObservationResourceProvider implements IResourceProvider
     }
 
     @Search
+    @SuppressWarnings("unchecked")
     public List<Observation> searchObservation(
             @RequiredParam(name = Observation.SP_CODE) TokenOrListParam codes,
             @RequiredParam(name = Observation.SP_PATIENT) ReferenceParam patient)
     {
-        throw new UnsupportedOperationException();
+        try {
+            ReadObservationOperation operation = new ReadObservationOperation();
+            return (List<Observation>)applicationService.execute(operation);
+        }
+        catch (Throwable error) {
+            throw new InternalErrorException(error);
+        }
     }
 }

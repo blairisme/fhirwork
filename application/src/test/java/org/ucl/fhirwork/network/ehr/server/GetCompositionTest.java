@@ -1,4 +1,4 @@
-package org.ucl.fhirwork.network.ehr;
+package org.ucl.fhirwork.network.ehr.server;
 
 import org.junit.Assert;
 import org.junit.Test;

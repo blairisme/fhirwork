@@ -10,18 +10,30 @@
 
 package org.ucl.fhirwork.network.ehr.data;
 
-import com.google.gson.annotations.SerializedName;
-
 public class QueryResult
 {
-    @SerializedName("#0")
-    private Composition composition;
+    private String date;
+    private String magnitude;
+    private String unit;
 
-    public QueryResult(Composition composition) {
-        this.composition = composition;
+    public QueryResult() {
     }
 
-    public Composition getComposition() {
-        return composition;
+    public QueryResult(String date, String magnitude, String unit) {
+        this.date = date;
+        this.magnitude = magnitude;
+        this.unit = unit;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getMagnitude() {
+        return magnitude;
+    }
+
+    public String getUnit() {
+        return unit;
     }
 }

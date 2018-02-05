@@ -22,6 +22,8 @@ public class ConfigurationService
     {
         values = new HashMap<>();
         values.put(Configuration.Empi, new NetworkConfiguration("http://localhost:8080", "admin", "admin"));
+        values.put(Configuration.Ehr, new NetworkConfiguration("https://test.operon.systems/rest/v1", "oprn_jarrod", "ZayFYCiO644"));
+        //values.put(Configuration.Ehr, new NetworkConfiguration("http://localhost:8888/rest/v1", "guest", "guest"));
     }
 
     @SuppressWarnings("unchecked")

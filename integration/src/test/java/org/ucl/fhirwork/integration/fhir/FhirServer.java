@@ -18,9 +18,7 @@ import com.google.common.collect.ImmutableMap;
 
 import org.ucl.fhirwork.integration.common.http.RestServer;
 import org.ucl.fhirwork.integration.common.http.RestServerException;
-import org.ucl.fhirwork.integration.fhir.model.Bundle;
-import org.ucl.fhirwork.integration.fhir.model.BundleEntry;
-import org.ucl.fhirwork.integration.fhir.model.Patient;
+import org.ucl.fhirwork.integration.fhir.model.*;
 import org.ucl.fhirwork.integration.common.serialization.JsonSerializer;
 
 import java.util.ArrayList;
@@ -63,55 +61,59 @@ public class FhirServer
 
     public List<Patient> searchPatients() throws RestServerException
     {
-        Bundle bundle = server.get(Patient, Bundle.class, Collections.emptyMap());
+        PatientBundle bundle = server.get(Patient, PatientBundle.class, Collections.emptyMap());
         return getPatients(bundle);
     }
 
     public List<Patient> searchPatientsByIdentifier(String identifier) throws RestServerException
     {
-        Bundle bundle = server.get(Patient, Bundle.class, ImmutableMap.of(Identifier, identifier));
+        PatientBundle bundle = server.get(Patient, PatientBundle.class, ImmutableMap.of(Identifier, identifier));
         return getPatients(bundle);
     }
 
     public List<Patient> searchPatientsByGender(String gender) throws RestServerException
     {
-        Bundle bundle = server.get(Patient, Bundle.class, ImmutableMap.of(Gender, gender));
+        PatientBundle bundle = server.get(Patient, PatientBundle.class, ImmutableMap.of(Gender, gender));
         return getPatients(bundle);
     }
 
     public List<Patient> searchPatientsByFirstName(String firstName) throws RestServerException
     {
-        Bundle bundle = server.get(Patient, Bundle.class, ImmutableMap.of(Given, firstName));
+        PatientBundle bundle = server.get(Patient, PatientBundle.class, ImmutableMap.of(Given, firstName));
         return getPatients(bundle);
     }
 
     public List<Patient> searchPatientsBySurname(String surname) throws RestServerException
     {
-        Bundle bundle = server.get(Patient, Bundle.class, ImmutableMap.of(Family, surname));
+        PatientBundle bundle = server.get(Patient, PatientBundle.class, ImmutableMap.of(Family, surname));
         return getPatients(bundle);
     }
 
     public List<Patient> searchPatientsByGenderAndSurname(String gender, String surname) throws RestServerException
     {
-        Bundle bundle = server.get(Patient, Bundle.class, ImmutableMap.of(Gender, gender, Family, surname));
+        PatientBundle bundle = server.get(Patient, PatientBundle.class, ImmutableMap.of(Gender, gender, Family, surname));
         return getPatients(bundle);
     }
 
-    public void searchObservation(String patient, String code) throws RestServerException
+    public List<Observation> searchObservation(String patient, String code) throws RestServerException
     {
-        //String result = server.getFoo(FhirEndpoint.Observation, ImmutableMap.of(Code, code, "identifier", patient, "_format", "json"));
-        //result.length();
-
-        /*
-            url = "#{$fhir_server_base}/Observation?code=http://loinc.org|3141-9,http://loinc.org|8302-2,http://loinc.org|8287-5,http://loinc.org|58941-6&patient=#{patient_id}&_format=json"
-    @response = RestClient.get url, :content_type => :json, :accept => :json
-         */
+        ObservationBundle bundle = server.get(FhirEndpoint.Observation, ObservationBundle.class, ImmutableMap.of(Code, code, "patient", patient, "_format", "json"));
+        return getObservations(bundle);
     }
 
-    private List<Patient> getPatients(Bundle bundle)
+    private List<Patient> getPatients(PatientBundle bundle)
     {
         List<Patient> result = new ArrayList<>();
-        for (BundleEntry bundleEntry: bundle.getEntry()){
+        for (PatientBundleEntry bundleEntry: bundle.getEntry()){
+            result.add(bundleEntry.getResource());
+        }
+        return result;
+    }
+
+    private List<Observation> getObservations(ObservationBundle bundle)
+    {
+        List<Observation> result = new ArrayList<>();
+        for (ObservationBundleEntry bundleEntry: bundle.getEntry()){
             result.add(bundleEntry.getResource());
         }
         return result;

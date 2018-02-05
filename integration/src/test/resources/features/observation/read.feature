@@ -14,5 +14,6 @@ Background:
     | 1         | SSN       | 2010-04-10    | 86.3   | 11.9   | 16   |          52        |
     | 1         | SSN       | 2010-04-10    | 90     | 15     | 18.5 |          54        |
 
-#Scenario: Search for observations
-#   When the user searches for observations
+Scenario: Search for observations
+   When the user searches for observations
+   Then the user should receive a list of 6 observations

@@ -12,15 +12,15 @@ package org.ucl.fhirwork.integration.fhir.model;
 import java.util.Collections;
 import java.util.List;
 
-public class Bundle
+public class PatientBundle
 {
-    private List<BundleEntry> entry;
+    private List<PatientBundleEntry> entry;
 
-    public Bundle(List<BundleEntry> entry) {
+    public PatientBundle(List<PatientBundleEntry> entry) {
         this.entry = entry;
     }
 
-    public List<BundleEntry> getEntry() {
+    public List<PatientBundleEntry> getEntry() {
         if (entry != null) {
             return entry;
         }

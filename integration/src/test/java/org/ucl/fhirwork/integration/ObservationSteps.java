@@ -1,13 +1,16 @@
 package org.ucl.fhirwork.integration;
 
 import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import cucumber.runtime.java.StepDefAnnotation;
+import org.junit.Assert;
 import org.ucl.fhirwork.integration.common.http.RestServerException;
 import org.ucl.fhirwork.integration.cucumber.HealthData;
 import org.ucl.fhirwork.integration.ehr.EhrServer;
 import org.ucl.fhirwork.integration.ehr.model.*;
 import org.ucl.fhirwork.integration.fhir.FhirServer;
+import org.ucl.fhirwork.integration.fhir.model.Observation;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,6 +21,7 @@ public class ObservationSteps
 {
     private FhirServer fhirServer;
     private EhrServer ehrServer;
+    private List<Observation> observations;
 
     public ObservationSteps()
     {
@@ -29,7 +33,7 @@ public class ObservationSteps
     @Given("^the system has the following health data:$")
     public void initializeHealthData(List<HealthData> healthData) throws IOException, RestServerException
     {
-        installTemplates();
+        //installTemplates();
         for (HealthData data: healthData){
             HealthRecord record = createHealthRecord(data);
             createComposition(data, record);
@@ -79,6 +83,12 @@ public class ObservationSteps
     @When("^the user searches for observations$")
     public void observationSearch() throws RestServerException
     {
-        //fhirServer.searchObservation("SSN|1", "http://loinc.org|3141-9");
+        observations = fhirServer.searchObservation("SSN|1", "http://loinc.org|3141-9");
+    }
+
+    @Then("^the user should receive a list of (\\d) observations$")
+    public void assertObservationList(int observationsCount)
+    {
+        Assert.assertEquals(observationsCount, observations.size());
     }
 }
