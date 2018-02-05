@@ -55,7 +55,7 @@ public class ConfigMannager {
 	}
 	
 	private void registerMappingConfig(String filePath) {
-		Config mappingConfig = new MappingConfig(filePath);
+		Config mappingConfig = new MappingConfig(filePath, false);
 		registeredConfig.put(Config.MAPPING, mappingConfig);
 	}
 }
