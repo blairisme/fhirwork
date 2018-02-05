@@ -7,63 +7,66 @@
  *
  *      https://opensource.org/licenses/MIT
  */
-package org.ucl.fhirwork.mapping.executor;
 
-import ca.uhn.fhir.model.dstu2.resource.Patient;
+package org.ucl.fhirwork.mapping.executor.patient;
+
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
 import org.ucl.fhirwork.common.http.RestException;
-import org.ucl.fhirwork.mapping.data.PatientFactory;
 import org.ucl.fhirwork.mapping.data.PersonFactory;
 import org.ucl.fhirwork.network.NetworkService;
 import org.ucl.fhirwork.network.empi.data.Person;
 import org.ucl.fhirwork.network.empi.server.EmpiServer;
 import org.ucl.fhirwork.network.fhir.data.SearchParameter;
-import org.ucl.fhirwork.network.fhir.operations.patient.CreatePatientOperation;
+import org.ucl.fhirwork.network.fhir.operations.patient.DeletePatientOperation;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Map;
 
 /**
- * Instances of this class convert the conditional create patient FHIR
+ * Instances of this class convert the conditional delete patient FHIR
  * operation into the appropriate EMPI service calls.
  *
- * @author Alperen Karaoglu
+ * @author Blair Butterworth
  */
-public class CreatePatientConditionalExecutor implements Executor {
-    private Patient patient;
+public class DeletePatientConditionalExecutor implements Executor
+{
+    private String personId;
     private Map<SearchParameter, Object> searchParameters;
     private EmpiServer empiServer;
-    private PatientFactory patientFactory;
     private PersonFactory personFactory;
 
     @Inject
-    public CreatePatientConditionalExecutor(
+    public DeletePatientConditionalExecutor(
             NetworkService networkService,
-            PatientFactory patientFactory,
             PersonFactory personFactory)
     {
         this.empiServer = networkService.getEmpiServer();
-        this.patientFactory = patientFactory;
         this.personFactory = personFactory;
     }
 
     @Override
     public void setOperation(Operation operation)
     {
-        CreatePatientOperation createPatient = (CreatePatientOperation)operation;
-        patient = createPatient.getPatient();
-        searchParameters = createPatient.getSearchParameters();
+        DeletePatientOperation deletePatient = (DeletePatientOperation)operation;
+        personId = deletePatient.getPatientId().getIdPart();
+        searchParameters = deletePatient.getSearchParameters();
     }
 
     @Override
     public Object invoke() throws ExecutionException
     {
-        try {
-            Person personInput = personFactory.fromSearchParameters(searchParameters);
-            Person personOutput = empiServer.addPerson(personInput);
-            return patientFactory.fromPerson(personOutput);
+        try
+        {
+            Person template = personFactory.fromSearchParameters(searchParameters);
+            List<Person> people = empiServer.findPersonsByAttributes(template);
+
+            for (Person person: people){
+                empiServer.removePerson(person.getPersonId());
+            }
+            return null;
         }
         catch (RestException cause){
             throw new ExecutionException(cause);

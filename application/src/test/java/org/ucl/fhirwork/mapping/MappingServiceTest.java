@@ -14,7 +14,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.ucl.fhirwork.common.framework.Executor;
-import org.ucl.fhirwork.mapping.executor.*;
+import org.ucl.fhirwork.mapping.executor.observation.ReadObservationExecutor;
+import org.ucl.fhirwork.mapping.executor.patient.*;
 import org.ucl.fhirwork.network.fhir.operations.patient.DeletePatientOperation;
 
 import javax.inject.Provider;
@@ -32,10 +33,12 @@ public class MappingServiceTest
         Provider<DeletePatientConditionalExecutor> deleteConditionalProvider = createMockProvider(DeletePatientConditionalExecutor.class);
         Provider<ReadPatientConditionalExecutor> readConditionalProvider = createMockProvider(ReadPatientConditionalExecutor.class);
         Provider<UpdatePatientConditionalExecutor> updateConditionalProvider = createMockProvider(UpdatePatientConditionalExecutor.class);
+        Provider<ReadObservationExecutor> readObservationProvider = createMockProvider(ReadObservationExecutor.class);
 
         MappingService mappingService = new MappingService(
                 createPatientProvider, deletePatientProvider, readPatientProvider, updatePatientProvider,
-                createConditionalProvider, deleteConditionalProvider, readConditionalProvider, updateConditionalProvider);
+                createConditionalProvider, deleteConditionalProvider, readConditionalProvider, updateConditionalProvider,
+                readObservationProvider);
         Executor executor = mappingService.getExecutor(new DeletePatientOperation(null));
 
         Assert.assertNotNull(executor);

@@ -8,7 +8,7 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.mapping.executor;
+package org.ucl.fhirwork.mapping.executor.patient;
 
 import ca.uhn.fhir.model.dstu2.resource.Patient;
 import org.ucl.fhirwork.common.framework.ExecutionException;

@@ -7,8 +7,10 @@
  *
  *      https://opensource.org/licenses/MIT
  */
-package org.ucl.fhirwork.mapping.executor;
 
+package org.ucl.fhirwork.mapping.executor.patient;
+
+import ca.uhn.fhir.model.dstu2.resource.Patient;
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
@@ -18,30 +20,25 @@ import org.ucl.fhirwork.mapping.data.PersonFactory;
 import org.ucl.fhirwork.network.NetworkService;
 import org.ucl.fhirwork.network.empi.data.Person;
 import org.ucl.fhirwork.network.empi.server.EmpiServer;
-import org.ucl.fhirwork.network.fhir.data.SearchParameter;
-import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
+import org.ucl.fhirwork.network.fhir.operations.patient.CreatePatientOperation;
 
 import javax.inject.Inject;
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Map;
 
 /**
- * Instances of this class convert the patient search FHIR operation into the
+ * Instances of this class convert the create patient FHIR operation into the
  * appropriate EMPI service calls.
  *
- * @author Alperen Karaoglu
  * @author Blair Butterworth
  */
-public class ReadPatientConditionalExecutor implements Executor
+public class CreatePatientExecutor implements Executor
 {
-    private Map<SearchParameter, Object> searchParameters;
+    private Patient patient;
     private EmpiServer empiServer;
     private PatientFactory patientFactory;
     private PersonFactory personFactory;
 
     @Inject
-    public ReadPatientConditionalExecutor(
+    public CreatePatientExecutor(
             NetworkService networkService,
             PatientFactory patientFactory,
             PersonFactory personFactory)
@@ -52,30 +49,22 @@ public class ReadPatientConditionalExecutor implements Executor
     }
 
     @Override
-    public void setOperation(Operation operation){
-        ReadPatientOperation readPatient = (ReadPatientOperation)operation;
-        searchParameters = readPatient.getSearchParameters();
+    public void setOperation(Operation operation)
+    {
+        CreatePatientOperation createPatient = (CreatePatientOperation)operation;
+        patient = createPatient.getPatient();
     }
 
     @Override
     public Object invoke() throws ExecutionException
     {
-        try
-        {
-            List<Person> people = findPeople(searchParameters);
-            return patientFactory.fromPeople(people);
+        try {
+            Person personInput = personFactory.fromPatient(patient);
+            Person personOutput = empiServer.addPerson(personInput);
+            return patientFactory.fromPerson(personOutput);
         }
         catch (RestException cause){
             throw new ExecutionException(cause);
         }
-    }
-
-    private List<Person> findPeople(Map<SearchParameter, Object> searchParameters) throws RestException
-    {
-        if (! searchParameters.isEmpty()){
-            Person template = personFactory.fromSearchParameters(searchParameters);
-            return empiServer.findPersonsByAttributes(template);
-        }
-        return empiServer.loadAllPersons(0, 100); //TODO: Paging mechanism needed. Is included in FHIR spec
     }
 }

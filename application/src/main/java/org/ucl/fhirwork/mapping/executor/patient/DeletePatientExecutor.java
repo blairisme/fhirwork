@@ -8,7 +8,7 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.mapping.executor;
+package org.ucl.fhirwork.mapping.executor.patient;
 
 import ca.uhn.fhir.model.primitive.IdDt;
 import org.ucl.fhirwork.common.framework.ExecutionException;

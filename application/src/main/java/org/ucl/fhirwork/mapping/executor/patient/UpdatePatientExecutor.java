@@ -8,48 +8,56 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.mapping.executor;
+package org.ucl.fhirwork.mapping.executor.patient;
 
-import ca.uhn.fhir.model.primitive.IdDt;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
 import org.ucl.fhirwork.common.http.RestException;
 import org.ucl.fhirwork.mapping.data.PatientFactory;
+import org.ucl.fhirwork.mapping.data.PersonFactory;
 import org.ucl.fhirwork.network.NetworkService;
 import org.ucl.fhirwork.network.empi.data.Person;
 import org.ucl.fhirwork.network.empi.server.EmpiServer;
-import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
+import org.ucl.fhirwork.network.fhir.operations.patient.UpdatePatientOperation;
 
 import javax.inject.Inject;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
- * Instances of this class convert the read patient FHIR operation into the
+ * Instances of this class convert the update patient FHIR operation into the
  * appropriate EMPI service calls.
  *
  * @author Blair Butterworth
  */
-public class ReadPatientExecutor implements Executor
+public class UpdatePatientExecutor implements Executor
 {
-    private String personId;
+    private Patient patient;
     private EmpiServer empiServer;
     private PatientFactory patientFactory;
+    private PersonFactory personFactory;
 
     @Inject
-    public ReadPatientExecutor(
+    public UpdatePatientExecutor(
             NetworkService networkService,
-            PatientFactory patientFactory)
+            PatientFactory patientFactory,
+            PersonFactory personFactory)
     {
         this.empiServer = networkService.getEmpiServer();
         this.patientFactory = patientFactory;
+        this.personFactory = personFactory;
     }
 
     @Override
     public void setOperation(Operation operation)
     {
-        ReadPatientOperation readPatient = (ReadPatientOperation)operation;
-        IdDt patientId = readPatient.getPatientId();
-        personId = patientId.getIdPart();
+        UpdatePatientOperation updatePatient = (UpdatePatientOperation)operation;
+        patient = updatePatient.getPatient();
     }
 
     @Override
@@ -57,11 +65,24 @@ public class ReadPatientExecutor implements Executor
     {
         try
         {
-            Person personOutput = empiServer.loadPerson(personId);
+            Person personInput = personFactory.fromPatient(patient);
+
+            Person foo = updateChangeDate(personInput);
+
+            Person personOutput = empiServer.updatePerson(foo);
             return patientFactory.fromPerson(personOutput);
         }
         catch (RestException cause){
             throw new ExecutionException(cause);
         }
+    }
+
+    private Person updateChangeDate(Person person)
+    {
+        ZonedDateTime date = ZonedDateTime.now();
+        String dateText = date.format(DateTimeFormatter.ISO_INSTANT);
+
+        person.setDateChanged(dateText);
+        return person;
     }
 }

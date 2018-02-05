@@ -12,8 +12,10 @@ package org.ucl.fhirwork.mapping;
 
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
-import org.ucl.fhirwork.mapping.executor.*;
+import org.ucl.fhirwork.mapping.executor.observation.ReadObservationExecutor;
+import org.ucl.fhirwork.mapping.executor.patient.*;
 import org.ucl.fhirwork.network.fhir.operations.common.ConditionalOperation;
+import org.ucl.fhirwork.network.fhir.operations.observation.ReadObservationOperation;
 import org.ucl.fhirwork.network.fhir.operations.patient.CreatePatientOperation;
 import org.ucl.fhirwork.network.fhir.operations.patient.DeletePatientOperation;
 import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
@@ -21,7 +23,6 @@ import org.ucl.fhirwork.network.fhir.operations.patient.UpdatePatientOperation;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -45,7 +46,8 @@ public class MappingService
             Provider<CreatePatientConditionalExecutor> createConditionalProvider,
             Provider<DeletePatientConditionalExecutor> deleteConditionalProvider,
             Provider<ReadPatientConditionalExecutor> readConditionalProvider,
-            Provider<UpdatePatientConditionalExecutor> updateConditionalProvider)
+            Provider<UpdatePatientConditionalExecutor> updateConditionalProvider,
+            Provider<ReadObservationExecutor> readObservationProvide)
     {
         this.executorFactories = new LinkedHashMap<>();
         this.executorFactories.put(isConditionalType(CreatePatientOperation.class), createConditionalProvider);
@@ -56,6 +58,7 @@ public class MappingService
         this.executorFactories.put(isType(DeletePatientOperation.class), deletePatientProvider);
         this.executorFactories.put(isType(ReadPatientOperation.class), readPatientProvider);
         this.executorFactories.put(isType(UpdatePatientOperation.class), updatePatientProvider);
+        this.executorFactories.put(isType(ReadObservationOperation.class), readObservationProvide);
     }
 
     public Executor getExecutor(Operation operation)
