@@ -13,18 +13,13 @@ import java.util.Map;
  *
  */
 public class ConfigMannager {
-	//predefined names for some specific environments
-	static final String DEVELOPING = "Developing";
-	static final String TESTING = "Testing";
-	static final String PRODUCTION = "Production";
-	
-	private String environment;
+	private Environment environment;
 	private ConfigFilePathMannager filePathMannager;
 	
 	//structure: <configType, configObject>
-	private Map<String, Config>registeredConfig;
+	private Map<ConfigType, Config>registeredConfig;
 	
-	public ConfigMannager(String environment){
+	public ConfigMannager(Environment environment){
 		this.environment = environment;
 		this.registeredConfig = new HashMap<>();
 		this.filePathMannager = new ConfigFilePathMannager();
@@ -33,22 +28,24 @@ public class ConfigMannager {
 	
 	// Obtaining mapping results in fulfillment of a given request
 	public Object getMappingResult(String key) {
-		Config mappingConfig = this.registeredConfig.get(Config.MAPPING);
-		if(mappingConfig instanceof MappingConfig)
+		Config mappingConfig = this.registeredConfig.get(ConfigType.MAPPING);
+		if(mappingConfig != null && mappingConfig instanceof MappingConfig)
 			return ((MappingConfig) mappingConfig).getMappingResult(key);
 		else
 			return null;
 	}
 	
 	private void loadConfig() {
-		Map<String, String> filePaths = this.filePathMannager.getFilePathsByEnvironment(this.environment);
+		Map<ConfigType, String> filePaths = this.filePathMannager.getFilePathsByEnvironment(this.environment);
 		
-		for(String key: filePaths.keySet()) {
+		for(ConfigType key: filePaths.keySet()) {
 			switch(key) {
-				case Config.DATABASE:
+				case NETWORK:
 					break;
-				case Config.MAPPING:
+				case MAPPING:
 					registerMappingConfig(filePaths.get(key));
+					break;
+				default:
 					break;
 			}
 		}
@@ -56,6 +53,6 @@ public class ConfigMannager {
 	
 	private void registerMappingConfig(String filePath) {
 		Config mappingConfig = new MappingConfig(filePath, false);
-		registeredConfig.put(Config.MAPPING, mappingConfig);
+		registeredConfig.put(ConfigType.MAPPING, mappingConfig);
 	}
 }

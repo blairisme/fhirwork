@@ -17,7 +17,7 @@ public class ConfigFilePathMannager {
 	static final String PATH_FILE_LOCATION = "src/main/resources/configFilePath.json";
 	
 	//structure <environment, <configFileType, path>>
-	private Map<String, Map<String, String>> filePath;
+	private Map<Environment, Map<ConfigType, String>> filePath;
 	
 	public ConfigFilePathMannager(){
 		this.filePath = loadFilePath();
@@ -32,15 +32,15 @@ public class ConfigFilePathMannager {
 	 * This method returns null if no records of the configuration file locations that belong to the specified 
 	 * environment has been found 
 	 * */
-	public Map<String, String> getFilePathsByEnvironment(String environment){
+	public Map<ConfigType, String> getFilePathsByEnvironment(Environment environment){
 		return filePath.get(environment);
 	}
 	
 	@SuppressWarnings("unchecked")
-	private Map<String, Map<String, String>> loadFilePath(){
+	private Map<Environment, Map<ConfigType, String>> loadFilePath(){
 		JsonSerializer serializer = new JsonSerializer();
-		Type type = new TypeToken<Map<String, Map<String, String>>>() {}.getType(); 
-		Map<String, Map<String, String>> convertedFilePath = (Map<String, Map<String, String>>) serializer.fromJsonFileToObj(type, PATH_FILE_LOCATION);
+		Type type = new TypeToken<Map<Environment, Map<ConfigType, String>>>() {}.getType(); 
+		Map<Environment, Map<ConfigType, String>> convertedFilePath = (Map<Environment, Map<ConfigType, String>>) serializer.fromJsonFileToObj(type, PATH_FILE_LOCATION);
 		return convertedFilePath;
 	}
 }

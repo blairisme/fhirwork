@@ -20,7 +20,7 @@ public class MappingConfig extends Config {
 	private Map<String, Object> codeMap;
 	
 	public MappingConfig(String filePath, boolean cachingConfig){
-		super(MAPPING, filePath, cachingConfig);
+		super(ConfigType.MAPPING, filePath, cachingConfig);
 		initialize();
 	}
 	

@@ -10,19 +10,14 @@ package fhirconverter.configuration;
  */
 
 public abstract class Config {
-	//current supported config types
-	static final String MAPPING = "Mapping";
-	static final String NETWORK = "Network";
-	static final String DATABASE = "Database";
-	
-	private String configType;
+	private ConfigType configType;
 	private String filePath;
 	
 	//True if the configuration file should be read every time it is used
 	//False if the configuration file should only be read once
 	private boolean cachingConfig;
 	
-	public Config(String configType, String filePath, boolean cachingConfig) {
+	public Config(ConfigType configType, String filePath, boolean cachingConfig) {
 		this.configType = configType;
 		this.filePath = filePath;
 		this.cachingConfig = cachingConfig;
@@ -33,7 +28,7 @@ public abstract class Config {
 		return this.filePath;
 	}
 	
-	public String getConfigType(){
+	public ConfigType getConfigType(){
 		return this.configType;
 	}
 	

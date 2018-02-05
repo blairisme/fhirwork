@@ -8,7 +8,7 @@ public class ConfigMannagerTest {
 
 	@Test
 	public void getMappingResultTest() {
-		ConfigMannager configMannager = new ConfigMannager(ConfigMannager.TESTING);
+		ConfigMannager configMannager = new ConfigMannager(Environment.TESTING);
 		
 		Object result = configMannager.getMappingResult("3141-9");
 		assertTrue("The return value of getMappingResult() is not a String", result instanceof String);
