@@ -11,6 +11,7 @@
 package org.ucl.fhirwork.mapping.data;
 
 import ca.uhn.fhir.model.dstu2.valueset.AdministrativeGenderEnum;
+import ca.uhn.fhir.model.primitive.StringDt;
 import org.ucl.fhirwork.network.empi.data.Gender;
 
 /**
@@ -21,6 +22,11 @@ import org.ucl.fhirwork.network.empi.data.Gender;
  */
 public class GenderFactory
 {
+    public Gender fromCode(StringDt gender)
+    {
+        return fromEnum(AdministrativeGenderEnum.forCode(gender.getValue()));
+    }
+
     public Gender fromEnum(AdministrativeGenderEnum gender)
     {
         switch (gender){

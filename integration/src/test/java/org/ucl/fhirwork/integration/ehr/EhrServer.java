@@ -100,7 +100,7 @@ public class EhrServer
     public void removeComposition(Composition composition) throws RestServerException
     {
         RestServer server = getServer();
-        server.delete("composition/" + composition.getUid().getValue());
+        server.delete("composition/" + composition.getUid().getValue(), Collections.emptyMap());
     }
 
     private RestServer getServer() throws RestServerException

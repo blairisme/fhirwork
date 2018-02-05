@@ -20,13 +20,13 @@ public class Patient
     private String resourceType;
     private List<Name> name;
     private List<Identifier> identifier;
-    //private String gender;
+    private String gender;
 
     public Patient(List<Name> name, List<Identifier> identifier, String gender)
     {
         this.name = name;
         this.identifier = identifier;
-       // this.gender = gender;
+        this.gender = gender;
         this.resourceType = "Patient";
     }
 

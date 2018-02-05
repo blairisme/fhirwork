@@ -23,6 +23,11 @@ import org.ucl.fhirwork.network.empi.server.EmpiServer;
 import org.ucl.fhirwork.network.fhir.operations.patient.UpdatePatientOperation;
 
 import javax.inject.Inject;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Instances of this class convert the update patient FHIR operation into the
@@ -61,11 +66,23 @@ public class UpdatePatientExecutor implements Executor
         try
         {
             Person personInput = personFactory.fromPatient(patient);
-            Person personOutput = empiServer.updatePerson(personInput);
+
+            Person foo = updateChangeDate(personInput);
+
+            Person personOutput = empiServer.updatePerson(foo);
             return patientFactory.fromPerson(personOutput);
         }
         catch (RestException cause){
             throw new ExecutionException(cause);
         }
+    }
+
+    private Person updateChangeDate(Person person)
+    {
+        ZonedDateTime date = ZonedDateTime.now();
+        String dateText = date.format(DateTimeFormatter.ISO_INSTANT);
+
+        person.setDateChanged(dateText);
+        return person;
     }
 }

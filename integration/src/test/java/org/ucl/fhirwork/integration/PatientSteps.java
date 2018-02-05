@@ -115,19 +115,25 @@ public class PatientSteps
         patients = fhirServer.searchPatientsByGenderAndSurname(gender, surname);
     }
 
-    @When("^the user deletes the patient named \"(.*)\"$")
-    public void deletePatient(String patientName) throws RestServerException
+    @When("^the user deletes the patient named \"(.*)\" using their id$")
+    public void deletePatientById(String patientName) throws RestServerException
     {
         String personId = getPersonIdByName(patientName);
         if (personId == null) throw new IllegalStateException();
-        fhirServer.deletePatient(personId);
+        fhirServer.deletePatientById(personId);
+    }
+
+    @When("^the user deletes the patient named \"(.*)\"$")
+    public void deletePatientByName(String givenName) throws RestServerException
+    {
+        fhirServer.deletePatientByGivenName(givenName);
     }
 
     @When("^the user updates a patient to the following data:$")
     public void updatePatient(List<Profile> profiles) throws RestServerException
     {
         for (Profile profile: profiles){
-            String personId = getPersonIdByIdentifier(profile.getId());
+            String personId = getPersonIdByName(profile.getFirst());
             if (personId == null) throw new IllegalStateException();
 
             Patient patient = Patient.fromProfile(profile);

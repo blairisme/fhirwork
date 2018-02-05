@@ -10,9 +10,9 @@
  */
 
 package org.ucl.fhirwork.network.ehr.server;
+
 public enum EhrParameter
 {
-
     Aql                 ("aql"),
     EhrId               ("ehrId"),
     Format              ("format"),

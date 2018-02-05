@@ -31,20 +31,26 @@ public class RestServer
     private Serializer serializer;
     private Map<String, String> headers;
 
-    public RestServer(String address, Serializer serializer, Map<Object, Object> headers)
-    {
-        this.server = address.endsWith("/") ? address : address + "/"; // TODO: (blair) Use URL/URI class instead.
-        this.serializer = serializer;
-        this.headers = convertHeaders(headers);
+    public RestServer() {
     }
 
-    public RestRequest get(RestResource resource)
-    {
+    public void setAddress(String address) {
+        this.server = address.endsWith("/") ? address : address + "/"; // TODO: (blair) Use URL/URI class instead.
+    }
+
+    public void setSerializer(Serializer serializer) {
+        this.serializer = serializer;
+    }
+
+    public void setHeaders(Map<Object, Object> values) {
+        this.headers = convertHeaders(values);
+    }
+
+    public RestRequest get(RestResource resource){
         return get(resource.getPath());
     }
 
-    public RestRequest get(String path)
-    {
+    public RestRequest get(String path){
         GetRequest request = Unirest.get(server + path).headers(headers);
         return new RestRequest(request, serializer);
     }
@@ -54,34 +60,30 @@ public class RestServer
         return post(resource.getPath());
     }
 
-    public RestRequest post(String path)
-    {
+    public RestRequest post(String path) {
         HttpRequestWithBody request = Unirest.post(server + path).headers(headers);
         return new RestRequest(request, serializer);
     }
 
-    public RestRequest put(RestResource resource)
-    {
+    public RestRequest put(RestResource resource) {
         return put(resource.getPath());
     }
 
-    public RestRequest put(String path)
-    {
+    public RestRequest put(String path) {
         HttpRequestWithBody request = Unirest.put(server + path).headers(headers);
         return new RestRequest(request, serializer);
     }
 
-    public RestRequest delete(RestResource resource){
+    public RestRequest delete(RestResource resource) {
         return delete(resource.getPath());
     }
 
-    public RestRequest delete(String path){
+    public RestRequest delete(String path) {
         HttpRequest request = Unirest.delete(server + path).headers(headers);
         return new RestRequest(request, serializer);
     }
 
-    private Map<String, String> convertHeaders(Map<Object, Object> values)
-    {
+    private Map<String, String> convertHeaders(Map<Object, Object> values) {
         Map<String, String> result = new HashMap<>();
         for (Map.Entry<Object, Object> entry: values.entrySet()){
             result.put(convert(entry.getKey()), convert(entry.getValue()));
@@ -89,8 +91,7 @@ public class RestServer
         return result;
     }
 
-    private String convert(Object object)
-    {
+    private String convert(Object object) {
         return object.toString();
     }
 }

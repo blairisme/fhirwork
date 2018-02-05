@@ -13,19 +13,25 @@ package org.ucl.fhirwork.network.empi.server;
 import static org.ucl.fhirwork.network.empi.server.EmpiHeader.SessionKey;
 import static org.ucl.fhirwork.common.http.HttpHeader.ContentType;
 import static org.ucl.fhirwork.common.http.MimeType.Xml;
+import static org.ucl.fhirwork.network.empi.server.EmpiParameter.FirstRecord;
+import static org.ucl.fhirwork.network.empi.server.EmpiParameter.MaxRecords;
 import static org.ucl.fhirwork.network.empi.server.EmpiParameter.PersonId;
 import static org.ucl.fhirwork.network.empi.server.EmpiResource.*;
 
 import com.google.common.collect.ImmutableMap;
 import org.ucl.fhirwork.common.http.*;
+import org.ucl.fhirwork.common.serialization.Serializer;
 import org.ucl.fhirwork.common.serialization.XmlSerializer;
 import org.ucl.fhirwork.network.empi.data.AuthenticationRequest;
 import org.ucl.fhirwork.network.empi.data.People;
 import org.ucl.fhirwork.network.empi.data.Person;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Instances of this class represent an EMPI server. Methods exists to create,
@@ -35,13 +41,15 @@ import java.util.List;
  */
 public class EmpiServer
 {
+    private Provider<RestServer> serverFactory;
     private RestServer server;
     private String username;
     private String password;
     private String address;
 
-    public EmpiServer()
-    {
+    @Inject
+    public EmpiServer(Provider<RestServer> serverFactory){
+        this.serverFactory = serverFactory;
     }
 
     public void setUsername(String username) {
@@ -67,14 +75,13 @@ public class EmpiServer
      * @throws RestException    thrown if an error occurs whilst communicating
      *                          with the EMPI server.
      */
-    //TODO: Documentation suggests that if the person is known nothing will be returned. Handle this case
     public Person addPerson(Person person) throws RestException
     {
         RestRequest request = getServer().put(AddPerson);
         request.setBody(person, Person.class);
 
         RestResponse response = request.make(HandleFailure.ByException);
-        return response.asType(Person.class);
+        return response.getStatusCode() != 204 ? response.asType(Person.class) : person;
     }
 
     /**
@@ -116,6 +123,26 @@ public class EmpiServer
 
         RestResponse response = request.make(HandleFailure.ByException);
         return response.asType(Person.class);
+    }
+
+    /**
+     * Returns biographical information on all people in the EMPI system.
+     *
+     * @param index             the index to read people from.
+     * @param count             the maximum number of people to read.
+     * @return                  a list of people.
+     * @throws RestException    thrown if an error occurs whilst communicating
+     *                          with the EMPI server.
+     */
+    public List<Person> loadAllPersons(int index, int count) throws RestException
+    {
+        RestRequest request = getServer().get(LoadAllPersons);
+        request.setParameters(ImmutableMap.of(FirstRecord, index, MaxRecords, count));
+
+        RestResponse response = request.make(HandleFailure.ByException);
+        People people = response.asType(People.class);
+
+        return Arrays.asList(people.getPerson());
     }
 
     /**
@@ -166,6 +193,7 @@ public class EmpiServer
      *                          with the EMPI server.
      */
     //TODO: Documentation suggests this method will throw if the person isnt found - evaluate if this is appropriate.
+    //TODO: Returns 304 if the person isnt modified - evaluate if we should throw
     public Person updatePerson(Person person) throws RestException
     {
         RestRequest request = getServer().put(UpdatePerson);
@@ -179,7 +207,7 @@ public class EmpiServer
     {
         if (server == null) {
             String token = getSessionToken();
-            server = new RestServer(address, new XmlSerializer(), ImmutableMap.of(ContentType, Xml, SessionKey, token));
+            server = newServer(address, new XmlSerializer(), ImmutableMap.of(ContentType, Xml, SessionKey, token));
         }
         return server;
     }
@@ -187,12 +215,21 @@ public class EmpiServer
     private String getSessionToken() throws RestException
     {
         AuthenticationRequest authentication = new AuthenticationRequest(username, password);
-        RestServer server = new RestServer(address, new XmlSerializer(), ImmutableMap.of(ContentType, Xml));
+        RestServer server = newServer(address, new XmlSerializer(), ImmutableMap.of(ContentType, Xml));
 
         RestRequest request = server.put(Authenticate);
         request.setBody(authentication, AuthenticationRequest.class);
 
         RestResponse response = request.make(HandleFailure.ByException);
         return response.asString();
+    }
+
+    private RestServer newServer(String address, Serializer serializer, Map<Object, Object> headers)
+    {
+        RestServer result = serverFactory.get();
+        result.setAddress(address);
+        result.setSerializer(serializer);
+        result.setHeaders(headers);
+        return result;
     }
 }

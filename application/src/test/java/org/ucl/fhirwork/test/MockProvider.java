@@ -8,22 +8,22 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.network.ehr.server;
+package org.ucl.fhirwork.test;
 
-public enum EhrHeader
+import javax.inject.Provider;
+
+public class MockProvider<T> implements Provider<T>
 {
-    SessionId ("Ehr-Session");
+    private T instance;
 
-    private String value;
-
-    private EhrHeader(String value)
+    public MockProvider(T instance)
     {
-        this.value = value;
+        this.instance = instance;
     }
 
     @Override
-    public String toString()
+    public T get()
     {
-        return value;
+        return instance;
     }
 }

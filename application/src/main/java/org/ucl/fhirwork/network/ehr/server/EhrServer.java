@@ -16,12 +16,15 @@ import com.google.common.collect.ImmutableMap;
 
 import org.ucl.fhirwork.common.http.*;
 import org.ucl.fhirwork.common.serialization.JsonSerializer;
+import org.ucl.fhirwork.common.serialization.Serializer;
 import org.ucl.fhirwork.network.ehr.data.SessionToken;
 import org.ucl.fhirwork.network.ehr.data.HealthRecord;
 import org.ucl.fhirwork.network.ehr.data.Composition;
 import org.ucl.fhirwork.network.ehr.data.QueryResult;
 import org.ucl.fhirwork.network.ehr.data.QueryBundle;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.*;
 import static com.google.common.collect.ImmutableBiMap.of;
 import static org.ucl.fhirwork.common.http.HttpHeader.Accept;
@@ -37,17 +40,25 @@ import static org.ucl.fhirwork.network.ehr.server.EhrResource.Query;
 import static org.ucl.fhirwork.network.ehr.server.EhrResource.Session;
 import static org.ucl.fhirwork.network.ehr.server.EhrResource.Ehr;
 
-
-public class EhrServer {
+/**
+ * Instances of this class represent an EHR server. Methods exists to create,
+ * read, update and delete composition and health record data.
+ *
+ * @author Blair Butterworth
+ * @author Xiaolong Chen
+ * @author Jiaming Zhou
+ */
+public class EhrServer
+{
+    private Provider<RestServer> serverFactory;
     private RestServer server;
-    private String sessionId;
     private String address;
     private String username;
     private String password;
 
-    public EhrServer()
-    {
-
+    @Inject
+    public EhrServer(Provider<RestServer> serverFactory){
+        this.serverFactory = serverFactory;
     }
 
     public void setUsername(String username) {
@@ -62,27 +73,11 @@ public class EhrServer {
         this.address = address;
     }
 
-//    public void addTemplate(TemplateReference template) throws IOException, RestServerException
-//    {
-//
-//    }
-//
-//    public List<Template> getTemplates() throws RestServerException
-//    {
-//
-//    }
-//
-//    public boolean templateExists(String templateId) throws RestServerException
-//    {
-//
-//
-//    }
-//
 //    public HealthRecord createEhr(String id, String namespace) throws RestServerException
 //    {
 //
 //    }
-//
+
     public HealthRecord getEhr(String id, String namespace) throws RestException {
         RestServer server = getServer();
         RestRequest request = server.get(Ehr);
@@ -92,7 +87,6 @@ public class EhrServer {
         return result;
     }
 
-
 //    public boolean ehrExists(String id, String namespace) throws RestServerException
 //    {
 //
@@ -101,7 +95,7 @@ public class EhrServer {
 //    {
 //
 //    }
-//
+
     public List<Composition> getCompositions(String ehrId) throws RestException
     {
         List<Composition> compositions = new ArrayList<>();
@@ -129,33 +123,31 @@ public class EhrServer {
 
     }
 
-
     private RestServer getServer() throws RestException
     {
         if (server == null) {
-
             String sessionId = getSessionId();
-            server = new RestServer(address, new JsonSerializer(), ImmutableMap.of(ContentType, Json, Accept, Json, SessionId, sessionId));
+            server = newServer(address, new JsonSerializer(), ImmutableMap.of(ContentType, Json, Accept, Json, SessionId, sessionId));
         }
         return server;
     }
 
-    public String getSessionId() throws RestException {
-        if (sessionId == null) {
-            RestServer rest = new RestServer(address, new JsonSerializer(), ImmutableMap.of(ContentType, Json, Accept, Json));
-            RestRequest request= rest.post(Session).setParameters(ImmutableMap.of(Username, username, Password, password));
-            RestResponse response = request.make(HandleFailure.ByException);
-            SessionToken sessionToken = response.asType(SessionToken.class);
-            sessionId = sessionToken.getSessionId();
-        }
-        return sessionId;
+    private String getSessionId() throws RestException
+    {
+        RestServer rest = newServer(address, new JsonSerializer(), ImmutableMap.of(ContentType, Json, Accept, Json));
+        RestRequest request= rest.post(Session).setParameters(ImmutableMap.of(Username, username, Password, password));
+        RestResponse response = request.make(HandleFailure.ByException);
+        SessionToken sessionToken = response.asType(SessionToken.class);
+        return sessionToken.getSessionId();
     }
 
-    public void deleteSessionId() throws RestException {
-        RestServer rest = new RestServer(address, new JsonSerializer(), of(ContentType, Json, SessionId, sessionId));
-        RestRequest request = rest.delete(Session);
-        request.make(HandleFailure.ByException);
+    private RestServer newServer(String address, Serializer serializer, Map<Object, Object> headers)
+    {
+        RestServer result = serverFactory.get();
+        result.setAddress(address);
+        result.setSerializer(serializer);
+        result.setHeaders(headers);
+        return result;
     }
-
 }
 

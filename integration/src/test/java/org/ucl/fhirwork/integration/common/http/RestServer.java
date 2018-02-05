@@ -39,11 +39,17 @@ public class RestServer
         headers.put(convert(key), convert(value));
     }
 
-    public void delete(String endPoint) throws RestServerException
+    public void delete(RestEndpoint endPoint, Map<Object, Object> parameters) throws RestServerException
+    {
+        delete(endPoint.getPath(), parameters);
+    }
+
+    public void delete(String endPoint, Map<Object, Object> parameters) throws RestServerException
     {
         try {
             HttpRequest request = Unirest.delete(server + endPoint)
-                    .headers(headers);
+                    .headers(headers)
+                    .queryString(convertParameters(parameters));
             HttpResponse<String> response = request.asString();
 
             if (! isSuccessful(response.getStatus())) {

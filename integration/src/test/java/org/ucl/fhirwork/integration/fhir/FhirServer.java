@@ -46,9 +46,14 @@ public class FhirServer
         return server.get(Patient.getPath() + "/" + patientId, Patient.class, Collections.emptyMap());
     }
 
-    public void deletePatient(String patientId) throws RestServerException
+    public void deletePatientById(String patientId) throws RestServerException
     {
-        server.delete(Patient.getPath() + "/" + patientId);
+        server.delete(Patient.getPath() + "/" + patientId, Collections.emptyMap());
+    }
+
+    public void deletePatientByGivenName(String givenName) throws RestServerException
+    {
+        server.delete(Patient, ImmutableMap.of(Given, givenName));
     }
 
     public void updatePatient(String patientId, Patient patient) throws RestServerException

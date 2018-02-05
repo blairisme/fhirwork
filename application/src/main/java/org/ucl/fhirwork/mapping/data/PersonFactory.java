@@ -170,9 +170,9 @@ public class PersonFactory
 
     private void setGender(Person person, Map<SearchParameter, Object> searchParameters)
     {
-        AdministrativeGenderEnum genderEnum = (AdministrativeGenderEnum)searchParameters.get(SearchParameter.Gender);
-        if (genderEnum != null) {
-            Gender gender = genderFactory.fromEnum(genderEnum);
+        StringDt genderCode = (StringDt)searchParameters.get(SearchParameter.Gender);
+        if (genderCode != null) {
+            Gender gender = genderFactory.fromCode(genderCode);
             person.setGender(gender);
         }
     }

@@ -17,12 +17,13 @@ import org.junit.Test;
 import org.ucl.fhirwork.network.fhir.data.SearchParameter;
 import org.ucl.fhirwork.network.fhir.data.SearchParameterBuilder;
 
+import java.util.Collections;
 import java.util.Map;
 
 public class SearchParameterBuilderTest
 {
     @Test
-    public void getSearchParametersTest()
+    public void appendConditionalTest()
     {
         SearchParameterBuilder builder = new SearchParameterBuilder();
         builder.append("Patient?identifier=system%7C00001");
@@ -32,6 +33,18 @@ public class SearchParameterBuilderTest
 
         Assert.assertEquals(expected.size(), actual.size());
         Assert.assertEquals(expected.get(0), actual.get(0));
+    }
+
+    @Test
+    public void appendNullTest()
+    {
+        SearchParameterBuilder builder = new SearchParameterBuilder();
+        builder.append(SearchParameter.Identifier, (TokenParam)null);
+
+        Map<SearchParameter, Object> expected = Collections.emptyMap();
+        Map<SearchParameter, Object> actual = builder.build();
+
+        Assert.assertEquals(expected.size(), actual.size());
     }
 
     @Test(expected = IllegalArgumentException.class)

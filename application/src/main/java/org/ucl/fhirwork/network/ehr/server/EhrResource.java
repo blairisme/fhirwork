@@ -12,7 +12,6 @@ import org.ucl.fhirwork.common.http.RestResource;
  */
 public enum EhrResource implements RestResource
 {
-
     Composition ("composition"),
     Ehr         ("ehr"),
     Observation ("observation"),

@@ -50,12 +50,9 @@ public class SearchParameterBuilder
     {
         switch (key){
             case GivenName:
-            case FamilyName: {
-                append(key, newString(value));
-                break;
-            }
+            case FamilyName:
             case Gender: {
-                append(key, newGender(value));
+                append(key, newString(value));
                 break;
             }
             case Identifier: {
@@ -90,13 +87,6 @@ public class SearchParameterBuilder
         }
     }
 
-    public void append(SearchParameter key, AdministrativeGenderEnum value)
-    {
-        if (value != null){
-            parameters.put(key, value);
-        }
-    }
-
     public Map<SearchParameter, Object> build()
     {
         return parameters;
@@ -124,11 +114,6 @@ public class SearchParameterBuilder
     private DateParam newDate(String value)
     {
         return new DateParam(value);
-    }
-
-    private AdministrativeGenderEnum newGender(String value)
-    {
-        return AdministrativeGenderEnum.forCode(value);
     }
 
     private StringDt newString(String value)
