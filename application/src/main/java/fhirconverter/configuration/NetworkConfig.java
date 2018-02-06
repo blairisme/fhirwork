@@ -1,5 +1,7 @@
 package fhirconverter.configuration;
 
+//TODO: have a list of errors/exceptions that this class should handle
+
 public class NetworkConfig extends Config {
 
 	public NetworkConfig(String filePath, boolean cachingConfiguration) {

@@ -19,6 +19,8 @@ import com.google.gson.GsonBuilder;
  * @author Chenghui Fan
  */
 
+//TODO: have a list of errors/exceptions that this class should handle
+
 public class JsonSerializer {
 	
 	/**This method implements a gson serializer for converting a JSON file to a specified java 

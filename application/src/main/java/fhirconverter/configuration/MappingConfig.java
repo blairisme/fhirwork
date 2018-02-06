@@ -13,12 +13,18 @@ import com.google.gson.reflect.TypeToken;
  * @author Chenghui Fan
  */
 
-//TODO null value handling - Chenghui Fan 2018/2/4
+//TODO: have a list of errors/exceptions that this class should handle
+
 public class MappingConfig extends Config {
+	
 	//Stores the mapping configuration loaded from file
 	//Structure <key(LONIC code), value(String/jsonObject)>
 	private Map<String, Object> codeMap;
 	
+	/**@param filePath - the location of the config file
+	 * @param cachingConfig - whether the class should cache the config loaded, 
+	 * true: config will only be loaded when this class is constructed,
+	 * false: config will be loaded every time it is used*/
 	public MappingConfig(String filePath, boolean cachingConfig){
 		super(ConfigType.MAPPING, filePath, cachingConfig);
 		initialize();
@@ -60,20 +66,37 @@ public class MappingConfig extends Config {
 			return loadMappingConfig().get(key);
 	}
 
+	@Override
+	public void update() {
+		initialize();
+	}
+	
 	//the methods below support modification to the configuration file/database through JavaFX application
+	//TODO: refactoring, considering to be made into abstract methods
 
+	/**This method is used for removing a config item in the mapping configuration file
+	 * @param key - the key of the config item
+	 * */
 	public void removeConfig(String key) {
 		Map<String, Object> newConfigMap = this.isConfigCached()? this.codeMap : loadMappingConfig();
 		newConfigMap.remove(key);
 		writeToConfigFile(newConfigMap);
 	}
 
+	/**This method is used for adding a config item to the mapping configuration file
+	 * @param key - the key of the config item
+	 * @param value - the value of the config item
+	 * */
 	public void addConfig(String key, Object value) {
 		Map<String, Object> newConfigMap = this.isConfigCached()? this.codeMap : loadMappingConfig();
 		newConfigMap.put(key, value);
 		writeToConfigFile(newConfigMap);
 	}
-
+	
+	/**This method is used for chaging the value of a config item in the mapping configuration file
+	 * @param key - the key of the config item
+	 * @param value - the value of the config item
+	 * */
 	public void changeConfig(String key, Object value) {
 		Map<String, Object> newConfigMap = this.isConfigCached()? this.codeMap : loadMappingConfig();
 		newConfigMap.put(key, value);
@@ -84,10 +107,5 @@ public class MappingConfig extends Config {
 		JsonSerializer serializer = new JsonSerializer();
 		Type type = new TypeToken<Map<String, Object>>() {}.getType(); 
 		serializer.fromObjToJsonFile(type, newConfigMap, this.getFilePath());
-	}
-
-	@Override
-	public void update() {
-		initialize();
 	}
 }

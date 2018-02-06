@@ -14,7 +14,6 @@ public class ConfigMannagerTest {
 		assertTrue("The return value of getMappingResult() is not a String", result instanceof String);
 		String resultInString = (String)result;
 		assertEquals("The return value of getMappingResult() is not correct", resultInString, "Weight");
-		
 	}
 
 }

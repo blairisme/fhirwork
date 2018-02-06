@@ -12,6 +12,9 @@ import java.util.Map;
  * @author Abdul-Qadir Ali
  *
  */
+
+//TODO: have a list of errors/exceptions that this class should handle
+
 public class ConfigMannager {
 	private Environment environment;
 	private ConfigFilePathMannager filePathMannager;
@@ -19,6 +22,7 @@ public class ConfigMannager {
 	//structure: <configType, configObject>
 	private Map<ConfigType, Config>registeredConfig;
 	
+	/**@param environment - the name of the environment*/
 	public ConfigMannager(Environment environment){
 		this.environment = environment;
 		this.registeredConfig = new HashMap<>();
@@ -26,7 +30,11 @@ public class ConfigMannager {
 		loadConfig();
 	}
 	
-	// Obtaining mapping results in fulfillment of a given request
+	/**This method is used for get mapping result by the key of the requested mapping rule
+	 * 
+	 * @param key - the key of the requested mapping
+	 * @return Object - the requested mapping result <br/> The method returns null if no match found or no mapping Config has been successfully loaded
+	 * */
 	public Object getMappingResult(String key) {
 		Config mappingConfig = this.registeredConfig.get(ConfigType.MAPPING);
 		if(mappingConfig != null && mappingConfig instanceof MappingConfig)
@@ -41,10 +49,13 @@ public class ConfigMannager {
 		for(ConfigType key: filePaths.keySet()) {
 			switch(key) {
 				case NETWORK:
+					//TODO
 					break;
 				case MAPPING:
 					registerMappingConfig(filePaths.get(key));
 					break;
+				case DATABASE:
+					//TODO
 				default:
 					break;
 			}
