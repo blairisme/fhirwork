@@ -56,6 +56,7 @@ public class ConfigMannager {
 					break;
 				case DATABASE:
 					//TODO
+					break;
 				default:
 					break;
 			}
