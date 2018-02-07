@@ -23,7 +23,7 @@ configurations {
 }
 
 dependencies {
-    environment 'alessfg:docker-ethercis:master@zip'
+    environment 'blairisme:docker-ethercis:master@zip'
     environment 'blairisme:docker-openempi:master@zip'
 }
 
