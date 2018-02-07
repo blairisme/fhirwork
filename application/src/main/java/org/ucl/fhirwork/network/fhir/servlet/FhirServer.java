@@ -8,7 +8,7 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork;
+package org.ucl.fhirwork.network.fhir.servlet;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
@@ -20,8 +20,7 @@ import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.springframework.web.cors.CorsConfiguration;
-import org.ucl.fhirwork.network.fhir.servlet.ObservationResourceProvider;
-import org.ucl.fhirwork.network.fhir.servlet.PatientResourceProvider;
+import org.ucl.fhirwork.ApplicationModule;
 
 import javax.servlet.annotation.WebServlet;
 import java.util.ArrayList;
@@ -41,9 +40,9 @@ import java.util.List;
  * @author Yuan wei
  */
 @WebServlet(urlPatterns= {"/fhir/*"}, displayName="FHIR Server")
-public class Application extends RestfulServer
+public class FhirServer extends RestfulServer
 {
-    public Application()
+    public FhirServer()
     {
         super(FhirContext.forDstu2());
     }
