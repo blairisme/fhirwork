@@ -37,7 +37,7 @@ public class ConfigMannager {
 		}
 	}
 	
-	/**This method is used for get mapping result by the key of the requested mapping rule
+	/**This method is used for getting mapping result by the key of the requested mapping rule
 	 * 
 	 * @param key - the key of the requested mapping
 	 * @return Object - the requested mapping result <br/> The method returns null if no match found or no mapping Config has been successfully loaded
@@ -48,6 +48,15 @@ public class ConfigMannager {
 			return ((MappingConfig) mappingConfig).getMappingResult(key);
 		else
 			return null;
+	}
+	
+	//Not sure if we should provide this accessibility
+	/**This method is used for getting config objects
+	 * @param configType
+	 * @return configObject
+	 * */
+	public Config getConfig(ConfigType configType) {
+		return this.registeredConfig.get(configType);
 	}
 	
 	private void loadConfig() throws FileNotFoundException {
@@ -66,7 +75,6 @@ public class ConfigMannager {
 				default:
 					break;
 			}
-		
 		}
 	}
 	

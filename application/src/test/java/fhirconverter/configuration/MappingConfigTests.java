@@ -41,7 +41,6 @@ public class MappingConfigTests {
             } catch (IOException ioException) {
                 System.out.println(ioException.toString());
             }
-        }  
+        }
 	}
-
 }
