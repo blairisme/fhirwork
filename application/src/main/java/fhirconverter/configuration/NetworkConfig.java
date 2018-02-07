@@ -44,7 +44,7 @@ public class NetworkConfig extends Config {
 	
 	
 	public String getAddress() {
-		return null;
+		return this.networkConfig;
 	}
 	
 	public String getUsername() {
