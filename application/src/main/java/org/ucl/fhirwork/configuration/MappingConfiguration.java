@@ -16,6 +16,9 @@ public class MappingConfiguration
 {
     public List<MappingSpecification> mappings;
 
+    public MappingConfiguration(){
+    }
+
     public MappingConfiguration(List<MappingSpecification> mappings) {
         this.mappings = mappings;
     }

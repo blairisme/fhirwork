@@ -32,22 +32,22 @@ public class ObservationFactory
     public ObservationFactory(){
     }
 
-    public List<Observation> fromQueryBundle(String patientId, String loincCode, QueryBundle queryBundle)
+    public List<Observation> fromQueryBundle(String loinc, String patientId, QueryBundle queryBundle)
     {
         List<Observation> result = new ArrayList<>(queryBundle.getResultSet().size());
         for (QueryResult queryResult: queryBundle.getResultSet()){
-            result.add(fromQueryResult(patientId, loincCode, queryResult));
+            result.add(fromQueryResult(patientId, loinc, queryResult));
         }
         return result;
     }
 
-    public Observation fromQueryResult(String patientId, String loincCode, QueryResult queryResult)
+    public Observation fromQueryResult(String patientId, String loinc, QueryResult queryResult)
     {
         Observation observation = new Observation();
         observation.setId(newId());
         observation.setSubject(newSubject(patientId));
         observation.setValue(newQuantity(queryResult));
-        observation.setCode(newCode(loincCode));
+        observation.setCode(newCode(loinc));
         observation.setEffective(newEffective(queryResult));
         return observation;
     }
@@ -67,13 +67,13 @@ public class ObservationFactory
         return quantity;
     }
 
-    private CodeableConceptDt newCode(String loincCode)
+    private CodeableConceptDt newCode(String loinc)
     {
         Map<String, String> codeMap = getCodeMap();
 
         CodeableConceptDt code = new CodeableConceptDt();
-        code.addCoding(new CodingDt("http://loinc.org", loincCode));
-        code.setText(codeMap.get(loincCode));
+        code.addCoding(new CodingDt("http://loinc.org", loinc));
+        code.setText(codeMap.get(loinc));
         return code;
     }
 

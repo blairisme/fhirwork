@@ -10,6 +10,7 @@
 
 package org.ucl.fhirwork.network.ehr.data;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.ucl.fhirwork.common.serialization.JsonSerializer;
 import org.ucl.fhirwork.test.TestResourceUtils;
@@ -24,17 +25,7 @@ public class QueryBundleTest
         JsonSerializer serializer = new JsonSerializer();
         String bundle = TestResourceUtils.readResource("ehr/QueryBundle.json");
 
-        //QueryBundle deserialized = serializer.deserialize(bundle, QueryBundle.class);
-        //deserialized.getResultSet();
-
-        /*
-        Assert.assertEquals("Kathrin", deserialized.getGivenName());
-        Assert.assertEquals("Williams", deserialized.getFamilyName());
-        Assert.assertEquals(2, deserialized.getPersonIdentifiers().length);
-
-        String serialized = serializer.serialize(deserialized, Person.class);
-        Assert.assertTrue(serialized.contains("<givenName>Kathrin</givenName>"));
-        Assert.assertTrue(serialized.contains("<familyName>Williams</familyName>"));
-        */
+        QueryBundle deserialized = serializer.deserialize(bundle, QueryBundle.class);
+        Assert.assertEquals(6, deserialized.getResultSet().size());
     }
 }

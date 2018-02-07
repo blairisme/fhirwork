@@ -73,7 +73,7 @@ public class EhrServer
         request.setParameters(of(Aql, query));
 
         RestResponse response = request.make(HandleFailure.ByException);
-        return response.asType(QueryBundle.class);
+        return response.getStatusCode() != 204 ? response.asType(QueryBundle.class) : new QueryBundle();
     }
 
     private RestServer getServer() throws RestException

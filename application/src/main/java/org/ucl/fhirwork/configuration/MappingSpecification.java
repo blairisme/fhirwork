@@ -5,15 +5,17 @@ public class MappingSpecification
     private MappingPath path;
     private String archetype;
     private String text;
+    private String loinc;
 
     public MappingSpecification()
     {
     }
 
-    public MappingSpecification(MappingPath path, String archetype, String text) {
+    public MappingSpecification(MappingPath path, String archetype, String text, String loinc) {
         this.path = path;
         this.archetype = archetype;
         this.text = text;
+        this.loinc = loinc;
     }
 
     public MappingPath getPath() {
@@ -26,5 +28,9 @@ public class MappingSpecification
 
     public String getText() {
         return text;
+    }
+
+    public String getLoinc() {
+        return loinc;
     }
 }
