@@ -33,7 +33,7 @@ public class ObservationSteps
     @Given("^the system has the following health data:$")
     public void initializeHealthData(List<HealthData> healthData) throws IOException, RestServerException
     {
-        //installTemplates();
+        installTemplates();
         for (HealthData data: healthData){
             HealthRecord record = createHealthRecord(data);
             createComposition(data, record);
