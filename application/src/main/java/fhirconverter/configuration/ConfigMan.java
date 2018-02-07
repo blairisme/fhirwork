@@ -1,4 +1,5 @@
 package fhirconverter.configuration;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,11 +36,8 @@ public class ConfigMan {
     }
 
     
-    
-      // throw new IllegalStateException();
-    
 
-	private void loadConfig() {
+	private void loadConfig() throws FileNotFoundException {
 	Map<ConfigType, String> filePaths = this.filePathMan.getFilePathsByEnvironment(this.environment);
 	
 	for(ConfigType key: filePaths.keySet()) {

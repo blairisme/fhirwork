@@ -1,4 +1,5 @@
 package fhirconverter.configuration;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +28,13 @@ public class ConfigMannager {
 		this.environment = environment;
 		this.registeredConfig = new HashMap<>();
 		this.filePathMannager = new ConfigFilePathMannager();
-		loadConfig();
+		try {
+			loadConfig();
+		} catch (FileNotFoundException e) {
+			System.out.println("The configuration file is not not reachable");
+			//TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**This method is used for get mapping result by the key of the requested mapping rule
@@ -43,9 +50,8 @@ public class ConfigMannager {
 			return null;
 	}
 	
-	private void loadConfig() {
+	private void loadConfig() throws FileNotFoundException {
 		Map<ConfigType, String> filePaths = this.filePathMannager.getFilePathsByEnvironment(this.environment);
-		
 		for(ConfigType key: filePaths.keySet()) {
 			switch(key) {
 				case NETWORK:
@@ -60,6 +66,7 @@ public class ConfigMannager {
 				default:
 					break;
 			}
+		
 		}
 	}
 	

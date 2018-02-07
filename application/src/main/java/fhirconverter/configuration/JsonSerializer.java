@@ -37,8 +37,11 @@ public class JsonSerializer {
 		try {
 			br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath)));
 		} catch (FileNotFoundException e) {
+			
+			System.out.println("The requsted file cannot be located, please try again");
 			// TODO Auto-generated catch block
 			br = null;
+			
 			e.printStackTrace();
 		}
 		if(br == null)
