@@ -38,7 +38,7 @@ check.dependsOn integrationTest
 
 task waitForEnvStartup(){
   doLast{
-    sleep(5 * 1000)
+    sleep(20 * 1000)
   }
   onlyIf {return true}
 }
