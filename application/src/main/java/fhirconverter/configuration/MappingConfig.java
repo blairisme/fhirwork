@@ -71,7 +71,8 @@ public class MappingConfig extends Config {
 		initialize();
 	}
 	
-	//the methods below support modification to the configuration file/database through JavaFX application
+	//The methods below support modification to the configuration file/database through JavaFX application
+	//If the GUI is decided to be made as a webpage, these methods can be removed
 	//TODO: refactoring, considering to be made into abstract methods
 
 	/**This method is used for removing a config item in the mapping configuration file

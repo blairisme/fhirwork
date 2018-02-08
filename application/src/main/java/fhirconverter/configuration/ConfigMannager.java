@@ -23,18 +23,22 @@ public class ConfigMannager {
 	//structure: <configType, configObject>
 	private Map<ConfigType, Config>registeredConfig;
 	
-	/**@param environment - the name of the environment*/
+	/**@param environment
+	 * @param pathFileLocation - the location of the config path file, <br/> if this parameter remains empty, a default path will be used: <br/> src/main/resources/configFilePath.json*/
 	public ConfigMannager(Environment environment){
 		this.environment = environment;
 		this.registeredConfig = new HashMap<>();
-		this.filePathMannager = new ConfigFilePathMannager();
-		try {
-			loadConfig();
-		} catch (FileNotFoundException e) {
-			System.out.println("The configuration file is not not reachable");
-			//TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.filePathMannager = new ConfigFilePathMannager(ConfigFilePathMannager.DEFAULT_PATH_FILE_LOCATION);
+		loadConfig();
+	}
+	
+	/**@param environment
+	 * @param pathFileLocation - the location of the config path file, <br/> if this parameter remains empty, a default path will be used: <br/> src/main/resources/configFilePath.json*/
+	public ConfigMannager(Environment environment, String pathFileLocation){
+		this.environment = environment;
+		this.registeredConfig = new HashMap<>();
+		this.filePathMannager = new ConfigFilePathMannager(pathFileLocation);
+		loadConfig();
 	}
 	
 	/**This method is used for getting mapping result by the key of the requested mapping rule
@@ -50,40 +54,30 @@ public class ConfigMannager {
 			return null;
 	}
 	
-	/**This method is used for getting network config
-	 * 
-	 * @param networkConfigType
-	 * @param key - valid keys: "Address", "Username", "Password", Non-case-sensitive
-	 * @return value
-	 * */
-	public String getNetworkConfig(NetworkConfigType networkConfigType, String key) {
+	/**@param NetworkConfigType*/
+	public String getNetworkAddress(NetworkConfigType networkConfigType) {
 		NetworkConfig networkConfig = (NetworkConfig) this.registeredConfig.get(ConfigType.NETWORK);
-		if(key.equalsIgnoreCase("address")) {
-			return networkConfig.getAddress(networkConfigType);
-		}
-		else if(key.equalsIgnoreCase("username")){
-			return networkConfig.getUsername(networkConfigType);
-		}
-		else if(key.equalsIgnoreCase("password")) {
-			return networkConfig.getPassword(networkConfigType);
-		}
-		else
-			System.out.println("Not a valid key for getting network config");
-		return null;
+		String result = networkConfig.getAddress(networkConfigType);
+		return result;
 	}
 	
-	//Not sure if we should provide this accessibility
-	/**This method is used for getting config objects
-	 * @param configType
-	 * @return configObject
-	 * */
-	public Config getConfig(ConfigType configType) {
-		return this.registeredConfig.get(configType);
+	/**@param NetworkConfigType*/
+	public String getNetworkUsername(NetworkConfigType networkConfigType) {
+		NetworkConfig networkConfig = (NetworkConfig) this.registeredConfig.get(ConfigType.NETWORK);
+		String result = networkConfig.getUsername(networkConfigType);
+		return result;
 	}
 	
-	private void loadConfig() throws FileNotFoundException {
+	/**@param NetworkConfigType*/
+	public String getNetworkPassword(NetworkConfigType networkConfigType) {
+		NetworkConfig networkConfig = (NetworkConfig) this.registeredConfig.get(ConfigType.NETWORK);
+		String result = networkConfig.getPassword(networkConfigType);
+		return result;
+	}
+	
+	private void loadConfig() {
 		Map<ConfigType, String> filePaths = this.filePathMannager.getFilePathsByEnvironment(this.environment);
-		for(ConfigType key: filePaths.keySet()) {
+		for(ConfigType key: filePaths.keySet()) 
 			switch(key) {
 				case NETWORK:
 					registerNetworkConfig(filePaths.get(key));
@@ -97,7 +91,6 @@ public class ConfigMannager {
 				default:
 					break;
 			}
-		}
 	}
 	
 	private void registerMappingConfig(String filePath) {

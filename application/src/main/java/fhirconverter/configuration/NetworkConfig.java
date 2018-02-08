@@ -41,6 +41,7 @@ public class NetworkConfig extends Config {
 			return convertedMappingConfig;
 	}
 	
+	/**@param networkConfigType*/
 	public String getAddress(NetworkConfigType networkConfigType) {
 		if(this.isConfigCached())
 			return this.networkConfig.get(networkConfigType).get("Address");
@@ -48,6 +49,7 @@ public class NetworkConfig extends Config {
 			return loadNetworkConfig().get(networkConfigType).get("Address");
 	}
 	
+	/**@param networkConfigType*/
 	public String getUsername(NetworkConfigType networkConfigType) {
 		if(this.isConfigCached())
 			return this.networkConfig.get(networkConfigType).get("Username");
@@ -55,6 +57,7 @@ public class NetworkConfig extends Config {
 			return loadNetworkConfig().get(networkConfigType).get("Username");
 	}
 	
+	/**@param networkConfigType*/
 	public String getPassword(NetworkConfigType networkConfigType) {
 		if(this.isConfigCached())
 			return this.networkConfig.get(networkConfigType).get("Password");

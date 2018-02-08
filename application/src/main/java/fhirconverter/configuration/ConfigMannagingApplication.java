@@ -10,6 +10,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+//TODO: finish this application
 public class ConfigMannagingApplication extends Application {
  
     public static void main(String[] args) {

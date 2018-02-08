@@ -18,12 +18,16 @@ import com.google.gson.reflect.TypeToken;
 
 public class ConfigFilePathMannager {
 
-	static final String PATH_FILE_LOCATION = "src/main/resources/configFilePath.json";
+	static final String DEFAULT_PATH_FILE_LOCATION = "src/main/resources/configFilePath.json";
+	
+	private String pathFileLocation;
 	
 	//structure <environment, <configFileType, path>>
 	private Map<Environment, Map<ConfigType, String>> filePath;
 	
-	public ConfigFilePathMannager(){
+	/**@param pathFileLocation*/
+	public ConfigFilePathMannager(String pathFileLocation){
+		this.pathFileLocation = pathFileLocation;
 		this.filePath = loadFilePath();
 	}
 	
@@ -44,7 +48,7 @@ public class ConfigFilePathMannager {
 	private Map<Environment, Map<ConfigType, String>> loadFilePath(){
 		JsonSerializer serializer = new JsonSerializer();
 		Type type = new TypeToken<Map<Environment, Map<ConfigType, String>>>() {}.getType(); 
-		Map<Environment, Map<ConfigType, String>> convertedFilePath = (Map<Environment, Map<ConfigType, String>>) serializer.fromJsonFileToObj(type, PATH_FILE_LOCATION);
+		Map<Environment, Map<ConfigType, String>> convertedFilePath = (Map<Environment, Map<ConfigType, String>>) serializer.fromJsonFileToObj(type, this.pathFileLocation);
 		return convertedFilePath;
 	}
 }
