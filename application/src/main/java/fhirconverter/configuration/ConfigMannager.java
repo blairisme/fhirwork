@@ -50,6 +50,28 @@ public class ConfigMannager {
 			return null;
 	}
 	
+	/**This method is used for getting network config
+	 * 
+	 * @param networkConfigType
+	 * @param key - valid keys: "Address", "Username", "Password", Non-case-sensitive
+	 * @return value
+	 * */
+	public String getNetworkConfig(NetworkConfigType networkConfigType, String key) {
+		NetworkConfig networkConfig = (NetworkConfig) this.registeredConfig.get(ConfigType.NETWORK);
+		if(key.equalsIgnoreCase("address")) {
+			return networkConfig.getAddress(networkConfigType);
+		}
+		else if(key.equalsIgnoreCase("username")){
+			return networkConfig.getUsername(networkConfigType);
+		}
+		else if(key.equalsIgnoreCase("password")) {
+			return networkConfig.getPassword(networkConfigType);
+		}
+		else
+			System.out.println("Not a valid key for getting network config");
+		return null;
+	}
+	
 	//Not sure if we should provide this accessibility
 	/**This method is used for getting config objects
 	 * @param configType
@@ -64,7 +86,7 @@ public class ConfigMannager {
 		for(ConfigType key: filePaths.keySet()) {
 			switch(key) {
 				case NETWORK:
-					//TODO
+					registerNetworkConfig(filePaths.get(key));
 					break;
 				case MAPPING:
 					registerMappingConfig(filePaths.get(key));
@@ -81,5 +103,10 @@ public class ConfigMannager {
 	private void registerMappingConfig(String filePath) {
 		Config mappingConfig = new MappingConfig(filePath, false);
 		registeredConfig.put(ConfigType.MAPPING, mappingConfig);
+	}
+	
+	private void registerNetworkConfig(String filePath) {
+		Config networkConfig = new NetworkConfig(filePath, false);
+		registeredConfig.put(ConfigType.NETWORK, networkConfig);
 	}
 }

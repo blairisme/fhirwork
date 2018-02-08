@@ -1,4 +1,4 @@
 {
-  "EMPI": {"URL":"http://localhost:8080","UserName":"admin","Password":"admin"},
-  "EHR":{"URL":"https://test.operon.systems/rest/v1","UserName":"oprn_jarrod","Password":"ZayFYCiO644"}
+  "EMPI": {"Address":"http://localhost:8080","Username":"admin","Password":"admin"},
+  "EHR":{"Address":"https://test.operon.systems/rest/v1","Username":"oprn_jarrod","Password":"ZayFYCiO644"}
 }

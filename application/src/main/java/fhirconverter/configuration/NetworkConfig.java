@@ -11,7 +11,7 @@ import com.google.gson.reflect.TypeToken;
 public class NetworkConfig extends Config {
 	//structure <networkConfigtype <key, value>>
 	//key: Address, Username, Password
-	private Map<String, Map<String, String>> networkConfig;
+	private Map<NetworkConfigType, Map<String, String>> networkConfig;
 	
 	public NetworkConfig(String filePath, boolean cachingConfiguration) {
 		super(ConfigType.NETWORK, filePath, cachingConfiguration);
@@ -26,13 +26,13 @@ public class NetworkConfig extends Config {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private Map<String, Map<String, String>> loadNetworkConfig(){
+	private Map<NetworkConfigType, Map<String, String>> loadNetworkConfig(){
 		JsonSerializer serializer = new JsonSerializer();
 		
 		//define the type of the object that would be converted to (should be supported by gson fromJson method)
-		Type type = new TypeToken<Map<String, Object>>() {}.getType(); 
+		Type type = new TypeToken<Map<NetworkConfigType, Map<String, String>>>() {}.getType(); 
 		
-		Map<String, Map<String, String>> convertedMappingConfig = (Map<String, Map<String, String>>) serializer.fromJsonFileToObj(type, this.getFilePath());
+		Map<NetworkConfigType, Map<String, String>> convertedMappingConfig = (Map<NetworkConfigType, Map<String, String>>) serializer.fromJsonFileToObj(type, this.getFilePath());
 		if(convertedMappingConfig == null) {
 			System.out.println("loading network configuration file failed");
 			return null;
@@ -41,22 +41,29 @@ public class NetworkConfig extends Config {
 			return convertedMappingConfig;
 	}
 	
-	
-	
-	public String getAddress() {
-		return this.networkConfig;
+	public String getAddress(NetworkConfigType networkConfigType) {
+		if(this.isConfigCached())
+			return this.networkConfig.get(networkConfigType).get("Address");
+		else
+			return loadNetworkConfig().get(networkConfigType).get("Address");
 	}
 	
-	public String getUsername() {
-		return null;
+	public String getUsername(NetworkConfigType networkConfigType) {
+		if(this.isConfigCached())
+			return this.networkConfig.get(networkConfigType).get("Username");
+		else
+			return loadNetworkConfig().get(networkConfigType).get("Username");
 	}
 	
-	public String getPassword() {
-		return null;
+	public String getPassword(NetworkConfigType networkConfigType) {
+		if(this.isConfigCached())
+			return this.networkConfig.get(networkConfigType).get("Password");
+		else
+			return loadNetworkConfig().get(networkConfigType).get("Password");
 	}
 	
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
+		initialize();
 	}
 }

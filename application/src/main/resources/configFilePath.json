@@ -1,4 +1,3 @@
 {
-  "TESTING": {"MAPPING":"src/main/resources/mappingConfig.json"},
-  "TESTING": {"NETWORK":"src/main/resources/networkConfig.json"}
+  "TESTING": {"MAPPING":"src/main/resources/mappingConfig.json","NETWORK":"src/main/resources/networkConfig.json"}
 }
