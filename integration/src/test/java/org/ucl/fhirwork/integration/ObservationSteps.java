@@ -1,10 +1,12 @@
 package org.ucl.fhirwork.integration;
 
+import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import cucumber.runtime.java.StepDefAnnotation;
 import org.junit.Assert;
+import org.ucl.fhirwork.integration.common.http.HttpStatus;
 import org.ucl.fhirwork.integration.common.http.RestServerException;
 import org.ucl.fhirwork.integration.cucumber.HealthData;
 import org.ucl.fhirwork.integration.ehr.EhrServer;
@@ -14,6 +16,7 @@ import org.ucl.fhirwork.integration.fhir.model.Observation;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @StepDefAnnotation
 @SuppressWarnings("unused")
@@ -23,11 +26,15 @@ public class ObservationSteps
     private EhrServer ehrServer;
     private List<Observation> observations;
 
-    public ObservationSteps()
+    @Before
+    public void setup() throws Exception
     {
         fhirServer = new FhirServer("http://localhost:8090");
         ehrServer = new EhrServer("http://localhost:8888/rest/v1", "guest", "guest");
         //ehrServer = new EhrServer("https://test.operon.systems/rest/v1", "oprn_jarrod", "ZayFYCiO644");
+
+        HttpStatus.waitForOnline("http://localhost:8888", 60, TimeUnit.SECONDS);
+        HttpStatus.waitForOnline("http://localhost:8090", 60, TimeUnit.SECONDS);
     }
 
     @Given("^the system has the following health data:$")

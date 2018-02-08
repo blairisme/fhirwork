@@ -15,6 +15,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import cucumber.runtime.java.StepDefAnnotation;
 import org.junit.Assert;
+import org.ucl.fhirwork.integration.common.http.HttpStatus;
 import org.ucl.fhirwork.integration.common.http.RestServerException;
 import org.ucl.fhirwork.integration.cucumber.Profile;
 import org.ucl.fhirwork.integration.empi.EmpiServer;
@@ -27,6 +28,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
 /**
@@ -44,11 +46,14 @@ public class PatientSteps
     private List<Patient> patients;
 
     @Before
-    public void setup()
+    public void setup() throws Exception
     {
         patients = Collections.emptyList();
         fhirServer = new FhirServer("http://localhost:8090");
         empiServer = new EmpiServer("http://localhost:8080", "admin", "admin");
+
+        HttpStatus.waitForOnline("http://localhost:8080", 60, TimeUnit.SECONDS);
+        HttpStatus.waitForOnline("http://localhost:8090", 60, TimeUnit.SECONDS);
     }
 
     @Given("^the system has no patients$")
