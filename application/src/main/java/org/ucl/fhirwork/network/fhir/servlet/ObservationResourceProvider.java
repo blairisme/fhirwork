@@ -59,7 +59,7 @@ public class ObservationResourceProvider implements IResourceProvider
             @RequiredParam(name = Observation.SP_PATIENT) ReferenceParam patient)
     {
         try {
-            ReadObservationOperation operation = new ReadObservationOperation();
+            ReadObservationOperation operation = new ReadObservationOperation(codes, patient);
             return (List<Observation>)applicationService.execute(operation);
         }
         catch (Throwable error) {

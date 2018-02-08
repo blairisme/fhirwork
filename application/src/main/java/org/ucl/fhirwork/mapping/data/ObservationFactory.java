@@ -78,7 +78,7 @@ public class ObservationFactory
     }
 
     //TODO: Remove
-    private Map<String, String> getCodeMap()
+    public Map<String, String> getCodeMap()
     {
         Map<String, String> codeMap = new HashMap<>();
         codeMap.put("3141-9", "Weight");
