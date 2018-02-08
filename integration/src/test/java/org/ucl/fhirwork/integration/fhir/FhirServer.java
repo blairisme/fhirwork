@@ -101,6 +101,17 @@ public class FhirServer
         return getObservations(bundle);
     }
 
+    public boolean ping()
+    {
+        try{
+            searchPatients();
+            return true;
+        }
+        catch (RestServerException error){
+            return false;
+        }
+    }
+
     private List<Patient> getPatients(PatientBundle bundle)
     {
         List<Patient> result = new ArrayList<>();

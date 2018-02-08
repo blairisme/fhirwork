@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.ucl.fhirwork.integration.common.http.HttpStatus;
 import org.ucl.fhirwork.integration.common.http.RestServerException;
 import org.ucl.fhirwork.integration.cucumber.HealthData;
+import org.ucl.fhirwork.integration.cucumber.StepUtils;
 import org.ucl.fhirwork.integration.ehr.EhrServer;
 import org.ucl.fhirwork.integration.ehr.model.*;
 import org.ucl.fhirwork.integration.fhir.FhirServer;
@@ -22,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("unused")
 public class ObservationSteps
 {
+    private static boolean serversPinged = false;
     private FhirServer fhirServer;
     private EhrServer ehrServer;
     private List<Observation> observations;
@@ -33,8 +35,11 @@ public class ObservationSteps
         ehrServer = new EhrServer("http://localhost:8888/rest/v1", "guest", "guest");
         //ehrServer = new EhrServer("https://test.operon.systems/rest/v1", "oprn_jarrod", "ZayFYCiO644");
 
-        HttpStatus.waitForOnline("http://localhost:8888", 60, TimeUnit.SECONDS);
-        HttpStatus.waitForOnline("http://localhost:8090", 60, TimeUnit.SECONDS);
+        if (! serversPinged) {
+            StepUtils.wait(120, TimeUnit.SECONDS, () -> ehrServer.ping());
+            StepUtils.wait(120, TimeUnit.SECONDS, () -> fhirServer.ping());
+            serversPinged = true;
+        }
     }
 
     @Given("^the system has the following health data:$")

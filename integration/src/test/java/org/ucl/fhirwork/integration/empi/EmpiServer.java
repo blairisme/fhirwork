@@ -24,6 +24,7 @@ import org.ucl.fhirwork.integration.empi.model.Person;
 import org.ucl.fhirwork.integration.common.serialization.XmlSerializer;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class EmpiServer
 {
@@ -80,6 +81,17 @@ public class EmpiServer
         RestServer server = getServer();
         People people = server.get(LoadAllPersons, People.class, ImmutableMap.of(FirstRecord, index, MaxRecords, count));
         return people.getPerson();
+    }
+
+    public boolean ping()
+    {
+        try{
+            getPeople();
+            return true;
+        }
+        catch (RestServerException error){
+            return false;
+        }
     }
 
     private RestServer getServer() throws RestServerException

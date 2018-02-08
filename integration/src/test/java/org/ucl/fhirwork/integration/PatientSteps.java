@@ -18,6 +18,7 @@ import org.junit.Assert;
 import org.ucl.fhirwork.integration.common.http.HttpStatus;
 import org.ucl.fhirwork.integration.common.http.RestServerException;
 import org.ucl.fhirwork.integration.cucumber.Profile;
+import org.ucl.fhirwork.integration.cucumber.StepUtils;
 import org.ucl.fhirwork.integration.empi.EmpiServer;
 import org.ucl.fhirwork.integration.empi.model.Person;
 import org.ucl.fhirwork.integration.fhir.model.Patient;
@@ -41,6 +42,7 @@ import java.util.function.Predicate;
 @SuppressWarnings("unused")
 public class PatientSteps
 {
+    private static boolean serversPinged = false;
     private FhirServer fhirServer;
     private EmpiServer empiServer;
     private List<Patient> patients;
@@ -52,8 +54,11 @@ public class PatientSteps
         fhirServer = new FhirServer("http://localhost:8090");
         empiServer = new EmpiServer("http://localhost:8080", "admin", "admin");
 
-        HttpStatus.waitForOnline("http://localhost:8080", 60, TimeUnit.SECONDS);
-        HttpStatus.waitForOnline("http://localhost:8090", 60, TimeUnit.SECONDS);
+        if (! serversPinged) {
+            StepUtils.wait(120, TimeUnit.SECONDS, () -> empiServer.ping());
+            StepUtils.wait(120, TimeUnit.SECONDS, () -> fhirServer.ping());
+            serversPinged = true;
+        }
     }
 
     @Given("^the system has no patients$")

@@ -103,6 +103,17 @@ public class EhrServer
         server.delete("composition/" + composition.getUid().getValue(), Collections.emptyMap());
     }
 
+    public boolean ping()
+    {
+        try{
+            getTemplates();
+            return true;
+        }
+        catch (RestServerException error){
+            return false;
+        }
+    }
+
     private RestServer getServer() throws RestServerException
     {
         if (restServer == null){
