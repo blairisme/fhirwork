@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping("/")
+@SuppressWarnings("unused")
 public class ServletController
 {
     @RequestMapping(value = "/network", method = RequestMethod.GET)

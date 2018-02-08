@@ -1,3 +1,12 @@
+/*
+ * FHIRWork (c)
+ *
+ * This work is licensed under the Creative Commons Attribution 4.0
+ * International License. To view a copy of this license, visit
+ *
+ *      http://creativecommons.org/licenses/by/4.0/
+ */
+
 package org.ucl.fhirwork.network.ehr.server;
 
 import com.google.common.collect.ImmutableMap;
@@ -20,6 +29,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+@SuppressWarnings("unchecked")
 public class EhrServerTest {
     private RestRequest request;
     private RestResponse response;

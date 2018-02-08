@@ -11,7 +11,6 @@ package org.ucl.fhirwork.integration.common.http;
 
 import com.google.common.base.Stopwatch;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
