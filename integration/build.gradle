@@ -35,7 +35,7 @@ task integrationTest(type: Test) {
   testLogging.showStandardStreams = true
 }
 
-check.dependsOn integrationTest
+//check.dependsOn integrationTest
 
 def getTasksByName(def name){
   return rootProject.allprojects.collect { subproject ->
