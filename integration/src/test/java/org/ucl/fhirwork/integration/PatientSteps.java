@@ -51,12 +51,16 @@ public class PatientSteps
     public void setup() throws Exception
     {
         patients = Collections.emptyList();
-        fhirServer = new FhirServer("http://localhost:8090");
-        empiServer = new EmpiServer("http://localhost:8080", "admin", "admin");
+        fhirServer = new FhirServer(
+                System.getProperty("network.fhir.address", "http://localhost:8090"));
+        empiServer = new EmpiServer(
+                System.getProperty("network.empi.address", "http://localhost:8080"),
+                System.getProperty("network.empi.username", "admin"),
+                System.getProperty("network.empi.password", "admin"));
 
         if (! serversPinged) {
-            StepUtils.wait(120, TimeUnit.SECONDS, () -> empiServer.ping());
-            StepUtils.wait(120, TimeUnit.SECONDS, () -> fhirServer.ping());
+            StepUtils.wait(60, TimeUnit.SECONDS, () -> empiServer.ping());
+            //StepUtils.wait(120, TimeUnit.SECONDS, () -> fhirServer.ping());
             serversPinged = true;
         }
     }

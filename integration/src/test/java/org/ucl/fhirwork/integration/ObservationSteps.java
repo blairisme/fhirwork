@@ -31,16 +31,20 @@ public class ObservationSteps
     @Before
     public void setup() throws Exception
     {
-        fhirServer = new FhirServer("http://localhost:8090");
-        ehrServer = new EhrServer("http://localhost:8888/rest/v1", "guest", "guest");
-        //ehrServer = new EhrServer("https://test.operon.systems/rest/v1", "oprn_jarrod", "ZayFYCiO644");
+        fhirServer = new FhirServer(
+                System.getProperty("network.fhir.address", "http://localhost:8090"));
+        ehrServer = new EhrServer(
+            System.getProperty("network.ehr.address", "http://localhost:8888/rest/v1"),
+            System.getProperty("network.ehr.username", "guest"),
+            System.getProperty("network.ehr.password", "guest"));
 
         if (! serversPinged) {
-            StepUtils.wait(120, TimeUnit.SECONDS, () -> ehrServer.ping());
-            StepUtils.wait(120, TimeUnit.SECONDS, () -> fhirServer.ping());
+            StepUtils.wait(60, TimeUnit.SECONDS, () -> ehrServer.ping());
+            StepUtils.wait(60, TimeUnit.SECONDS, () -> fhirServer.ping());
             serversPinged = true;
         }
     }
+
 
     @Given("^the system has the following health data:$")
     public void initializeHealthData(List<HealthData> healthData) throws IOException, RestServerException

@@ -35,6 +35,13 @@ apply plugin: 'org.akhikhl.gretty'
 gretty {
     contextPath = '/'
     httpPort = 8090
+    jvmArgs = [
+      '-Dnetwork.ehr.address=' + project.getProperty('network.ehr.address'),
+      '-Dnetwork.ehr.username=' + project.getProperty('network.ehr.username'),
+      '-Dnetwork.ehr.username=' + project.getProperty('network.ehr.password'),
+      '-Dnetwork.empi.address=' + project.getProperty('network.empi.address'),
+      '-Dnetwork.empi.username=' + project.getProperty('network.empi.username'),
+      '-Dnetwork.empi.username=' + project.getProperty('network.empi.password')]
 }
 
 war {
@@ -49,13 +56,10 @@ tasks.withType(JavaCompile) {
 dependencies {
     compile group: 'ca.uhn.hapi.fhir', name:'hapi-fhir-base', version:'2.5'
     compile group: 'ca.uhn.hapi.fhir', name: 'hapi-fhir-structures-dstu2', version: '2.5'
-    // compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.7.3'
-
     compile group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.9.RELEASE'
     compile group: 'org.springframework', name: 'spring-web', version: '5.0.2.RELEASE'
     compile group: 'org.springframework', name: 'spring-webmvc', version: '5.0.2.RELEASE'
     compile group: 'javax.servlet', name: 'jstl', version: '1.2'
-
     compile group: 'javax.inject', name: 'javax.inject', version: '1'
     compile group: 'com.mashape.unirest', name:'unirest-java', version:'1.4.9'
     compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.2.12'
@@ -81,8 +85,6 @@ jacocoTestReport {
     }
 }
 
-check.finalizedBy jacocoTestReport
-
 /*** style checking configuration ***/
 
 checkstyle {
@@ -95,4 +97,7 @@ task appStartDaemon(dependsOn: 'appBeforeIntegrationTest'){
 }
 
 task appStopDaemon(dependsOn: 'appAfterIntegrationTest'){
+}
+
+task report(dependsOn: 'jacocoTestReport'){
 }

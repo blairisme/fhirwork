@@ -33,9 +33,19 @@ test {
 task integrationTest(type: Test) {
   include '**/integration/**'
   testLogging.showStandardStreams = true
+
+  systemProperty 'network.ehr.address', project.getProperty('network.ehr.address')
+  systemProperty 'network.ehr.username', project.getProperty('network.ehr.username')
+  systemProperty 'network.ehr.password', project.getProperty('network.ehr.password')
+
+  systemProperty 'network.empi.address', project.getProperty('network.empi.address')
+  systemProperty 'network.empi.username', project.getProperty('network.empi.username')
+  systemProperty 'network.empi.password', project.getProperty('network.empi.password')
+
+  systemProperty 'network.fhir.address', project.getProperty('network.fhir.address')
 }
 
-//check.dependsOn integrationTest
+check.dependsOn integrationTest
 
 def getTasksByName(def name){
   return rootProject.allprojects.collect { subproject ->
@@ -45,8 +55,5 @@ def getTasksByName(def name){
 
 gradle.projectsEvaluated {
   integrationTest.dependsOn getTasksByName('appStartDaemon')
-  integrationTest.dependsOn getTasksByName('envStart')
-
-  integrationTest.finalizedBy getTasksByName('envStop')
   integrationTest.finalizedBy getTasksByName('appStopDaemon')
 }

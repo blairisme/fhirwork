@@ -21,8 +21,18 @@ public class ConfigurationService
     public ConfigurationService()
     {
         values = new HashMap<>();
-        values.put(Configuration.Empi, new NetworkConfiguration("http://localhost:8080", "admin", "admin"));
-        values.put(Configuration.Ehr, new NetworkConfiguration("https://test.operon.systems/rest/v1", "oprn_jarrod", "ZayFYCiO644"));
+
+        values.put(Configuration.Ehr, new NetworkConfiguration(
+                System.getProperty("network.ehr.address", "http://localhost:8888/rest/v1"),
+                System.getProperty("network.ehr.username", "guest"),
+                System.getProperty("network.ehr.password", "guest")));
+
+        values.put(Configuration.Empi, new NetworkConfiguration(
+                System.getProperty("network.empi.address", "http://localhost:8080"),
+                System.getProperty("network.empi.username", "admin"),
+                System.getProperty("network.empi.password", "admin")));
+
+        //values.put(Configuration.Ehr, new NetworkConfiguration("https://test.operon.systems/rest/v1", "oprn_jarrod", "ZayFYCiO644"));
         //values.put(Configuration.Ehr, new NetworkConfiguration("http://localhost:8888/rest/v1", "guest", "guest"));
 
         MappingPath path = new MappingPath(
@@ -45,4 +55,5 @@ public class ConfigurationService
         }
         throw new IllegalStateException();
     }
+
 }
