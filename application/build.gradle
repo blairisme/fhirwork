@@ -45,8 +45,8 @@ gretty {
 }
 
 war {
-    baseName = 'fhirconverter'
-    version =  '0.5.0'
+    baseName = 'fhirwork'
+    version =  '1.0.0'
 }
 
 tasks.withType(JavaCompile) {
