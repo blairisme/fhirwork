@@ -33,6 +33,13 @@ import java.util.Map;
 import javax.inject.Inject;
 import java.util.ArrayList;
 
+/**
+ * Instances of this class convert the read observation FHIR operation into the
+ * appropriate EHR and EMPI service calls.
+ *
+ * @author Blair Butterworth
+ * @author Alperen Karaoglu
+ */
 public class ReadObservationExecutor implements Executor
 {
     private EhrServer ehrServer;
