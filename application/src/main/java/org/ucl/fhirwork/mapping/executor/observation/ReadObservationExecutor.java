@@ -70,16 +70,10 @@ public class ReadObservationExecutor implements Executor
             String patientId = "12345";
             String ehrId = "c831fe4d-0ce9-4a63-8bfa-2c51007f97e5";
 
-            //Instance of empiPerson
             //Person person = empiServer.loadPerson(personId);
-
             String patientID = patient.getIdPart();
 
             BaseCodingDt codeElements = codes.getListAsCodings().get(0);
-
-            Map<String, String> codeMap = observationFactory.getCodeMap();
-
-            //String ehrId = ehrServer
 
             String query = queryService.getQuery(loinc, ehrId);
             QueryBundle bundle = ehrServer.query(query);
