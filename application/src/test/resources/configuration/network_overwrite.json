@@ -5,7 +5,7 @@
     "password": "admin"
   },
   "ehr": {
-    "address": "http://localhost:8888/rest/v1",
+    "address": "http://localhost:8888",
     "username": "guest",
     "password": "guest"
   }

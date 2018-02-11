@@ -10,59 +10,58 @@
 
 package org.ucl.fhirwork.mapping.query;
 
-import org.ucl.fhirwork.configuration.*;
+import org.ucl.fhirwork.configuration.ConfigMissingException;
+import org.ucl.fhirwork.configuration.ConfigService;
+import org.ucl.fhirwork.configuration.MappingConfigData;
 
 import javax.inject.Inject;
-import java.util.Objects;
 
 public class QueryService
 {
-    private ConfigurationService configurationService;
+    private ConfigService configuration;
 
     @Inject
-    public QueryService(ConfigurationService configurationService)
+    public QueryService(ConfigService configuration)
     {
-        this.configurationService = configurationService;
+        this.configuration = configuration;
     }
 
     public String getQuery(String loinc, String ehrId)
     {
-        MappingSpecification mappingSpecification = getMappingSpecification(loinc);
-        return getQuery(mappingSpecification, ehrId);
+        MappingConfigData mappingData = getMappingData(loinc);
+        return getQuery(mappingData, ehrId);
     }
 
-    private MappingSpecification getMappingSpecification(String loinc)
+    private MappingConfigData getMappingData(String loinc)
     {
-        MappingConfiguration mappingConfiguration = configurationService.getConfiguration(Configuration.Mapping);
-        for (MappingSpecification mappingSpecification: mappingConfiguration.getMappings()){
-            if (Objects.equals(loinc, mappingSpecification.getLoinc())){
-                return mappingSpecification;
-            }
+        try {
+            return configuration.getMappingConfig(loinc);
         }
-        throw new UnsupportedOperationException();
+        catch (ConfigMissingException error) {
+            throw new UnsupportedOperationException();
+        }
     }
 
-    private String getQuery(MappingSpecification mappingSpecification, String ehrId)
+    private String getQuery(MappingConfigData mappingData, String ehrId)
     {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(getSelectStatement(mappingSpecification));
+        stringBuilder.append(getSelectStatement(mappingData));
         stringBuilder.append(getFromStatement(ehrId));
-        stringBuilder.append(getContainsStatement(mappingSpecification));
+        stringBuilder.append(getContainsStatement(mappingData));
         return stringBuilder.toString();
     }
 
-    private String getSelectStatement(MappingSpecification mappingSpecification)
+    private String getSelectStatement(MappingConfigData mappingData)
     {
-        String text = mappingSpecification.getText();
-        MappingPath path = mappingSpecification.getPath();
+        String text = mappingData.getText();
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("select ");
-        stringBuilder.append(getSelectStatement(text, path.getDate(), "date"));
+        stringBuilder.append(getSelectStatement(text, mappingData.getDate(), "date"));
         stringBuilder.append(", ");
-        stringBuilder.append(getSelectStatement(text, path.getMagnitude(), "magnitude"));
+        stringBuilder.append(getSelectStatement(text, mappingData.getMagnitude(), "magnitude"));
         stringBuilder.append(", ");
-        stringBuilder.append(getSelectStatement(text, path.getUnits(), "unit"));
+        stringBuilder.append(getSelectStatement(text, mappingData.getUnit(), "unit"));
         stringBuilder.append(" ");
 
         return stringBuilder.toString();
@@ -88,14 +87,14 @@ public class QueryService
         return stringBuilder.toString();
     }
 
-    private String getContainsStatement(MappingSpecification mappingSpecification)
+    private String getContainsStatement(MappingConfigData mappingData)
     {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("contains COMPOSITION c ");
         stringBuilder.append("contains OBSERVATION ");
-        stringBuilder.append(mappingSpecification.getText());
+        stringBuilder.append(mappingData.getText());
         stringBuilder.append("[");
-        stringBuilder.append(mappingSpecification.getArchetype());
+        stringBuilder.append(mappingData.getArchetype());
         stringBuilder.append("]");
         return stringBuilder.toString();
     }

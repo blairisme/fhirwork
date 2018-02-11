@@ -12,8 +12,8 @@ package org.ucl.fhirwork;
 
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
-import org.ucl.fhirwork.configuration.ConfigurationService;
 import org.ucl.fhirwork.common.framework.Operation;
+import org.ucl.fhirwork.configuration.ConfigService;
 import org.ucl.fhirwork.mapping.MappingService;
 import org.ucl.fhirwork.network.NetworkService;
 
@@ -28,17 +28,17 @@ import javax.inject.Singleton;
 @Singleton
 public class ApplicationService
 {
-    private ConfigurationService configurationService;
+    private ConfigService configuration;
     private MappingService mappingService;
     private NetworkService networkService;
 
     @Inject
     public ApplicationService(
-            ConfigurationService configurationService,
+            ConfigService configuration,
             MappingService mappingService,
             NetworkService networkService)
     {
-        this.configurationService = configurationService;
+        this.configuration = configuration;
         this.mappingService = mappingService;
         this.networkService = networkService;
     }

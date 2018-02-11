@@ -10,9 +10,15 @@
 
 package org.ucl.fhirwork.configuration;
 
-public enum Configuration
+/**
+ * Options in this enumeration specify predefined configuration sets.
+ *
+ * @author Chenghui Fan
+ * @author Blair Butterworth
+ */
+public enum Environment
 {
-    Ehr,
-    Empi,
-    Mapping
+	Testing,
+    Development,
+    Production
 }

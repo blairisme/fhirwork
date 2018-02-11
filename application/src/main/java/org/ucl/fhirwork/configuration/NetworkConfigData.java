@@ -10,13 +10,21 @@
 
 package org.ucl.fhirwork.configuration;
 
-public class NetworkConfiguration
+/**
+ * Instances of this class contain the information needed to an external server,
+ * usually either an EMPI or EHR REST service.
+ *
+ * @author Chenghui Fan
+ * @author Blair Butterworth
+ */
+@SuppressWarnings("UnusedDeclaration")
+public class NetworkConfigData
 {
     private String address;
     private String username;
     private String password;
 
-    public NetworkConfiguration(String address, String username, String password) {
+    public NetworkConfigData(String address, String username, String password) {
         this.address = address;
         this.username = username;
         this.password = password;

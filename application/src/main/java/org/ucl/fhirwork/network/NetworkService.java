@@ -10,23 +10,22 @@
 
 package org.ucl.fhirwork.network;
 
-import org.ucl.fhirwork.configuration.Configuration;
-import org.ucl.fhirwork.configuration.ConfigurationService;
-import org.ucl.fhirwork.configuration.NetworkConfiguration;
+import org.ucl.fhirwork.configuration.ConfigService;
+import org.ucl.fhirwork.configuration.NetworkConfigData;
+import org.ucl.fhirwork.configuration.NetworkConfigType;
 import org.ucl.fhirwork.network.ehr.server.EhrServer;
 import org.ucl.fhirwork.network.empi.server.EmpiServer;
 
 import javax.inject.Inject;
-import java.util.Collection;
 
 public class NetworkService
 {
     private EmpiServer empiServer;
     private EhrServer ehrServer;
-    private ConfigurationService configuration;
+    private ConfigService configuration;
 
     @Inject
-    public NetworkService(EmpiServer empiServer, EhrServer ehrServer, ConfigurationService configuration)
+    public NetworkService(EmpiServer empiServer, EhrServer ehrServer, ConfigService configuration)
     {
         this.empiServer = empiServer;
         this.ehrServer = ehrServer;
@@ -43,18 +42,18 @@ public class NetworkService
 
     private void initializeEhrServer()
     {
-        NetworkConfiguration networkProperties = configuration.getConfiguration(Configuration.Ehr);
-        this.ehrServer.setAddress(networkProperties.getAddress());
-        this.ehrServer.setUsername(networkProperties.getUsername());
-        this.ehrServer.setPassword(networkProperties.getPassword());
+        NetworkConfigData networkProperties = configuration.getNetworkConfig(NetworkConfigType.Ehr);
+        this.ehrServer.setAddress(System.getProperty("network.ehr.address", networkProperties.getAddress()));
+        this.ehrServer.setUsername(System.getProperty("network.ehr.username", networkProperties.getUsername()));
+        this.ehrServer.setPassword(System.getProperty("network.ehr.password", networkProperties.getPassword()));
     }
 
     private void initializeEmpiServer()
     {
-        NetworkConfiguration networkProperties = configuration.getConfiguration(Configuration.Empi);
-        this.empiServer.setAddress(networkProperties.getAddress());
-        this.empiServer.setUsername(networkProperties.getUsername());
-        this.empiServer.setPassword(networkProperties.getPassword());
+        NetworkConfigData networkProperties = configuration.getNetworkConfig(NetworkConfigType.Empi);
+        this.empiServer.setAddress(System.getProperty("network.empi.address", networkProperties.getAddress()));
+        this.empiServer.setUsername(System.getProperty("network.empi.username", networkProperties.getUsername()));
+        this.empiServer.setPassword(System.getProperty("network.empi.password", networkProperties.getPassword()));
     }
 
     public EhrServer getEhrServer()
