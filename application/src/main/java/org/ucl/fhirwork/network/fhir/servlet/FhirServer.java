@@ -19,8 +19,10 @@ import ca.uhn.fhir.rest.server.interceptor.CorsInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import org.hl7.fhir.exceptions.FHIRException;
 import org.springframework.web.cors.CorsConfiguration;
 import org.ucl.fhirwork.ApplicationModule;
+import org.ucl.fhirwork.ApplicationService;
 
 import javax.servlet.annotation.WebServlet;
 import java.util.ArrayList;
@@ -42,9 +44,15 @@ import java.util.List;
 @WebServlet(urlPatterns= {"/fhir/*"}, displayName="FHIR Server")
 public class FhirServer extends RestfulServer
 {
-    public FhirServer()
-    {
+    private ApplicationService applicationService;
+
+    public FhirServer(){
+        this(ApplicationService.instance());
+    }
+
+    public FhirServer(ApplicationService applicationService){
         super(FhirContext.forDstu2());
+        this.applicationService = applicationService;
     }
 
     @Override
@@ -58,12 +66,9 @@ public class FhirServer extends RestfulServer
 
     private void setResourceProviders()
     {
-        Injector injector = Guice.createInjector(new ApplicationModule());
-
         List<IResourceProvider> providers = new ArrayList<IResourceProvider>();
-        providers.add(injector.getInstance(PatientResourceProvider.class));
-        providers.add(injector.getInstance(ObservationResourceProvider.class));
-
+        providers.add(applicationService.get(PatientResourceProvider.class));
+        providers.add(applicationService.get(ObservationResourceProvider.class));
         setResourceProviders(providers);
     }
 

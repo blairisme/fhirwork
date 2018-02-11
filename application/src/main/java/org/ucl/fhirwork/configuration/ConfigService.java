@@ -15,6 +15,7 @@ import org.ucl.fhirwork.common.serialization.SerializationException;
 import org.ucl.fhirwork.common.serialization.Serializer;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.Reader;
 
@@ -27,6 +28,7 @@ import java.io.Reader;
  * @author Chenghui Fan
  * @author Blair Butterworth
  */
+@Singleton
 public class ConfigService
 {
     private Serializer serializer;

@@ -14,12 +14,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.ucl.fhirwork.ApplicationService;
+import org.ucl.fhirwork.configuration.ConfigService;
 
 @Controller
 @RequestMapping("/")
 @SuppressWarnings("unused")
 public class ServletController
 {
+    private ConfigService configService;
+
+    public ServletController(){
+        this(ApplicationService.instance());
+    }
+
+    public ServletController(ApplicationService applicationService) {
+        this.configService = applicationService.get(ConfigService.class);
+    }
+
     @RequestMapping(value = "/network", method = RequestMethod.GET)
     public String network(ModelMap model)
     {

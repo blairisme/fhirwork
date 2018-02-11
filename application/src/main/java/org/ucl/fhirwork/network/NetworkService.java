@@ -17,7 +17,9 @@ import org.ucl.fhirwork.network.ehr.server.EhrServer;
 import org.ucl.fhirwork.network.empi.server.EmpiServer;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class NetworkService
 {
     private EmpiServer empiServer;

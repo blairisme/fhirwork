@@ -23,7 +23,7 @@ import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import ca.uhn.fhir.rest.server.exceptions.NotImplementedOperationException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.ucl.fhirwork.ApplicationService;
+import org.ucl.fhirwork.mapping.ExecutorService;
 import org.ucl.fhirwork.network.fhir.data.SearchParameter;
 import org.ucl.fhirwork.network.fhir.operations.patient.*;
 import org.ucl.fhirwork.network.fhir.data.SearchParameterBuilder;
@@ -44,17 +44,15 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class PatientResourceProvider implements IResourceProvider
 {
-    private ApplicationService applicationService;
+    private ExecutorService executorService;
 
     @Inject
-    public PatientResourceProvider(ApplicationService applicationService)
-    {
-        this.applicationService = applicationService;
+    public PatientResourceProvider(ExecutorService executorService) {
+        this.executorService = executorService;
     }
 
     @Override
-    public Class<? extends IBaseResource> getResourceType()
-    {
+    public Class<? extends IBaseResource> getResourceType() {
         return Patient.class;
     }
 
@@ -66,7 +64,7 @@ public class PatientResourceProvider implements IResourceProvider
 
         try {
             CreatePatientOperation operation = new CreatePatientOperation(patient);
-            Patient response = (Patient)applicationService.execute(operation);
+            Patient response = (Patient)executorService.execute(operation);
             result.setId(new IdDt("Patient", response.getId().getIdPart(), "1"));
         }
         catch (Throwable error) {
@@ -81,7 +79,7 @@ public class PatientResourceProvider implements IResourceProvider
     {
         try {
             DeletePatientOperation operation = new DeletePatientOperation(patientId);
-            applicationService.execute(operation);
+            executorService.execute(operation);
         }
         catch (Exception e) {
             throw new ResourceNotFoundException(Patient.class, patientId);
@@ -93,7 +91,7 @@ public class PatientResourceProvider implements IResourceProvider
     {
         try {
             DeletePatientOperation operation = new DeletePatientOperation(patientId, getSearchParameters(condition));
-            applicationService.execute(operation);
+            executorService.execute(operation);
         }
         catch (Exception e) {
             throw new ResourceNotFoundException(Patient.class, patientId);
@@ -105,7 +103,7 @@ public class PatientResourceProvider implements IResourceProvider
     {
         try {
             ReadPatientOperation operation = new ReadPatientOperation(patientId);
-            return (Patient)applicationService.execute(operation);
+            return (Patient)executorService.execute(operation);
         }
         catch (Exception e) {
             throw new ResourceNotFoundException(Patient.class, patientId);
@@ -130,7 +128,7 @@ public class PatientResourceProvider implements IResourceProvider
             parameterBuilder.append(SearchParameter.BirthDate, birthDate);
 
             ReadPatientOperation operation = new ReadPatientOperation(parameterBuilder.build());
-            return (List<Patient>)applicationService.execute(operation);
+            return (List<Patient>)executorService.execute(operation);
         }
         catch (Throwable error) {
             throw new InternalErrorException(error);
@@ -145,7 +143,7 @@ public class PatientResourceProvider implements IResourceProvider
 
         try {
             UpdatePatientOperation operation = new UpdatePatientOperation(patientId, patient);
-            Patient response = (Patient)applicationService.execute(operation);
+            Patient response = (Patient)executorService.execute(operation);
             result.setId(new IdDt("Patient", response.getId().getIdPart(), "1"));
         }
         catch (Throwable error) {
@@ -164,7 +162,7 @@ public class PatientResourceProvider implements IResourceProvider
 
         try {
             UpdatePatientOperation operation = new UpdatePatientOperation(patient, parameters);
-            Patient response = (Patient)applicationService.execute(operation);
+            Patient response = (Patient)executorService.execute(operation);
             result.setId(new IdDt("Patient", response.getId().getIdPart(), "1"));
         }
         catch (Throwable error) {

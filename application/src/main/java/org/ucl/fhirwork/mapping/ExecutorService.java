@@ -10,6 +10,7 @@
 
 package org.ucl.fhirwork.mapping;
 
+import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
 import org.ucl.fhirwork.mapping.executor.observation.ReadObservationExecutor;
@@ -33,12 +34,12 @@ import java.util.function.Predicate;
  *
  * @author Blair Butterworth
  */
-public class MappingService
+public class ExecutorService
 {
     private Map<Predicate<Operation>, Provider<? extends Executor>> executorFactories;
 
     @Inject
-    public MappingService(
+    public ExecutorService(
             Provider<CreatePatientExecutor> createPatientProvider,
             Provider<DeletePatientExecutor> deletePatientProvider,
             Provider<ReadPatientExecutor> readPatientProvider,
@@ -59,6 +60,12 @@ public class MappingService
         this.executorFactories.put(isType(ReadPatientOperation.class), readPatientProvider);
         this.executorFactories.put(isType(UpdatePatientOperation.class), updatePatientProvider);
         this.executorFactories.put(isType(ReadObservationOperation.class), readObservationProvide);
+    }
+
+    public Object execute(Operation operation) throws ExecutionException
+    {
+        Executor executor = getExecutor(operation);
+        return executor.invoke();
     }
 
     public Executor getExecutor(Operation operation)

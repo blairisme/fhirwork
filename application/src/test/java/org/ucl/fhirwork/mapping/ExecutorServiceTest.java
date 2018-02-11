@@ -20,7 +20,7 @@ import org.ucl.fhirwork.network.fhir.operations.patient.DeletePatientOperation;
 
 import javax.inject.Provider;
 
-public class MappingServiceTest
+public class ExecutorServiceTest
 {
     @Test
     public void getExecutorTest()
@@ -35,11 +35,11 @@ public class MappingServiceTest
         Provider<UpdatePatientConditionalExecutor> updateConditionalProvider = createMockProvider(UpdatePatientConditionalExecutor.class);
         Provider<ReadObservationExecutor> readObservationProvider = createMockProvider(ReadObservationExecutor.class);
 
-        MappingService mappingService = new MappingService(
+        ExecutorService executorService = new ExecutorService(
                 createPatientProvider, deletePatientProvider, readPatientProvider, updatePatientProvider,
                 createConditionalProvider, deleteConditionalProvider, readConditionalProvider, updateConditionalProvider,
                 readObservationProvider);
-        Executor executor = mappingService.getExecutor(new DeletePatientOperation(null));
+        Executor executor = executorService.getExecutor(new DeletePatientOperation(null));
 
         Assert.assertNotNull(executor);
         Mockito.verify(createPatientProvider, Mockito.never()).get();

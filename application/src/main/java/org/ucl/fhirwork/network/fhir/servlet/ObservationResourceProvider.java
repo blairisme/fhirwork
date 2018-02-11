@@ -11,7 +11,6 @@
 package org.ucl.fhirwork.network.fhir.servlet;
 
 import ca.uhn.fhir.model.dstu2.resource.Observation;
-import ca.uhn.fhir.model.dstu2.resource.Patient;
 import ca.uhn.fhir.rest.annotation.RequiredParam;
 import ca.uhn.fhir.rest.annotation.Search;
 import ca.uhn.fhir.rest.param.ReferenceParam;
@@ -19,11 +18,8 @@ import ca.uhn.fhir.rest.param.TokenOrListParam;
 import ca.uhn.fhir.rest.server.IResourceProvider;
 import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.ucl.fhirwork.ApplicationService;
-import org.ucl.fhirwork.network.fhir.data.SearchParameter;
-import org.ucl.fhirwork.network.fhir.data.SearchParameterBuilder;
+import org.ucl.fhirwork.mapping.ExecutorService;
 import org.ucl.fhirwork.network.fhir.operations.observation.ReadObservationOperation;
-import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -38,17 +34,15 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class ObservationResourceProvider implements IResourceProvider
 {
-    private ApplicationService applicationService;
+    private ExecutorService executorService;
 
     @Inject
-    public ObservationResourceProvider(ApplicationService applicationService)
-    {
-        this.applicationService = applicationService;
+    public ObservationResourceProvider(ExecutorService executorService) {
+        this.executorService = executorService;
     }
 
     @Override
-    public Class<? extends IBaseResource> getResourceType()
-    {
+    public Class<? extends IBaseResource> getResourceType() {
         return Observation.class;
     }
 
@@ -60,7 +54,7 @@ public class ObservationResourceProvider implements IResourceProvider
     {
         try {
             ReadObservationOperation operation = new ReadObservationOperation(codes, patient);
-            return (List<Observation>)applicationService.execute(operation);
+            return (List<Observation>)executorService.execute(operation);
         }
         catch (Throwable error) {
             throw new InternalErrorException(error);
