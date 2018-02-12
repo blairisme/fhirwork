@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Writer;
 
 /**
  * Instances of this class store the configuration used by the system. Methods
@@ -28,6 +29,7 @@ import java.io.Reader;
  * @author Chenghui Fan
  * @author Blair Butterworth
  */
+//TODO: Make thread safe
 @Singleton
 public class ConfigService
 {
@@ -49,23 +51,33 @@ public class ConfigService
     }
 
     public MappingConfigData getMappingConfig(String loinc) {
-        loadConfig();
+        readConfig();
         return mappingConfig.get(loinc);
     }
 
     public NetworkConfigData getNetworkConfig(NetworkConfigType type) {
-        loadConfig();
+        readConfig();
         return networkConfig.get(type);
     }
 
-    private void loadConfig(){
+    public void setMappingConfig(String loinc, MappingConfigData config) {
+        mappingConfig = mappingConfig.set(loinc, config);
+        writeConfig();
+    }
+
+    public void setNetworkConfig(NetworkConfigType type, NetworkConfigData config) {
+        networkConfig = networkConfig.set(type, config);
+        writeConfig();
+    }
+
+    private void readConfig(){
         if (mappingConfig == null || networkConfig == null){
-            registerMappingConfig();
-            registerNetworkConfig();
+            readMappingConfig();
+            readNetworkConfig();
         }
     }
 
-	private void registerMappingConfig() {
+	private void readMappingConfig() {
         try (Reader configFile = fileManager.getConfigReader(ConfigType.Mapping)) {
             mappingConfig = serializer.deserialize(configFile, MappingConfig.class);
         }
@@ -77,7 +89,7 @@ public class ConfigService
         }
 	}
 
-	private void registerNetworkConfig() {
+	private void readNetworkConfig() {
         try(Reader configFile = fileManager.getConfigReader(ConfigType.Network)){
             networkConfig = serializer.deserialize(configFile, NetworkConfig.class);
         }
@@ -88,4 +100,33 @@ public class ConfigService
             throw new ConfigInvalidException(serializationError);
         }
 	}
+
+    private void writeConfig() {
+        writeMappingConfig();
+        writeNetworkConfig();
+    }
+
+    private void writeMappingConfig() {
+        try (Writer writer = fileManager.getConfigWriter(ConfigType.Mapping)){
+            serializer.serialize(mappingConfig, MappingConfig.class, writer);
+        }
+        catch (IOException ioError){
+            throw new ConfigIoException(ioError);
+        }
+        catch (SerializationException serializationError){
+            throw new ConfigInvalidException(serializationError);
+        }
+    }
+
+    private void writeNetworkConfig() {
+        try (Writer writer = fileManager.getConfigWriter(ConfigType.Network)){
+            serializer.serialize(networkConfig, NetworkConfig.class, writer);
+        }
+        catch (IOException ioError){
+            throw new ConfigIoException(ioError);
+        }
+        catch (SerializationException serializationError){
+            throw new ConfigInvalidException(serializationError);
+        }
+    }
 }

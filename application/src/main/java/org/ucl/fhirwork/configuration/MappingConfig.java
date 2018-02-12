@@ -10,6 +10,7 @@
 
 package org.ucl.fhirwork.configuration;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,5 +40,17 @@ public class MappingConfig
             }
         }
         throw new ConfigMissingException(loinc);
+    }
+
+    public MappingConfig set(String loinc, MappingConfigData config){
+        List<MappingConfigData> updatedMappings = new ArrayList<>();
+        updatedMappings.add(config);
+
+        for (MappingConfigData mapping: mappings){
+            if (! Objects.equals(mapping.getLoinc(), loinc)){
+                updatedMappings.add(mapping);
+            }
+        }
+        return new MappingConfig(updatedMappings);
     }
 }

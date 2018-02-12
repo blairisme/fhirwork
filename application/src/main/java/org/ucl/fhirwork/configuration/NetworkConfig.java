@@ -43,4 +43,12 @@ public class NetworkConfig
             default: throw new ConfigMissingException(type.name());
         }
     }
+
+    public NetworkConfig set(NetworkConfigType type, NetworkConfigData data){
+        switch (type){
+            case Ehr: return new NetworkConfig(empi, data);
+            case Empi: return new NetworkConfig(data, ehr);
+            default: throw new ConfigMissingException(type.name());
+        }
+    }
 }
