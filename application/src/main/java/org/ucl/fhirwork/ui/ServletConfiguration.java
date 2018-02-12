@@ -22,8 +22,13 @@ import org.springframework.web.servlet.view.JstlView;
 @EnableWebMvc
 @ComponentScan(basePackages = {"org.ucl.fhirwork.ui"})
 @SuppressWarnings("unused")
-public class ServletConfiguration
+public class ServletConfiguration implements WebMvcConfigurer
 {
+    @Override
+    public void addResourceHandlers(final ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+    }
+
     @Bean
     public ViewResolver viewResolver()
     {
