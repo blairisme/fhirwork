@@ -1,18 +1,18 @@
-.form_element {
-    display: block;
+.settings {
+    background-color: #f1f1f1;
+    overflow: hidden;
+    float: none;
+    width: auto;
+    height: 100%;
+    padding: 20px 20px 20px 20px;
 }
 
-.title {
-    color: #000000;
-    font-family: Verdana, Geneva, sans-serif;
+.property th {
+    width: 120px;
+    text-align: left;
 }
 
-.settings input {
-    color: #000000;
-    font-family: Verdana, Geneva, sans-serif;
+.property td {
+  padding-bottom: 12px;
 }
 
-.settings span {
-    color: #000000;
-    font-family: Verdana, Geneva, sans-serif;
-}

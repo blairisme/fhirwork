@@ -10,25 +10,35 @@
 <body>
     <div class"container">
         <div class="navigation">
-            <a class="link" href="/configuration/mapping">Mapping</a>
-            <a class="link" href="/configuration/network">Network</a>
+            <a class="link" href="/configuration/mapping">
+                <div class="icon mapping"></div>
+                <span>FHIR Mappings</span>
+            </a>
+            <a class="link selected" href="/configuration/network">
+                <div class="icon network"></div>
+                <span>Network Settings</span>
+            </a>
         </div>
         <div class="settings">
             <h1 class="title">EMPI Settings</h1>
-            <form action = "network" method = "POST">
-                <div class="form_element">
-                    <span>Address: </span>
-                    <input type="text" name="address" value="${empi.address}" />
-                </div>
-                <div class="form_element">
-                    <span>User name: </span>
-                    <input type = "text" name="username" value="${empi.username}" />
-                </div>
-                <div class="form_element">
-                    <span>Password: </span>
-                    <input type = "text" name="password" value="${empi.password}" />
-                </div>
-                <input type = "submit" value = "Submit" />
+            <form action="network" method="POST">
+                <table>
+                    <tbody>
+                        <tr class="property">
+                            <th><label for="address" class="label">Address</label></th>
+                            <td><input type="text" name="address" value="${empi.address}" class="textbox"/></td>
+                        </tr>
+                        <tr class="property">
+                            <th><label for="username" class="label">Username</label></th>
+                            <td><input type="text" name="username" value="${empi.username}" class="textbox"/></td>
+                        </tr>
+                        <tr class="property">
+                            <th><label for="password" class="label">Password</label></th>
+                            <td><input type="text" name="password" value="${empi.password}" class="textbox"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="submit" value="Submit" class="button"/>
             </form>
         </div>
     </div>
