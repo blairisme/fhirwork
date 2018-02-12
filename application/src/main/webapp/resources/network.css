@@ -1,2 +1,18 @@
+.form_element {
+    display: block;
+}
+
 .title {
+    color: #000000;
+    font-family: Verdana, Geneva, sans-serif;
+}
+
+.settings input {
+    color: #000000;
+    font-family: Verdana, Geneva, sans-serif;
+}
+
+.settings span {
+    color: #000000;
+    font-family: Verdana, Geneva, sans-serif;
 }
