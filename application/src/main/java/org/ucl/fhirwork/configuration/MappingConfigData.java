@@ -20,7 +20,6 @@ package org.ucl.fhirwork.configuration;
 @SuppressWarnings("UnusedDeclaration")
 public class MappingConfigData
 {
-    private String loinc;
     private String text;
     private String archetype;
     private String date;
@@ -28,14 +27,12 @@ public class MappingConfigData
     private String unit;
 
     public MappingConfigData(
-            String loinc,
-            String text,
-            String archetype,
-            String date,
-            String magnitude,
-            String unit)
+        String text,
+        String archetype,
+        String date,
+        String magnitude,
+        String unit)
     {
-        this.loinc = loinc;
         this.text = text;
         this.archetype = archetype;
         this.date = date;
@@ -49,10 +46,6 @@ public class MappingConfigData
 
     public String getText() {
         return text;
-    }
-
-    public String getLoinc() {
-        return loinc;
     }
 
     public String getDate() {

@@ -10,9 +10,7 @@
 
 package org.ucl.fhirwork.configuration;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Instances of this class represent a container for all persisted mapping
@@ -23,34 +21,28 @@ import java.util.Objects;
  */
 public class MappingConfig
 {
-    public List<MappingConfigData> mappings;
+    public Map<String, MappingConfigData> mappings;
 
-    public MappingConfig(List<MappingConfigData> mappings) {
+    public MappingConfig(Map<String, MappingConfigData> mappings) {
         this.mappings = mappings;
     }
 
-    public List<MappingConfigData> getMappings() {
+    public Map<String, MappingConfigData> getMappings() {
         return mappings;
     }
 
     public MappingConfigData get(String loinc){
-        for (MappingConfigData mapping: mappings){
-            if (Objects.equals(mapping.getLoinc(), loinc)){
-                return mapping;
-            }
+        MappingConfigData result = mappings.get(loinc);
+        if (result != null) {
+            return result;
         }
         throw new ConfigMissingException(loinc);
     }
 
-    public MappingConfig set(String loinc, MappingConfigData config){
-        List<MappingConfigData> updatedMappings = new ArrayList<>();
-        updatedMappings.add(config);
-
-        for (MappingConfigData mapping: mappings){
-            if (! Objects.equals(mapping.getLoinc(), loinc)){
-                updatedMappings.add(mapping);
-            }
-        }
-        return new MappingConfig(updatedMappings);
+    public MappingConfig set(String loinc, MappingConfigData config) {
+        Map<String, MappingConfigData> newMappings = new HashMap<>();
+        newMappings.putAll(mappings);
+        newMappings.put(loinc, config);
+        return new MappingConfig(newMappings);
     }
 }

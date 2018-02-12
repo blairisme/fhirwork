@@ -61,11 +61,13 @@ public class ConfigService
     }
 
     public void setMappingConfig(String loinc, MappingConfigData config) {
+        readConfig();
         mappingConfig = mappingConfig.set(loinc, config);
         writeConfig();
     }
 
     public void setNetworkConfig(NetworkConfigType type, NetworkConfigData config) {
+        readConfig();
         networkConfig = networkConfig.set(type, config);
         writeConfig();
     }

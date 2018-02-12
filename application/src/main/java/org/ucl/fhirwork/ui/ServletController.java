@@ -57,5 +57,4 @@ public class ServletController
         model.addAttribute("empi", config);
         return "network";
     }
-
 }

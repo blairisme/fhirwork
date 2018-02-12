@@ -61,4 +61,19 @@ public class ConfigServiceTest
         ConfigService configService = new ConfigService(configFileManager);
         configService.getMappingConfig("3141-9");
     }
+
+    @Test
+    public void setNetworkConfigTest()
+    {
+        ConfigFileManager configFileManager = new ConfigFileManager();
+        configFileManager.setConfigListPath(Resources.getResource("configuration/manifest_overwrite.json"));
+
+        ConfigService configService = new ConfigService(configFileManager);
+        NetworkConfigData expected = new NetworkConfigData("http://different.com", "not", "thesame");
+
+        configService.setNetworkConfig(NetworkConfigType.Empi, expected);
+        NetworkConfigData actual = configService.getNetworkConfig(NetworkConfigType.Empi);
+
+        Assert.assertEquals(expected.getAddress(), actual.getAddress());
+    }
 }

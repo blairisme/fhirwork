@@ -41,7 +41,6 @@ public class QueryServiceTest
     private ConfigService getMockConfiguration() throws IOException
     {
         MappingConfigData mappingConfiguration = new MappingConfigData(
-            "3141-9",
             "body_weight",
             "openEHR-EHR-OBSERVATION.body_weight.v1",
             "data[at0002]/origin/value",
