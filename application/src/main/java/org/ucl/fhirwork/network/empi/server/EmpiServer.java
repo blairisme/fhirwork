@@ -52,16 +52,19 @@ public class EmpiServer
         this.serverFactory = serverFactory;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setAddress(String address) {
+    /**
+     * Sets the address and authentication information used to connect to the
+     * EMPI server.
+     *
+     * @param address   the URL of an EMPI server.
+     * @param username  the name of an account on the EMPI server.
+     * @param password  the password of an EMPI account.
+     */
+    public synchronized void setConnectionDetails(String address, String username, String password) {
         this.address = address;
+        this.username = username;
+        this.password = password;
+        this.server = null;
     }
 
     /**
@@ -203,7 +206,7 @@ public class EmpiServer
         return response.asType(Person.class);
     }
 
-    private RestServer getServer() throws RestException
+    private synchronized RestServer getServer() throws RestException
     {
         if (server == null) {
             String token = getSessionToken();

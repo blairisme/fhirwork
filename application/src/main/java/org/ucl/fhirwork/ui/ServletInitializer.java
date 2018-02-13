@@ -16,6 +16,9 @@ import javax.servlet.ServletRegistration;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
+import org.ucl.fhirwork.ApplicationService;
+
+import java.lang.reflect.Method;
 
 @SuppressWarnings("unused")
 public class ServletInitializer implements WebApplicationInitializer

@@ -20,6 +20,7 @@ import org.ucl.fhirwork.ApplicationService;
 import org.ucl.fhirwork.configuration.ConfigService;
 import org.ucl.fhirwork.configuration.NetworkConfigData;
 import org.ucl.fhirwork.configuration.NetworkConfigType;
+import org.ucl.fhirwork.network.NetworkService;
 
 @Controller
 @RequestMapping("/")

@@ -14,6 +14,9 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.ucl.fhirwork.common.framework.Operation;
 
+import java.lang.reflect.Field;
+import java.util.Properties;
+
 /**
  * Instances of this class facilitate the execution of {@link Operation}s.
  *
@@ -23,7 +26,7 @@ public class ApplicationService
 {
     private static ApplicationService instance;
 
-    public static ApplicationService instance() {
+    public static synchronized ApplicationService instance() {
         if (instance == null){
             instance = new ApplicationService();
         }

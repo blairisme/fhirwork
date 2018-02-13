@@ -43,9 +43,7 @@ public class EhrServerTest {
         response  = mock(RestResponse.class);
         restServer = mock(RestServer.class);
         ehrServer = new EhrServer(new MockProvider(restServer));
-        ehrServer.setUsername("testUserName");
-        ehrServer.setPassword("testPassword");
-        ehrServer.setAddress("testAddress");
+        ehrServer.setConnectionDetails("testAddress", "testUserName", "testPassword");
         sessionToken = mock(SessionToken.class);
 
         when(restServer.post(any(RestResource.class))).thenReturn(request);

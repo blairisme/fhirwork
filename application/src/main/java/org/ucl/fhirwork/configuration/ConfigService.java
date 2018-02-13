@@ -10,6 +10,7 @@
 
 package org.ucl.fhirwork.configuration;
 
+import org.ucl.fhirwork.common.runtime.JvmSingleton;
 import org.ucl.fhirwork.common.serialization.JsonSerializer;
 import org.ucl.fhirwork.common.serialization.SerializationException;
 import org.ucl.fhirwork.common.serialization.Serializer;
@@ -19,6 +20,10 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Instances of this class store the configuration used by the system. Methods
@@ -31,12 +36,14 @@ import java.io.Writer;
  */
 //TODO: Make thread safe
 @Singleton
-public class ConfigService
+public class ConfigService implements Observer
 {
     private Serializer serializer;
     private ConfigFileManager fileManager;
     private MappingConfig mappingConfig;
     private NetworkConfig networkConfig;
+    private List<ConfigObserver> observers;
+    private JvmSingleton updateFlag;
 
     /**
      * Constructs a new instance of this class given a {@link ConfigFileManager}
@@ -48,38 +55,47 @@ public class ConfigService
     public ConfigService(ConfigFileManager fileManager) {
         this.fileManager = fileManager;
         this.serializer = new JsonSerializer();
+        this.observers = new ArrayList<>();
+        this.updateFlag = new JvmSingleton(getClass().getName());
+        this.updateFlag.addObserver(this);
+    }
+
+    public void addObserver(ConfigObserver observer) {
+        observers.add(observer);
     }
 
     public MappingConfigData getMappingConfig(String loinc) {
-        readConfig();
+        initializeConfig();
         return mappingConfig.get(loinc);
     }
 
     public NetworkConfigData getNetworkConfig(NetworkConfigType type) {
-        readConfig();
+        initializeConfig();
         return networkConfig.get(type);
     }
 
     public void setMappingConfig(String loinc, MappingConfigData config) {
-        readConfig();
+        initializeConfig();
         mappingConfig = mappingConfig.set(loinc, config);
-        writeConfig();
+        updateMappingConfig();
+        signalUpdate();
     }
 
     public void setNetworkConfig(NetworkConfigType type, NetworkConfigData config) {
-        readConfig();
+        initializeConfig();
         networkConfig = networkConfig.set(type, config);
-        writeConfig();
+        updateNetworkConfig();
+        signalUpdate();
     }
 
-    private void readConfig(){
-        if (mappingConfig == null || networkConfig == null){
-            readMappingConfig();
-            readNetworkConfig();
+    private void initializeConfig(){
+        if (mappingConfig == null || networkConfig == null) {
+            initializeMappingConfig();
+            initializeNetworkConfig();
         }
     }
 
-	private void readMappingConfig() {
+	private void initializeMappingConfig() {
         try (Reader configFile = fileManager.getConfigReader(ConfigType.Mapping)) {
             mappingConfig = serializer.deserialize(configFile, MappingConfig.class);
         }
@@ -91,7 +107,7 @@ public class ConfigService
         }
 	}
 
-	private void readNetworkConfig() {
+	private void initializeNetworkConfig() {
         try(Reader configFile = fileManager.getConfigReader(ConfigType.Network)){
             networkConfig = serializer.deserialize(configFile, NetworkConfig.class);
         }
@@ -103,12 +119,7 @@ public class ConfigService
         }
 	}
 
-    private void writeConfig() {
-        writeMappingConfig();
-        writeNetworkConfig();
-    }
-
-    private void writeMappingConfig() {
+    private void updateMappingConfig() {
         try (Writer writer = fileManager.getConfigWriter(ConfigType.Mapping)){
             serializer.serialize(mappingConfig, MappingConfig.class, writer);
         }
@@ -120,7 +131,7 @@ public class ConfigService
         }
     }
 
-    private void writeNetworkConfig() {
+    private void updateNetworkConfig() {
         try (Writer writer = fileManager.getConfigWriter(ConfigType.Network)){
             serializer.serialize(networkConfig, NetworkConfig.class, writer);
         }
@@ -129,6 +140,23 @@ public class ConfigService
         }
         catch (SerializationException serializationError){
             throw new ConfigInvalidException(serializationError);
+        }
+    }
+
+    private void signalUpdate() {
+        updateFlag.notifyObservers();
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        initializeMappingConfig();
+        initializeNetworkConfig();
+        notifyObservers();
+    }
+
+    private void notifyObservers() {
+        for (ConfigObserver observer: observers){
+            observer.configurationUpdated();
         }
     }
 }

@@ -54,16 +54,38 @@ public class EhrServer
         this.serverFactory = serverFactory;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setAddress(String address) {
+    /**
+     * Sets the address and authentication information used to connect to the
+     * EHR server.
+     *
+     * @param address   the URL of an EHR server.
+     * @param username  the name of an account on the EMPI server.
+     * @param password  the password of an EMPI account.
+     */
+    public synchronized void setConnectionDetails(String address, String username, String password) {
         this.address = address;
+        this.username = username;
+        this.password = password;
+        this.server = null;
+    }
+
+    public HealthRecord getEhr(String id, String namespace) throws RestException {
+        RestServer server = getServer();
+        RestRequest request = server.get(Ehr);
+        request.setParameters(ImmutableMap.of(SubjectId, id, SubjectNamespace, namespace));
+        RestResponse response = request.make(HandleFailure.ByException);
+        HealthRecord result = response.asType(HealthRecord.class);
+        return result;
+    }
+
+
+    public List<Composition> getCompositions(String ehrId) throws RestException, InstantiationException, IllegalAccessException {
+        List<Composition> compositions = new ArrayList<>();
+        CompositionBundle bundle = query("select a from EHR [ehr_id/value='" + ehrId + "'] contains COMPOSITION a",CompositionBundle.class);
+        for (CompositionResult compositionResult: bundle.getResultSet()) {
+            compositions.add(compositionResult.getComposition());
+        }
+        return compositions;
     }
 
     public QueryBundle query(String query) throws RestException
@@ -84,7 +106,7 @@ public class EhrServer
         return response.getStatusCode() != 204 ? response.asType(type) : type.newInstance();
     }
 
-    public RestServer getServer() throws RestException
+    public synchronized RestServer getServer() throws RestException
     {
         if (server == null) {
             String sessionId = getSessionId();
@@ -96,9 +118,11 @@ public class EhrServer
     private String getSessionId() throws RestException
     {
         RestServer rest = newServer(address, new JsonSerializer(), ImmutableMap.of(ContentType, Json, Accept, Json));
-        RestRequest request= rest.post(Session).setParameters(ImmutableMap.of(Username, username, Password, password));
+        RestRequest request = rest.post(Session).setParameters(ImmutableMap.of(Username, username, Password, password));
+
         RestResponse response = request.make(HandleFailure.ByException);
         SessionToken sessionToken = response.asType(SessionToken.class);
+
         return sessionToken.getSessionId();
     }
 
@@ -109,25 +133,6 @@ public class EhrServer
         result.setSerializer(serializer);
         result.setHeaders(headers);
         return result;
-    }
-
-    public HealthRecord getEhr(String id, String namespace) throws RestException {
-       RestServer server = getServer();
-       RestRequest request = server.get(Ehr);
-       request.setParameters(ImmutableMap.of(SubjectId, id, SubjectNamespace, namespace));
-       RestResponse response = request.make(HandleFailure.ByException);
-       HealthRecord result = response.asType(HealthRecord.class);
-       return result;
-    }
-
-
-    public List<Composition> getCompositions(String ehrId) throws RestException, InstantiationException, IllegalAccessException {
-        List<Composition> compositions = new ArrayList<>();
-        CompositionBundle bundle = query("select a from EHR [ehr_id/value='" + ehrId + "'] contains COMPOSITION a",CompositionBundle.class);
-        for (CompositionResult compositionResult: bundle.getResultSet()) {
-            compositions.add(compositionResult.getComposition());
-        }
-        return compositions;
     }
 }
 
