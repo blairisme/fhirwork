@@ -22,6 +22,7 @@ import org.ucl.fhirwork.network.empi.server.EmpiServer;
 import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
 
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * Instances of this class convert the read patient FHIR operation into the

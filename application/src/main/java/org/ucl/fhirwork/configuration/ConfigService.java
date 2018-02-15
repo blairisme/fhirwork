@@ -73,24 +73,29 @@ public class ConfigService implements Observer
 
     public MappingConfigData getMappingConfig(String loinc) {
         initializeConfig();
-        return mappingConfig.get(loinc);
+        return mappingConfig.getData(loinc);
     }
 
     public NetworkConfigData getNetworkConfig(NetworkConfigType type) {
         initializeConfig();
-        return networkConfig.get(type);
+        return networkConfig.getData(type);
+    }
+
+    public boolean hasMappingConfig(String code){
+        initializeConfig();
+        return mappingConfig.hasData(code);
     }
 
     public void setMappingConfig(String loinc, MappingConfigData config) {
         initializeConfig();
-        mappingConfig = mappingConfig.set(loinc, config);
+        mappingConfig = mappingConfig.setData(loinc, config);
         updateMappingConfig();
         signalUpdate();
     }
 
     public void setNetworkConfig(NetworkConfigType type, NetworkConfigData config) {
         initializeConfig();
-        networkConfig = networkConfig.set(type, config);
+        networkConfig = networkConfig.setData(type, config);
         updateNetworkConfig();
         signalUpdate();
     }

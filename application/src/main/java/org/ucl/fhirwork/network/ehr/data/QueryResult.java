@@ -19,12 +19,6 @@ public class QueryResult
     public QueryResult() {
     }
 
-    public QueryResult(String date, String magnitude, String unit) {
-        this.date = date;
-        this.magnitude = magnitude;
-        this.unit = unit;
-    }
-
     public String getDate() {
         return date;
     }

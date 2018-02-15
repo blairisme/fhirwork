@@ -26,19 +26,19 @@ public class QueryService
         this.configuration = configuration;
     }
 
-    public String getQuery(String loinc, String ehrId)
+    public boolean isSupported(String code)
     {
-        MappingConfigData mappingData = getMappingData(loinc);
-        return getQuery(mappingData, ehrId);
+        return configuration.hasMappingConfig(code);
     }
 
-    private MappingConfigData getMappingData(String loinc)
+    public String getQuery(String code, String ehrId)
     {
         try {
-            return configuration.getMappingConfig(loinc);
+            MappingConfigData mappingData = configuration.getMappingConfig(code);
+            return getQuery(mappingData, ehrId);
         }
         catch (ConfigMissingException error) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException(code);
         }
     }
 

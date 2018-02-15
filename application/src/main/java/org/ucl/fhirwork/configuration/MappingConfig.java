@@ -31,18 +31,22 @@ public class MappingConfig
         return mappings;
     }
 
-    public MappingConfigData get(String loinc){
-        MappingConfigData result = mappings.get(loinc);
+    public boolean hasData(String code){
+        return mappings.containsKey(code);
+    }
+
+    public MappingConfigData getData(String code){
+        MappingConfigData result = mappings.get(code);
         if (result != null) {
             return result;
         }
-        throw new ConfigMissingException(loinc);
+        throw new ConfigMissingException(code);
     }
 
-    public MappingConfig set(String loinc, MappingConfigData config) {
+    public MappingConfig setData(String code, MappingConfigData config) {
         Map<String, MappingConfigData> newMappings = new HashMap<>();
         newMappings.putAll(mappings);
-        newMappings.put(loinc, config);
+        newMappings.put(code, config);
         return new MappingConfig(newMappings);
     }
     
