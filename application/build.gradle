@@ -38,10 +38,10 @@ gretty {
     jvmArgs = [
       '-Dnetwork.ehr.address=' + project.getProperty('network.ehr.address'),
       '-Dnetwork.ehr.username=' + project.getProperty('network.ehr.username'),
-      '-Dnetwork.ehr.username=' + project.getProperty('network.ehr.password'),
+      '-Dnetwork.ehr.password=' + project.getProperty('network.ehr.password'),
       '-Dnetwork.empi.address=' + project.getProperty('network.empi.address'),
       '-Dnetwork.empi.username=' + project.getProperty('network.empi.username'),
-      '-Dnetwork.empi.username=' + project.getProperty('network.empi.password')]
+      '-Dnetwork.empi.password=' + project.getProperty('network.empi.password')]
 }
 
 war {
