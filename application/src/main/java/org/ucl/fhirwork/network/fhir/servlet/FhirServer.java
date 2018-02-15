@@ -69,6 +69,7 @@ public class FhirServer extends RestfulServer
         List<IResourceProvider> providers = new ArrayList<IResourceProvider>();
         providers.add(applicationService.get(PatientResourceProvider.class));
         providers.add(applicationService.get(ObservationResourceProvider.class));
+        providers.add(applicationService.get(FamilyHistoryResourceProvider.class));
         setResourceProviders(providers);
     }
 

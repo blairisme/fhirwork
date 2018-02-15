@@ -36,7 +36,7 @@ public class NetworkConfig
         return ehr;
     }
 
-    public NetworkConfigData get(NetworkConfigType type){
+    public NetworkConfigData getData(NetworkConfigType type){
         switch (type){
             case Ehr: return ehr;
             case Empi: return empi;
@@ -44,7 +44,7 @@ public class NetworkConfig
         }
     }
 
-    public NetworkConfig set(NetworkConfigType type, NetworkConfigData data){
+    public NetworkConfig setData(NetworkConfigType type, NetworkConfigData data){
         switch (type){
             case Ehr: return new NetworkConfig(empi, data);
             case Empi: return new NetworkConfig(data, ehr);

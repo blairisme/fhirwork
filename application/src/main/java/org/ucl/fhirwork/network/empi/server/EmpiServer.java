@@ -23,6 +23,7 @@ import org.ucl.fhirwork.common.http.*;
 import org.ucl.fhirwork.common.serialization.Serializer;
 import org.ucl.fhirwork.common.serialization.XmlSerializer;
 import org.ucl.fhirwork.network.empi.data.AuthenticationRequest;
+import org.ucl.fhirwork.network.empi.data.Identifier;
 import org.ucl.fhirwork.network.empi.data.People;
 import org.ucl.fhirwork.network.empi.data.Person;
 
@@ -85,6 +86,25 @@ public class EmpiServer
 
         RestResponse response = request.make(HandleFailure.ByException);
         return response.getStatusCode() != 204 ? response.asType(Person.class) : person;
+    }
+
+    /**
+     * Returns the {@link Person} that matches the given {@link Identifier}.
+     *
+     * @param identifier        the {@code Identifier} of the desired
+     *                          {@code Person}.
+     * @return                  the matching {@code Person}.
+     * @throws RestException    thrown if an error occurs whilst communicating
+     *                          with the EMPI server.
+     */
+    //TODO: Handle missing person
+    public Person findPersonById(Identifier identifier) throws RestException
+    {
+        RestRequest request = getServer().post(FindPersonById);
+        request.setBody(identifier, Identifier.class);
+
+        RestResponse response = request.make(HandleFailure.ByException);
+        return response.asType(Person.class);
     }
 
     /**

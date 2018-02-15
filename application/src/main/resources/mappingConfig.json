@@ -18,7 +18,6 @@
       "text": "body_mass_index",
       "archetype": "openEHR-EHR-OBSERVATION.body_mass_index.v1",
       "date": "data[at0001]/origin/value",
-      "precision": "data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/precision",
       "magnitude": "data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/magnitude",
       "unit": "data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/units"
     },
@@ -26,7 +25,6 @@
       "text": "head_circumference",
       "archetype": "openEHR-EHR-OBSERVATION.head_circumference.v0",
       "date": "data[at0001]/origin/value",
-      "precision": "data[at0001]/events[at0010]/data[at0003]/items[at0004]/value/precision",
       "magnitude": "data[at0001]/events[at0010]/data[at0003]/items[at0004]/value/magnitude",
       "unit": "data[at0001]/events[at0010]/data[at0003]/items[at0004]/value/units"
     }
