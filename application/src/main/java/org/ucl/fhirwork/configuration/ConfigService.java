@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -62,6 +63,12 @@ public class ConfigService implements Observer
 
     public void addObserver(ConfigObserver observer) {
         observers.add(observer);
+    }
+    
+    //added by Chenghui Fan
+    public Collection<String> getAllLoinc(){
+    	initializeConfig();
+    	return mappingConfig.getAllLoinc();
     }
 
     public MappingConfigData getMappingConfig(String loinc) {

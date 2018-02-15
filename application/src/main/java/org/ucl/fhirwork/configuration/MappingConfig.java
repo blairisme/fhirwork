@@ -45,4 +45,9 @@ public class MappingConfig
         newMappings.put(loinc, config);
         return new MappingConfig(newMappings);
     }
+    
+    //added by Chenghui Fan
+    public Collection<String> getAllLoinc(){
+    	return this.mappings.keySet();
+    }
 }
