@@ -11,20 +11,23 @@
               <th>Birthdate</th>
               <th>Given name</th>
               <th>Family name</th>
+              <th>Growth Chart</th>
             </tr>
           </thead>
           {{#each patients}}
-
             <tbody>
               <tr>
                 <td><a href='/observations/${{id}}'>{{id}}</a></td>
                 <td>{{birthDate}}</td>
                 <td>{{given}}</td>
                 <td>{{family}}</td>
-                </tr>
-
-              </tbody>
+                <td>
+                  <a class="logo" href='{{../chartAddress}}/launch.html?fhirServiceUrl={{../fhirAddress}}&patientId={{id}}'>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
           {{/each}}
-        </table>
+      </table>
   </div>
 </form>

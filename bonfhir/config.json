@@ -3,6 +3,6 @@
     "address": "https://sb-fhir-stu3.smarthealthit.org/smartstu3/open"
   },
   "growthchart":{
-    "address": "http://localhost:9000"
+    "address": "https://sb-apps.smarthealthit.org/apps/growth-chart"
   }
 }

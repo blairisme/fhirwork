@@ -1,15 +1,15 @@
 /*
  * FHIRWork (c)
  *
- * This work is licensed under the Creative Commons Attribution 4.0
- * International License. To view a copy of this license, visit
+ * This work is licensed under the MIT License. To view a copy of this
+ * license, visit
  *
- *      http://creativecommons.org/licenses/by/4.0/
+ *      https://opensource.org/licenses/MIT
  *
  * Author: Alperen Karaoglu
  * Author: Blair Butterworth
  */
- 
+
 const express = require('express');
 const router = express.Router();
 const rest = require('restler')
@@ -59,9 +59,10 @@ router.get('/patients', function (req, res) {
     	else {
       	var patients = [];
     	};
+
     	// res.send(patients)
       console.log(patients)
-    	res.render('patients', { patients: patients})
+    	res.render('patients', {patients: patients, chartAddress: config.growthchart.address, fhirAddress: config.fhir.address})
     }
   });
 });

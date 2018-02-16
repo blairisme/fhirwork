@@ -27,9 +27,7 @@ th, td {
 
 tr:hover {background-color:#f5f5f5;}
 
-
 a:link, a:visited {
-
     border: none;
     color: white;
     padding: 16px 32px;
@@ -46,7 +44,6 @@ a:link, a:visited {
     border: 2px solid #555555;
 }
 
-
 a:hover, a:active {
     background-color: #555555;
     color: white;
@@ -56,4 +53,18 @@ a:hover, a:active {
   margin: auto;
   width: 50%;
   text-align: center;
+}
+
+.logo {
+  height: 20px;
+  width: 40px;
+
+  background-size: contain;
+  background-origin: content-box;
+  background-repeat: no-repeat;
+  background-image: url('../images/smart-logo-black.png');
+}
+
+.logo:hover {
+  background-image: url('../images/smart-logo-white.png');
 }

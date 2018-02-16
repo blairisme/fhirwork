@@ -1,3 +1,15 @@
+/*
+ * FHIRWork (c)
+ *
+ * This work is licensed under the MIT License. To view a copy of this
+ * license, visit
+ *
+ *      https://opensource.org/licenses/MIT
+ *
+ * Author: Alperen Karaoglu
+ * Author: Blair Butterworth
+ */
+ 
 //Set up express, app and router
 const express = require('express');
 const app = express();
