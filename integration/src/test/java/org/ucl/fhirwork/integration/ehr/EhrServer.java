@@ -11,6 +11,8 @@ import com.google.common.collect.ImmutableMap;
 import org.ucl.fhirwork.integration.common.http.RestServer;
 import org.ucl.fhirwork.integration.common.http.RestServerException;
 import org.ucl.fhirwork.integration.common.serialization.JsonSerializer;
+import org.ucl.fhirwork.integration.common.serialization.Serializer;
+import org.ucl.fhirwork.integration.common.serialization.XmlSerializer;
 import org.ucl.fhirwork.integration.ehr.model.*;
 
 import java.io.IOException;
@@ -33,7 +35,7 @@ public class EhrServer
 
     public void addTemplate(TemplateReference template) throws IOException, RestServerException
     {
-        RestServer server = createServer(ImmutableMap.of(ContentType, Xml));
+        RestServer server = createServer(ImmutableMap.of(ContentType, Xml), new XmlSerializer());
         server.post(EhrEndpoint.Template, template.getContent(), Collections.emptyMap());
     }
 
@@ -117,17 +119,17 @@ public class EhrServer
     private RestServer getServer() throws RestServerException
     {
         if (restServer == null){
-            restServer = createServer(ImmutableMap.of(ContentType, Json, Accept, Json));
+            restServer = createServer(ImmutableMap.of(ContentType, Json, Accept, Json), new JsonSerializer());
         }
         return restServer;
     }
 
-    private RestServer createServer(Map<Object, Object> headers) throws RestServerException
+    private RestServer createServer(Map<Object, Object> headers, Serializer serializer) throws RestServerException
     {
         Map<Object, Object> authHeaders = new HashMap<>();
         authHeaders.putAll(headers);
         authHeaders.put(SessionId, getSessionId());
-        return new RestServer(address, new JsonSerializer(), authHeaders);
+        return new RestServer(address, serializer, authHeaders);
     }
 
     private String getSessionId() throws RestServerException

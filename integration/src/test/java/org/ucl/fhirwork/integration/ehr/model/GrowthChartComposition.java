@@ -3,32 +3,8 @@ package org.ucl.fhirwork.integration.ehr.model;
 import com.google.gson.annotations.SerializedName;
 import org.ucl.fhirwork.integration.cucumber.HealthData;
 
-public class GrowthChartComposition
+public class GrowthChartComposition extends FlatComposition
 {
-    @SerializedName("ctx/language")
-    private String language;
-
-    @SerializedName("ctx/territory")
-    private String territory;
-
-    @SerializedName("ctx/composer_name")
-    private String composer;
-
-    @SerializedName("ctx/time")
-    private String time;
-
-    @SerializedName("ctx/id_namespace")
-    private String idNamespace;
-
-    @SerializedName("ctx/id_scheme")
-    private String idScheme;
-
-    @SerializedName("ctx/health_care_facility|name")
-    private String facilityName;
-
-    @SerializedName("ctx/health_care_facility|id")
-    private String facilityId;
-
     @SerializedName("smart_growth_report/body_weight/weight|magnitude")
     private int weightValue;
 
@@ -58,15 +34,7 @@ public class GrowthChartComposition
 
     public GrowthChartComposition(String time, int weight, int height, int bmi, int headCircumference)
     {
-        this.language = "en";
-        this.territory = "GB";
-        this.composer = "Dummy";
-        this.time = time;
-        this.idNamespace = "Hospital";
-        this.idScheme = "HOSPITAL-NS";
-        this.facilityName = "Marandia DGH";
-        this.facilityId = "9095";
-
+        super(time);
         this.weightUnit = "kg";
         this.weightValue = weight;
         this.heightUnit = "cm";
@@ -74,7 +42,7 @@ public class GrowthChartComposition
         this.bmiUnit = "kg/m2";
         this.bmiValue = bmi;
         this.headUnit = "cm";
-        this.heightValue = headCircumference;
+        this.headValue = headCircumference;
         this.skeletalAge = "P6Y";
     }
 
@@ -86,5 +54,10 @@ public class GrowthChartComposition
                 data.getHeight(),
                 data.getBmi(),
                 data.getHeadCircumference());
+    }
+
+    @Override
+    public String getCompositionId() {
+        return "Smart Growth Chart Data.v0";
     }
 }

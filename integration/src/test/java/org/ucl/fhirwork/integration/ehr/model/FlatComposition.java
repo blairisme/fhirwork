@@ -14,7 +14,7 @@ public abstract class FlatComposition
     @SerializedName("ctx/health_care_facility|name") private String facilityName;
     @SerializedName("ctx/health_care_facility|id") private String facilityId;
 
-    public FlatComposition()
+    public FlatComposition(String time)
     {
         this.language = "en";
         this.territory = "GB";
