@@ -11,6 +11,6 @@
 
 include 'application'
 include 'environment'
-include 'integration'
+include 'verification:integration'
 include 'verification:manual:bonfhir'
 include 'verification:manual:growthchart'
