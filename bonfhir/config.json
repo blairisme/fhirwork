@@ -1,6 +1,8 @@
 {
-  "etherciseEHRPort": 8888,
-  "openEMPIPort": 8080,
-  "fhirPort": 8090,
-  "serverAddress": "127.0.0.1"
+  "fhir":{
+    "address": "https://sb-fhir-stu3.smarthealthit.org/smartstu3/open"
+  },
+  "growthchart":{
+    "address": "http://localhost:9000"
+  }
 }

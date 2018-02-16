@@ -17,11 +17,6 @@ const session = require('express-session');
 //Setting up the configuration file
 const config = require('./config.json');
 
-const ehrPort = config.etherciseEHRPort;
-const openEMPIPort = config.openEMPIPort;
-const fhirPort = config.fhirPort
-const serverAddress = config.serverAddress;
-
 //Setting up the options for session management
 const sessionOptions = {
 	secret: 'secret cookie thang',

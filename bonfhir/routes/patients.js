@@ -1,9 +1,22 @@
+/*
+ * FHIRWork (c)
+ *
+ * This work is licensed under the Creative Commons Attribution 4.0
+ * International License. To view a copy of this license, visit
+ *
+ *      http://creativecommons.org/licenses/by/4.0/
+ *
+ * Author: Alperen Karaoglu
+ * Author: Blair Butterworth
+ */
+ 
 const express = require('express');
 const router = express.Router();
-
 const rest = require('restler')
+const config = require('../config.json');
+
 router.get('/patients', function (req, res) {
-  var url = `https://sb-fhir-stu3.smarthealthit.org/smartstu3/open/Patient?_format=json`;
+  var url = `${config.fhir.address}/Patient?_format=json`;
   console.log(url);
   rest.get(url).on('complete', function(result) {
     if (result instanceof Error) {

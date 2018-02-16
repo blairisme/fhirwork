@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-
 const rest = require('restler')
+const config = require('../config.json');
 
 router.get(/observations/, function(req, res){
   console.log('req url', req.url);
@@ -9,7 +9,7 @@ router.get(/observations/, function(req, res){
   //console.log(req);
   //console.log(res);
   let patientID = req.url.slice(15);
-	var url = `https://sb-fhir-stu3.smarthealthit.org/smartstu3/open/Observation?subject=Patient/${patientID}&_format=json`
+	var url = `${config.fhir.address}/Observation?subject=Patient/${patientID}&_format=json`
 	console.log(url)
 	rest.get(url).on('complete', function(result) {
 		if (result instanceof Error) {
