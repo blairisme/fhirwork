@@ -1,0 +1,8 @@
+{
+  "fhir":{
+    "address": "http://localhost:8090/fhir"
+  },
+  "growthchart":{
+    "address": "http://localhost:9000"
+  }
+}

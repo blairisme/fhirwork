@@ -10,6 +10,7 @@
  */
 
 include 'application'
-include 'bonfhir'
 include 'environment'
 include 'integration'
+include 'verification:manual:bonfhir'
+include 'verification:manual:growthchart'

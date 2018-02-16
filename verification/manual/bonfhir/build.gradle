@@ -57,16 +57,15 @@ task bonfhirStopDaemon(dependsOn: installForever) {
         commandLine 'cmd', '/c', "${nodeBinDir}/forever stop app.js"
       }
       else {
-        commandLine "${nodeBinDir}/forever", 'start', 'app.js'
+        commandLine "${nodeBinDir}/forever", 'stop', 'app.js'
       }
       ignoreExitValue true
     }
   }
 }
-/*
-task envStart(dependsOn: bonfhirStartDaemon){
+
+task manualTestStart(dependsOn: bonfhirStartDaemon){
 }
 
-task envStop(dependsOn: bonfhirStopDaemon){
+task manualTestStop(dependsOn: bonfhirStopDaemon){
 }
-*/
