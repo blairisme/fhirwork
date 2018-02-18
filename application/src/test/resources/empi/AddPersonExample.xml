@@ -1,0 +1,45 @@
+<person>
+	<address1>8 Winterhouse</address1>
+	<address2>Main Road</address2>
+	<birthOrder>3</birthOrder>
+	<birthPlace>Brighton</birthPlace>
+	<city>London</city>
+	<country>United Kingdom</country>
+	<countryCode>UK</countryCode>
+	<dateOfBirth>1932-10-19T00:00:00Z</dateOfBirth>
+	<deathInd>23</deathInd>
+	<deathTime>2017-03-19T12:00:00Z</deathTime>
+	<degree>Masters</degree>
+	<familyName>Mill</familyName>
+	<fatherName>Pret</fatherName>
+	<gender>
+		<genderCd>1</genderCd>
+		<genderCode>F</genderCode>
+		<genderDescription>Female</genderDescription>
+		<genderName>Female</genderName>
+	</gender>
+	<givenName>Anna</givenName>
+	<maritalStatusCode>Married</maritalStatusCode>
+	<middleName>Will</middleName>
+	<motherName>Min</motherName>
+	<mothersMaidenName>Kim</mothersMaidenName>
+	<multipleBirthInd>2</multipleBirthInd>
+	<personIdentifiers>
+		<identifier>555</identifier>
+		<identifierDomain>
+			<identifierDomainId>10</identifierDomainId>
+			<identifierDomainName>SSN</identifierDomainName>
+		</identifierDomain>
+	</personIdentifiers>
+	<phoneAreaCode>44</phoneAreaCode>
+	<phoneCountryCode>44</phoneCountryCode>
+	<phoneExt>888</phoneExt>
+	<phoneNumber>90909090</phoneNumber>
+	<postalCode>SE1234L</postalCode>
+	<prefix>Ms</prefix>
+	<ssn>666</ssn>
+	<state>London</state>
+	<suffix>SS</suffix>
+	<language>English</language>
+	<email>anna@gmail.com</email>
+</person>
