@@ -1,0 +1,28 @@
+<h1> Observations in the FHIR database </h1>
+<table>
+  <div class="container">
+    <table>
+      <div class="container">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Loinc Code</th>
+            <th>Type</th>
+            <th>Value</th>
+            <th>Unit</th>
+          </tr>
+        </thead>
+        {{#each observations}}
+
+          <tbody>
+            <tr>
+              <td>{{loinc}}</td>
+              <td>{{type}}</td>
+              <td>{{value}}</td>
+              <td>{{unit}}</td>
+              </tr>
+
+            </tbody>
+        {{/each}}
+      </table>
+</div>

@@ -1,0 +1,106 @@
+/*
+ * FHIRWork (c)
+ *
+ * This work is licensed under the Creative Commons Attribution 4.0
+ * International License. To view a copy of this license, visit
+ *
+ *      http://creativecommons.org/licenses/by/4.0/
+ *
+ * Author: Blair Butterworth
+ */
+
+repositories {
+    ivy {
+        url 'https://github.com/'
+        layout 'pattern', {
+            artifact '/[organisation]/[module]/archive/[revision].[ext]'
+        }
+    }
+}
+
+configurations {
+    environment
+}
+
+dependencies {
+    environment 'blairisme:docker-ethercis:master@zip'
+    environment 'blairisme:docker-openempi:master@zip'
+}
+
+task ehrExtract() {
+  doLast {
+    copy {
+      def zipPath = project.configurations.environment.find {it.name.startsWith('docker-ethercis') }
+      def zipFile = file(zipPath)
+      def outputDir = projectDir
+
+      from zipTree(zipFile)
+      into outputDir
+    }
+  }
+  outputs.dir file("${projectDir}/docker-ethercis-master")
+}
+
+task empiExtract(){
+  doLast{
+    copy {
+      def zipPath = project.configurations.environment.find {it.name.startsWith('docker-openempi') }
+      def zipFile = file(zipPath)
+      def outputDir = projectDir
+
+      from zipTree(zipFile)
+      into outputDir
+    }
+  }
+  outputs.dir file("${projectDir}/docker-openempi-master")
+}
+
+task ehrStart(type: Exec) {
+  dependsOn 'ehrExtract'
+  workingDir 'docker-ethercis-master'
+  commandLine 'docker-compose', 'up', '-d'
+}
+
+task ehrStartProduction(type: Exec) {
+  dependsOn 'ehrExtract'
+  workingDir 'docker-ethercis-master'
+  commandLine 'docker-compose', '-f', 'docker-compose.yml', '-f', 'production.yml', 'up', '-d'
+}
+
+task empiStart(type: Exec) {
+  dependsOn 'empiExtract'
+  workingDir 'docker-openempi-master'
+  commandLine 'docker-compose', 'up', '-d'
+}
+
+task empiStartProduction(type: Exec) {
+  dependsOn 'empiExtract'
+  workingDir 'docker-openempi-master'
+  commandLine 'docker-compose', '-f', 'docker-compose.yml', '-f', 'production.yml', 'up', '-d'
+}
+
+task ehrStop(type: Exec){
+  workingDir 'docker-ethercis-master'
+  commandLine 'docker-compose', 'stop'
+}
+
+task empiStop(type: Exec){
+  workingDir 'docker-openempi-master'
+  commandLine 'docker-compose', 'stop'
+}
+
+task envStart() {
+  dependsOn = ['empiStart', 'ehrStart']
+}
+
+task envStartProduction() {
+  dependsOn = ['empiStartProduction', 'ehrStartProduction']
+}
+
+task envStop() {
+  dependsOn = ['ehrStop', 'empiStop']
+}
+
+task envStopProduction() {
+  dependsOn 'envStop'
+}

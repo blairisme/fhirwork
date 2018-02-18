@@ -1,0 +1,39 @@
+{
+  "meta": {
+    "href": "http://test.operon.systems/rest/v1/query/?aql=select%20body_weight/data%5Bat0002%5D/origin/value%20as%20date,%20body_weight/data%5Bat0002%5D/events%5Bat0003%5D/data%5Bat0001%5D/items%5Bat0004%5D/value/magnitude%20as%20magnitude,%20body_weight/data%5Bat0002%5D/events%5Bat0003%5D/data%5Bat0001%5D/items%5Bat0004%5D/value/units%20as%20unit%20from%20EHR%20%5Behr_id/value%3D'c831fe4d-0ce9-4a63-8bfa-2c51007f97e5'%5D%20contains%20COMPOSITION%20c%20contains%20OBSERVATION%20body_weight%5BopenEHR-EHR-OBSERVATION.body_weight.v1%5D"
+  },
+  "aql": "select body_weight/data[at0002]/origin/value as date, body_weight/data[at0002]/events[at0003]/data[at0001]/items[at0004]/value/magnitude as magnitude, body_weight/data[at0002]/events[at0003]/data[at0001]/items[at0004]/value/units as unit from EHR [ehr_id/value='c831fe4d-0ce9-4a63-8bfa-2c51007f97e5'] contains COMPOSITION c contains OBSERVATION body_weight[openEHR-EHR-OBSERVATION.body_weight.v1]",
+  "executedAql": "select body_weight/data[at0002]/origin/value as date, body_weight/data[at0002]/events[at0003]/data[at0001]/items[at0004]/value/magnitude as magnitude, body_weight/data[at0002]/events[at0003]/data[at0001]/items[at0004]/value/units as unit from EHR [ehr_id/value='c831fe4d-0ce9-4a63-8bfa-2c51007f97e5'] contains COMPOSITION c contains OBSERVATION body_weight[openEHR-EHR-OBSERVATION.body_weight.v1]",
+  "resultSet": [
+    {
+      "date": "2011-04-11T00:00:00+02:00",
+      "unit": "kg",
+      "magnitude": 10.9
+    },
+    {
+      "date": "2010-04-10T00:00:00+02:00",
+      "unit": "kg",
+      "magnitude": 9.8
+    },
+    {
+      "date": "2010-04-10T00:00:00+02:00",
+      "unit": "kg",
+      "magnitude": 9.8
+    },
+    {
+      "date": "2011-11-09T00:00:00+01:00",
+      "unit": "kg",
+      "magnitude": 11.9
+    },
+    {
+      "date": "2012-11-09T00:00:00+01:00",
+      "unit": "kg",
+      "magnitude": 12.7
+    },
+    {
+      "date": "2011-04-11T00:00:00+02:00",
+      "unit": "kg",
+      "magnitude": 10.9
+    }
+  ]
+}

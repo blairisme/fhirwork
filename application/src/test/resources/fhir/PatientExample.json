@@ -1,0 +1,71 @@
+{
+  "resourceType": "Patient",
+  "id": "1",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-07-19T08:17:26.188-04:00"
+  },
+  "identifier": [
+    {
+      "system": "OpenMRS",
+      "value": "568749875445698798988873"
+    },
+    {
+      "system": "OpenEMPI",
+      "value": "2b869d20-6ccc-11e7-a2fc-0242ac120003"
+    }
+  ],
+  "name": [
+    {
+      "use": "usual",
+      "family":[ "Williams"],
+      "given": [
+        "Kathrin",
+        "Mary"
+      ],
+      "prefix": [
+        "Miss"
+      ]
+    },
+    {
+      "use": "maiden",
+      "family": ["Katy"]
+    }
+  ],
+  "telecom": [
+    {
+      "system": "email",
+      "value": "kathrinwilliams@gmail.com"
+    },
+    {
+      "system": "phone",
+      "value": "678975459787"
+    }
+  ],
+  "gender": "female",
+  "birthDate": "1970-09-24",
+  "deceasedDateTime": "1982-08-25T07:06:12-04:00",
+  "address": [
+    {
+      "text": "Kings Cross Penton Rise London London 589632 UK",
+      "line": [
+        "Kings Cross",
+        "Penton Rise"
+      ],
+      "city": "London",
+      "state": "London",
+      "postalCode": "589632",
+      "country": "UK"
+    }
+  ],
+  "maritalStatus": {
+    "coding": [
+	    {	
+		"system": "http://hl7.org/fhir/v3/MaritalStatus",
+		"code": "D"
+	    }
+    ]
+  },
+  "multipleBirthInteger": 2
+}
+

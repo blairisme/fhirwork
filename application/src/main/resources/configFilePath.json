@@ -1,0 +1,14 @@
+{
+  "testing": {
+    "mapping": "mappingConfig.json",
+    "network": "networkConfig.json"
+  },
+  "development": {
+    "mapping": "mappingConfig.json",
+    "network": "networkConfig.json"
+  },
+  "production": {
+    "mapping": "mappingConfig.json",
+    "network": "networkConfig.json"
+  }
+}

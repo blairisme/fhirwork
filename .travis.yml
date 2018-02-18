@@ -1,0 +1,17 @@
+dist: trusty
+
+sudo: required
+
+language: java
+
+jdk:
+  - oraclejdk8
+
+services:
+  - docker
+
+script:
+  - gradle clean assemble check report
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

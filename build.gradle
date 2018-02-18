@@ -1,0 +1,51 @@
+/*
+ * FHIRWork (c)
+ *
+ * This work is licensed under the Creative Commons Attribution 4.0
+ * International License. To view a copy of this license, visit
+ *
+ *      http://creativecommons.org/licenses/by/4.0/
+ *
+ * Author: Blair Butterworth
+ */
+
+apply plugin: 'idea'
+
+allprojects {
+  repositories {
+    mavenCentral()
+    jcenter()
+  }
+}
+
+idea {
+  project {
+    jdkName = '1.8'
+    languageLevel = '1.8'
+    vcs = 'Git'
+    modules -= project.idea.module
+  }
+}
+
+subprojects {
+  plugins.withType(IdeaPlugin) {
+    idea {
+      module {
+        downloadSources = true
+
+        sourceDirs += file('src/main')
+        testSourceDirs += file('src/test')
+
+        excludeDirs += file('config')
+        excludeDirs += file('build')
+        excludeDirs += file('bin')
+        excludeDirs += file('.gradle')
+        excludeDirs += file('.settings')
+      }
+    }
+
+    afterEvaluate {
+      rootProject.idea.project.modules += project.idea.module
+    }
+  }
+}
