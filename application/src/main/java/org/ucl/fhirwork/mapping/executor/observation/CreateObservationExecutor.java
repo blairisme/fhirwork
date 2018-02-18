@@ -65,6 +65,7 @@ public class CreateObservationExecutor implements Executor {
     @Override
     public Object invoke() throws ExecutionException
     {
+        /*
         try{
             //
             //Observation observationInput = observationFactory.fromObservation(FHIRobservation);
@@ -75,5 +76,7 @@ public class CreateObservationExecutor implements Executor {
         catch (RestException cause){
             throw new ExecutionException(cause);
         }
+        */
+        return null;
     }
 }
