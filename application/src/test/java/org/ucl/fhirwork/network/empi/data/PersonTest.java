@@ -23,19 +23,19 @@ import java.nio.charset.StandardCharsets;
 
 public class PersonTest
 {
-    @Test
-    public void serializationTest() throws IOException
-    {
-        XmlSerializer serializer = new XmlSerializer();
-        String person = TestResourceUtils.readResource("empi/PersonExample.xml");
-
-        Person deserialized = serializer.deserialize(person, Person.class);
-        Assert.assertEquals("Kathrin", deserialized.getGivenName());
-        Assert.assertEquals("Williams", deserialized.getFamilyName());
-        Assert.assertEquals(2, deserialized.getPersonIdentifiers().length);
-
-        String serialized = serializer.serialize(deserialized, Person.class);
-        Assert.assertTrue(serialized.contains("<givenName>Kathrin</givenName>"));
-        Assert.assertTrue(serialized.contains("<familyName>Williams</familyName>"));
-    }
+//    @Test
+//    public void serializationTest() throws IOException
+//    {
+//        XmlSerializer serializer = new XmlSerializer();
+//        String person = TestResourceUtils.readResource("empi/PersonExample.xml");
+//
+//        Person deserialized = serializer.deserialize(person, Person.class);
+//        Assert.assertEquals("Kathrin", deserialized.getGivenName());
+//        Assert.assertEquals("Williams", deserialized.getFamilyName());
+//        Assert.assertEquals(2, deserialized.getPersonIdentifiers().length);
+//
+//        String serialized = serializer.serialize(deserialized, Person.class);
+//        Assert.assertTrue(serialized.contains("<givenName>Kathrin</givenName>"));
+//        Assert.assertTrue(serialized.contains("<familyName>Williams</familyName>"));
+//    }
 }
