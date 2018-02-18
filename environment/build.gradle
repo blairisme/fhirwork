@@ -61,10 +61,22 @@ task ehrStart(type: Exec) {
   commandLine 'docker-compose', 'up', '-d'
 }
 
+task ehrStartProduction(type: Exec) {
+  dependsOn 'ehrExtract'
+  workingDir 'docker-ethercis-master'
+  commandLine 'docker-compose', '-f', 'docker-compose.yml', '-f', 'production.yml', 'up', '-d'
+}
+
 task empiStart(type: Exec) {
   dependsOn 'empiExtract'
   workingDir 'docker-openempi-master'
   commandLine 'docker-compose', 'up', '-d'
+}
+
+task empiStartProduction(type: Exec) {
+  dependsOn 'empiExtract'
+  workingDir 'docker-openempi-master'
+  commandLine 'docker-compose', '-f', 'docker-compose.yml', '-f', 'production.yml', 'up', '-d'
 }
 
 task ehrStop(type: Exec){
@@ -81,6 +93,14 @@ task envStart() {
   dependsOn = ['empiStart', 'ehrStart']
 }
 
+task envStartProduction() {
+  dependsOn = ['empiStartProduction', 'ehrStartProduction']
+}
+
 task envStop() {
   dependsOn = ['ehrStop', 'empiStop']
+}
+
+task envStopProduction() {
+  dependsOn 'envStop'
 }

@@ -1,0 +1,59 @@
+/*
+ * FHIRWork (c)
+ *
+ * This work is licensed under the Creative Commons Attribution 4.0
+ * International License. To view a copy of this license, visit
+ *
+ *      http://creativecommons.org/licenses/by/4.0/
+ *
+ * Author: Blair Butterworth
+ */
+
+plugins {
+  id 'java'
+  id 'idea'
+}
+
+dependencies {
+  testCompile group: 'com.mashape.unirest', name:'unirest-java', version:'1.4.9'
+  testCompile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
+  testCompile group: 'com.google.code.gson', name: 'gson', version: '2.8.2'
+  testCompile group: 'com.google.guava', name: 'guava', version: '23.0'
+  testCompile group: 'commons-io', name: 'commons-io', version: '2.6'
+
+  testCompile group: 'junit', name:'junit', version:'4.11'
+  testCompile group: 'io.cucumber', name: 'cucumber-java', version: '2.3.1'
+  testCompile group: 'io.cucumber', name: 'cucumber-junit', version: '2.3.1'
+}
+
+test {
+  exclude '**/integration/**'
+}
+
+task integrationTest(type: Test) {
+  include '**/integration/**'
+  testLogging.showStandardStreams = project.getProperty('test.output.enabled').toBoolean()
+
+  systemProperty 'network.ehr.address', project.getProperty('network.ehr.address')
+  systemProperty 'network.ehr.username', project.getProperty('network.ehr.username')
+  systemProperty 'network.ehr.password', project.getProperty('network.ehr.password')
+
+  systemProperty 'network.empi.address', project.getProperty('network.empi.address')
+  systemProperty 'network.empi.username', project.getProperty('network.empi.username')
+  systemProperty 'network.empi.password', project.getProperty('network.empi.password')
+
+  systemProperty 'network.fhir.address', project.getProperty('network.fhir.address')
+}
+
+check.dependsOn integrationTest
+
+def getTasksByName(def name){
+  return rootProject.allprojects.collect { subproject ->
+    subproject.tasks.findAll { it.name == name }
+  }.flatten()
+}
+
+gradle.projectsEvaluated {
+  integrationTest.dependsOn getTasksByName('appStartDaemon')
+  integrationTest.finalizedBy getTasksByName('appStopDaemon')
+}

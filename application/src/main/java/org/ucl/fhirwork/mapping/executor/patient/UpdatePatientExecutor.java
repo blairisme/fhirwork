@@ -66,23 +66,11 @@ public class UpdatePatientExecutor implements Executor
         try
         {
             Person personInput = personFactory.fromPatient(patient);
-
-            Person foo = updateChangeDate(personInput);
-
-            Person personOutput = empiServer.updatePerson(foo);
+            Person personOutput = empiServer.updatePerson(personInput);
             return patientFactory.fromPerson(personOutput);
         }
         catch (RestException cause){
             throw new ExecutionException(cause);
         }
-    }
-
-    private Person updateChangeDate(Person person)
-    {
-        ZonedDateTime date = ZonedDateTime.now();
-        String dateText = date.format(DateTimeFormatter.ISO_INSTANT);
-
-        person.setDateChanged(dateText);
-        return person;
     }
 }

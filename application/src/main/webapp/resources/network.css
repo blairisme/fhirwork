@@ -1,0 +1,18 @@
+.settings {
+    background-color: #f1f1f1;
+    overflow: hidden;
+    float: none;
+    width: auto;
+    height: 100%;
+    padding: 20px 20px 20px 20px;
+}
+
+.property th {
+    width: 120px;
+    text-align: left;
+}
+
+.property td {
+  padding-bottom: 12px;
+}
+

@@ -20,10 +20,7 @@ import org.ucl.fhirwork.network.ehr.data.QueryBundle;
 import org.ucl.fhirwork.network.ehr.data.QueryResult;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ObservationFactory

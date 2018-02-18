@@ -16,7 +16,7 @@
     <property name="fileExtensions" value="java"/>
 
     <module name="FileLength">
-        <property name="max" value="750"/>
+        <property name="max" value="300"/>
     </module>
 
     <module name="TreeWalker">
@@ -25,7 +25,7 @@
         <module name="EqualsHashCode"/>
         <module name="MethodLength">
             <property name="tokens" value="METHOD_DEF"/>
-            <property name="max" value="100"/>
+            <property name="max" value="25"/>
         </module>
     </module>
 </module>

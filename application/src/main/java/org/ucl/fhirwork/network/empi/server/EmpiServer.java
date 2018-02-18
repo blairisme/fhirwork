@@ -23,6 +23,7 @@ import org.ucl.fhirwork.common.http.*;
 import org.ucl.fhirwork.common.serialization.Serializer;
 import org.ucl.fhirwork.common.serialization.XmlSerializer;
 import org.ucl.fhirwork.network.empi.data.AuthenticationRequest;
+import org.ucl.fhirwork.network.empi.data.Identifier;
 import org.ucl.fhirwork.network.empi.data.People;
 import org.ucl.fhirwork.network.empi.data.Person;
 
@@ -52,16 +53,19 @@ public class EmpiServer
         this.serverFactory = serverFactory;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setAddress(String address) {
+    /**
+     * Sets the address and authentication information used to connect to the
+     * EMPI server.
+     *
+     * @param address   the URL of an EMPI server.
+     * @param username  the name of an account on the EMPI server.
+     * @param password  the password of an EMPI account.
+     */
+    public synchronized void setConnectionDetails(String address, String username, String password) {
         this.address = address;
+        this.username = username;
+        this.password = password;
+        this.server = null;
     }
 
     /**
@@ -82,6 +86,25 @@ public class EmpiServer
 
         RestResponse response = request.make(HandleFailure.ByException);
         return response.getStatusCode() != 204 ? response.asType(Person.class) : person;
+    }
+
+    /**
+     * Returns the {@link Person} that matches the given {@link Identifier}.
+     *
+     * @param identifier        the {@code Identifier} of the desired
+     *                          {@code Person}.
+     * @return                  the matching {@code Person}.
+     * @throws RestException    thrown if an error occurs whilst communicating
+     *                          with the EMPI server.
+     */
+    //TODO: Handle missing person
+    public Person findPersonById(Identifier identifier) throws RestException
+    {
+        RestRequest request = getServer().post(FindPersonById);
+        request.setBody(identifier, Identifier.class);
+
+        RestResponse response = request.make(HandleFailure.ByException);
+        return response.asType(Person.class);
     }
 
     /**
@@ -219,7 +242,7 @@ public class EmpiServer
         
     }
 
-    private RestServer getServer() throws RestException
+    private synchronized RestServer getServer() throws RestException
     {
         if (server == null) {
             String token = getSessionToken();

@@ -1,47 +1,34 @@
 {
-  "mappings":[
-  {
-    "loinc": "3141-9",
-    "text": "body_weight",
-    "archetype": "openEHR-EHR-OBSERVATION.body_weight.v1",
-
-    "path": {
+  "mappings": {
+    "3141-9": {
+      "text": "body_weight",
+      "archetype": "openEHR-EHR-OBSERVATION.body_weight.v1",
       "date": "data[at0002]/origin/value",
       "magnitude": "data[at0002]/events[at0003]/data[at0001]/items[at0004]/value/magnitude",
-      "units": "data[at0002]/events[at0003]/data[at0001]/items[at0004]/value/units"
-    }
-  },
-  {
-    "loinc": "8302-2",
-    "text": "height",
-    "archetype": "openEHR-EHR-OBSERVATION.height.v1",
-
-    "path": {
+      "unit": "data[at0002]/events[at0003]/data[at0001]/items[at0004]/value/units"
+    },
+    "8302-2": {
+      "text": "height",
+      "archetype": "openEHR-EHR-OBSERVATION.height.v1",
       "date": "data[at0001]/origin/value",
       "magnitude": "data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/magnitude",
-      "units": "data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/units"
-    }
-  },
-  {
-    "loinc": "39156-5",
-    "text": "body_mass_index",
-    "archetype": "openEHR-EHR-OBSERVATION.body_mass_index.v1",
-    "path": {
+      "unit": "data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/units"
+    },
+    "39156-5": {
+      "text": "body_mass_index",
+      "archetype": "openEHR-EHR-OBSERVATION.body_mass_index.v1",
       "date": "data[at0001]/origin/value",
       "precision": "data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/precision",
       "magnitude": "data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/magnitude",
-      "units": "data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/units"
-    }
-  },
-  {
-    "loinc": "8287-5",
-    "text": "head_circumference",
-    "archetype": "openEHR-EHR-OBSERVATION.head_circumference.v0",
-    "path": {
+      "unit": "data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/units"
+    },
+    "8287-5": {
+      "text": "head_circumference",
+      "archetype": "openEHR-EHR-OBSERVATION.head_circumference.v0",
       "date": "data[at0001]/origin/value",
       "precision": "data[at0001]/events[at0010]/data[at0003]/items[at0004]/value/precision",
       "magnitude": "data[at0001]/events[at0010]/data[at0003]/items[at0004]/value/magnitude",
-      "units": "data[at0001]/events[at0010]/data[at0003]/items[at0004]/value/units"
+      "unit": "data[at0001]/events[at0010]/data[at0003]/items[at0004]/value/units"
     }
-  }]
+  }
 }

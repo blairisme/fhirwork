@@ -10,6 +10,9 @@
 
 package org.ucl.fhirwork.network.fhir.operations.observation;
 
+import ca.uhn.fhir.model.primitive.IdDt;
+import ca.uhn.fhir.rest.param.ReferenceParam;
+import ca.uhn.fhir.rest.param.TokenOrListParam;
 import org.ucl.fhirwork.common.framework.Operation;
 
 /**
@@ -19,4 +22,19 @@ import org.ucl.fhirwork.common.framework.Operation;
  */
 public class ReadObservationOperation implements Operation
 {
+    private TokenOrListParam codes;
+    private ReferenceParam patient;
+
+    public ReadObservationOperation(TokenOrListParam codes, ReferenceParam patient) {
+        this.codes = codes;
+        this.patient = patient;
+    }
+
+    public TokenOrListParam getCodes() {
+        return codes;
+    }
+
+    public ReferenceParam getPatient() {
+        return patient;
+    }
 }

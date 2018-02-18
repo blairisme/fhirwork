@@ -1,0 +1,30 @@
+<form method="POST" action="/observations">
+  <h1> Patients in the FHIR database </h1>
+  <table>
+    <div class="container">
+      <table>
+        <div class="container">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Birthdate</th>
+              <th>Given name</th>
+              <th>Family name</th>
+              <th>Growth Chart</th>
+            </tr>
+          </thead>
+          {{#each patients}}
+            <tbody>
+              <tr>
+                <td><a href='/observations/${{id}}'>{{id}}</a></td>
+                <td>{{birthDate}}</td>
+                <td>{{given}}</td>
+                <td>{{family}}</td>
+                <td><a class="logo" href='{{../chartAddress}}/launch.html?fhirServiceUrl={{../fhirAddress}}&patientId={{id}}'/></td>
+              </tr>
+            </tbody>
+          {{/each}}
+      </table>
+  </div>
+</form>

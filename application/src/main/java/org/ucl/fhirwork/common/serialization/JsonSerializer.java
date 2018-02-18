@@ -12,6 +12,11 @@ package org.ucl.fhirwork.common.serialization;
 
 import com.google.gson.Gson;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.Writer;
+
 /**
  * Instances of this class serialize objects into their equivalent JSON
  * representation. Methods are provided to convert Java objects into JSON
@@ -28,13 +33,28 @@ public class JsonSerializer implements Serializer
         gson = new Gson();
     }
 
-    public <T> String serialize(T value, Class<T> type)
+    @Override
+    public <T> String serialize(T value, Class<T> type) throws SerializationException
     {
         return gson.toJson(value, type);
     }
 
-    public <T> T deserialize(String value, Class<T> type)
+    @Override
+    public <T> void serialize(T value, Class<T> type, Writer writer) throws SerializationException
+    {
+        gson.toJson(value, type, writer);
+    }
+
+    @Override
+    public <T> T deserialize(String value, Class<T> type) throws SerializationException
     {
         return gson.fromJson(value, type);
     }
+
+    @Override
+    public <T> T deserialize(Reader reader, Class<T> type) throws SerializationException
+    {
+        return gson.fromJson(reader, type);
+    }
+
 }

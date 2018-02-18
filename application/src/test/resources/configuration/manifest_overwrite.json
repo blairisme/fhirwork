@@ -1,0 +1,14 @@
+{
+  "testing": {
+    "mapping": "configuration/mapping.json",
+    "network": "configuration/network_overwrite.json"
+  },
+  "development": {
+    "mapping": "configuration/mapping.json",
+    "network": "configuration/network_overwrite.json"
+  },
+  "production": {
+    "mapping": "configuration/mapping.json",
+    "network": "configuration/network_overwrite.json"
+  }
+}
