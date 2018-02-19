@@ -145,7 +145,15 @@ public class EmpiServer
         request.setParameters(ImmutableMap.of(PersonId, personId));
 
         RestResponse response = request.make(HandleFailure.ByException);
-        return response.asType(Person.class);
+        Person result;
+        if (response.getStatusCode() == 204) {
+//        	   result = new Person();
+        		throw new RestException(204);
+        }
+        else
+          	result = response.asType(Person.class);
+    
+        return result;
     }
 
     /**
@@ -219,11 +227,19 @@ public class EmpiServer
     //TODO: Returns 304 if the person isnt modified - evaluate if we should throw
     public Person updatePerson(Person person) throws RestException
     {
-        RestRequest request = getServer().put(UpdatePerson);
-        request.setBody(person, Person.class);
-
-        RestResponse response = request.make(HandleFailure.ByException);
-        return response.asType(Person.class);
+    		String personId = person.getPersonId();
+    		
+    		if(personExists(personId)) {
+    			removePerson(personId);
+    			person.setPersonId(null);
+    			return addPerson(person);
+    			
+    		}
+    		else {
+    			return addPerson(person);
+    		}
+   
+        
     }
 
     private synchronized RestServer getServer() throws RestException
