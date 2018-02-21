@@ -59,7 +59,7 @@ public class RestRequest
         {
             HttpResponse<String> response = request.asString();
             RestResponse result = new RestResponse(response, serializer);
-
+            
             if (! result.wasSuccessful() && mode == HandleFailure.ByException){
                 throw new RestException(result.getStatusCode());
             }
