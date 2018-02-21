@@ -9,9 +9,11 @@
  */
 package org.ucl.fhirwork.network.fhir.operations.common;
 
+import org.apache.commons.lang3.Validate;
 import org.ucl.fhirwork.common.framework.Operation;
 import org.ucl.fhirwork.network.fhir.data.SearchParameter;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -26,10 +28,12 @@ public abstract class ConditionalOperation implements Operation
     private Map<SearchParameter, Object> searchParameters;
 
     protected ConditionalOperation() {
+        searchParameters = null; //Collections.emptyMap();
     }
 
     protected ConditionalOperation(Map<SearchParameter, Object> searchParameters) {
-        this.searchParameters = searchParameters;
+        Validate.notNull(searchParameters);
+        this.searchParameters = Collections.unmodifiableMap(searchParameters);
     }
 
     public Map<SearchParameter, Object> getSearchParameters() {

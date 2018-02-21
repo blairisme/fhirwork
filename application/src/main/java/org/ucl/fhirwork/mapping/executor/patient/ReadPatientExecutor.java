@@ -11,10 +11,10 @@
 package org.ucl.fhirwork.mapping.executor.patient;
 
 import ca.uhn.fhir.model.primitive.IdDt;
+import org.apache.commons.lang3.Validate;
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
-import org.ucl.fhirwork.common.http.RestException;
 import org.ucl.fhirwork.mapping.data.PatientFactory;
 import org.ucl.fhirwork.network.NetworkService;
 import org.ucl.fhirwork.network.empi.data.Person;
@@ -22,7 +22,6 @@ import org.ucl.fhirwork.network.empi.server.EmpiServer;
 import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
 
 import javax.inject.Inject;
-import java.util.List;
 
 /**
  * Instances of this class convert the read patient FHIR operation into the
@@ -48,6 +47,8 @@ public class ReadPatientExecutor implements Executor
     @Override
     public void setOperation(Operation operation)
     {
+        Validate.notNull(operation);
+
         ReadPatientOperation readPatient = (ReadPatientOperation)operation;
         IdDt patientId = readPatient.getPatientId();
         personId = patientId.getIdPart();
@@ -61,7 +62,7 @@ public class ReadPatientExecutor implements Executor
             Person personOutput = empiServer.loadPerson(personId);
             return patientFactory.fromPerson(personOutput);
         }
-        catch (RestException cause){
+        catch (Throwable cause){
             throw new ExecutionException(cause);
         }
     }

@@ -11,6 +11,7 @@
 package org.ucl.fhirwork.network.fhir.operations.patient;
 
 import ca.uhn.fhir.model.primitive.IdDt;
+import org.apache.commons.lang3.Validate;
 import org.ucl.fhirwork.common.framework.Operation;
 import org.ucl.fhirwork.network.fhir.data.SearchParameter;
 import org.ucl.fhirwork.network.fhir.operations.common.ConditionalOperation;
@@ -27,11 +28,12 @@ public class ReadPatientOperation extends ConditionalOperation
     private IdDt patientId;
 
     public ReadPatientOperation(IdDt patientId) {
+        Validate.notNull(patientId);
+        Validate.notNull(patientId.getValue());
         this.patientId = patientId;
     }
 
-    public ReadPatientOperation(Map<SearchParameter, Object> parameters)
-    {
+    public ReadPatientOperation(Map<SearchParameter, Object> parameters){
         super(parameters);
     }
 
