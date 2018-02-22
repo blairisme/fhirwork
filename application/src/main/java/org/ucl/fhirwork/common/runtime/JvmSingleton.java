@@ -30,6 +30,11 @@ public class JvmSingleton
         this.name = name;
     }
 
+    public JvmSingleton(String name, Observer observer) {
+        this.name = name;
+        addObserver(observer);
+    }
+
     public void addObserver(Observer observer) {
         List<WeakReference<Observer>> observers = getObservers();
         observers.add(new WeakReference<>(observer));

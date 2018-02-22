@@ -13,14 +13,13 @@ package org.ucl.fhirwork.ui;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.ucl.fhirwork.ApplicationService;
-import org.ucl.fhirwork.configuration.ConfigService;
-import org.ucl.fhirwork.configuration.NetworkConfigData;
-import org.ucl.fhirwork.configuration.NetworkConfigType;
-import org.ucl.fhirwork.network.NetworkService;
+import org.ucl.fhirwork.configuration.*;
+import org.ucl.fhirwork.configuration.data.ConfigType;
+import org.ucl.fhirwork.configuration.data.NetworkConfig;
+import org.ucl.fhirwork.configuration.data.NetworkConfigData;
 
 @Controller
 @RequestMapping("/")
@@ -47,15 +46,19 @@ public class ServletController
     @RequestMapping(value = "/network", method = RequestMethod.GET)
     public String network(ModelMap model)
     {
-        model.addAttribute("empi", configuration.getNetworkConfig(NetworkConfigType.Empi));
+        NetworkConfig networkConfig = configuration.getConfig(ConfigType.Network);
+        model.addAttribute("empi", networkConfig.getEmpi());
         return "network";
     }
 
     @RequestMapping(value = "/network", method = RequestMethod.POST)
-    public String networkSubmit(@ModelAttribute NetworkConfigData config, ModelMap model)
+    public String networkSubmit(@ModelAttribute NetworkConfigData data, ModelMap model)
     {
-        configuration.setNetworkConfig(NetworkConfigType.Empi, config);
-        model.addAttribute("empi", config);
+        NetworkConfig networkConfig = configuration.getConfig(ConfigType.Network);
+        networkConfig.setEmpi(data);
+        configuration.setConfig(ConfigType.Network, networkConfig);
+
+        model.addAttribute("empi", data);
         return "network";
     }
 }

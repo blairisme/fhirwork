@@ -8,19 +8,22 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.configuration;
+package org.ucl.fhirwork.configuration.data;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
- * Instances of this exception are thrown if persisted configuration failed to
- * deserialize.
+ * Options in this enumeration specify identifiers for different configuration
+ * files.
  *
  * @author Chenghui Fan
  * @author Blair Butterworth
  */
-public class ConfigInvalidException extends RuntimeException
+public enum ConfigType
 {
-    public ConfigInvalidException(Throwable cause)
-    {
-        super(cause);
-    }
+    @SerializedName("network")
+	Network,
+
+    @SerializedName("mapping")
+    Mapping
 }

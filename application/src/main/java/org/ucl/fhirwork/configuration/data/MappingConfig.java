@@ -8,7 +8,9 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.configuration;
+package org.ucl.fhirwork.configuration.data;
+
+import org.ucl.fhirwork.configuration.exception.ConfigMissingException;
 
 import java.util.*;
 

@@ -14,6 +14,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.ucl.fhirwork.common.serialization.JsonSerializer;
 import org.ucl.fhirwork.common.serialization.Serializer;
+import org.ucl.fhirwork.configuration.persistence.ConfigFileList;
 import org.ucl.fhirwork.test.TestResourceUtils;
 
 import java.io.IOException;

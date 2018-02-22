@@ -8,17 +8,19 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.configuration;
+package org.ucl.fhirwork.configuration.exception;
 
 /**
- * Options in this enumeration specify the different network configurations
- * types.
+ * Instances of this exception are thrown if an error occurs while reading or
+ * writing configuration files.
  *
  * @author Chenghui Fan
  * @author Blair Butterworth
  */
-public enum NetworkConfigType
+public class ConfigIoException extends RuntimeException
 {
-	Empi,
-    Ehr
+    public ConfigIoException(Throwable cause)
+    {
+        super(cause);
+    }
 }

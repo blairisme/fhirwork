@@ -10,16 +10,13 @@
 
 package org.ucl.fhirwork.configuration;
 
-import static org.junit.Assert.*;
-
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.ucl.fhirwork.common.serialization.JsonSerializer;
 import org.ucl.fhirwork.common.serialization.Serializer;
+import org.ucl.fhirwork.configuration.data.MappingConfig;
 import org.ucl.fhirwork.test.TestResourceUtils;
 
 public class MappingConfigTest

@@ -14,14 +14,14 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.ucl.fhirwork.configuration.ConfigService;
-import org.ucl.fhirwork.configuration.MappingConfigData;
-
-import java.io.IOException;
+import org.ucl.fhirwork.configuration.data.ConfigType;
+import org.ucl.fhirwork.configuration.data.MappingConfig;
+import org.ucl.fhirwork.configuration.data.MappingConfigData;
 
 public class QueryServiceTest
 {
     @Test
-    public void getQueryTest() throws IOException
+    public void getQueryTest()
     {
         ConfigService configuration = getMockConfiguration();
         QueryService queryService = new QueryService(configuration);
@@ -38,17 +38,21 @@ public class QueryServiceTest
             "contains OBSERVATION body_weight[openEHR-EHR-OBSERVATION.body_weight.v1]");
     }
 
-    private ConfigService getMockConfiguration() throws IOException
+    private ConfigService getMockConfiguration()
     {
-        MappingConfigData mappingConfiguration = new MappingConfigData(
+        MappingConfigData configData = new MappingConfigData(
             "body_weight",
             "openEHR-EHR-OBSERVATION.body_weight.v1",
             "data[at0002]/origin/value",
             "data[at0002]/events[at0003]/data[at0001]/items[at0004]/value/magnitude",
             "data[at0002]/events[at0003]/data[at0001]/items[at0004]/value/units");
 
-        ConfigService configurationService = Mockito.mock(ConfigService.class);
-        Mockito.when(configurationService.getMappingConfig("3141-9")).thenReturn(mappingConfiguration);
-        return configurationService;
+        ConfigService configService = Mockito.mock(ConfigService.class);
+        MappingConfig mappingConfig = Mockito.mock(MappingConfig.class);
+
+        Mockito.when(mappingConfig.getData("3141-9")).thenReturn(configData);
+        Mockito.when(configService.getConfig(ConfigType.Mapping)).thenReturn(mappingConfig);
+
+        return configService;
     }
 }

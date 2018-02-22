@@ -8,19 +8,19 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.configuration;
+package org.ucl.fhirwork.configuration.exception;
 
 /**
- * Instances of this exception are thrown if the request configuration
- * information is missing.
+ * Instances of this exception are thrown if persisted configuration failed to
+ * deserialize.
  *
  * @author Chenghui Fan
  * @author Blair Butterworth
  */
-public class ConfigMissingException extends RuntimeException
+public class ConfigInvalidException extends RuntimeException
 {
-    public ConfigMissingException(String key)
+    public ConfigInvalidException(Throwable cause)
     {
-        super("Configuration missing: " + key);
+        super(cause);
     }
 }

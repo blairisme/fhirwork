@@ -8,7 +8,9 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.configuration;
+package org.ucl.fhirwork.configuration.data;
+
+import org.ucl.fhirwork.configuration.exception.ConfigMissingException;
 
 /**
  * Instances of this class represent a container for all persisted network
@@ -36,18 +38,26 @@ public class NetworkConfig
         return ehr;
     }
 
+    public NetworkConfig setEmpi(NetworkConfigData newEmpi){
+        return new NetworkConfig(newEmpi, ehr);
+    }
+
+    public NetworkConfig setEhr(NetworkConfigData newEhr){
+        return new NetworkConfig(empi, newEhr);
+    }
+
     public NetworkConfigData getData(NetworkConfigType type){
         switch (type){
-            case Ehr: return ehr;
-            case Empi: return empi;
+            case Ehr: return getEhr();
+            case Empi: return getEmpi();
             default: throw new ConfigMissingException(type.name());
         }
     }
 
     public NetworkConfig setData(NetworkConfigType type, NetworkConfigData data){
         switch (type){
-            case Ehr: return new NetworkConfig(empi, data);
-            case Empi: return new NetworkConfig(data, ehr);
+            case Ehr: return setEhr(data);
+            case Empi: return setEmpi(data);
             default: throw new ConfigMissingException(type.name());
         }
     }

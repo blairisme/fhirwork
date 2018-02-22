@@ -8,7 +8,10 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.configuration;
+package org.ucl.fhirwork.configuration.persistence;
+
+import org.ucl.fhirwork.configuration.data.ConfigType;
+import org.ucl.fhirwork.configuration.persistence.Environment;
 
 import java.util.Map;
 

@@ -8,22 +8,19 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.configuration;
-
-import com.google.gson.annotations.SerializedName;
+package org.ucl.fhirwork.configuration.exception;
 
 /**
- * Options in this enumeration specify identifiers for different configuration
- * files.
+ * Instances of this exception are thrown if the request configuration
+ * information is missing.
  *
  * @author Chenghui Fan
  * @author Blair Butterworth
  */
-public enum ConfigType
+public class ConfigMissingException extends RuntimeException
 {
-    @SerializedName("network")
-	Network,
-
-    @SerializedName("mapping")
-    Mapping
+    public ConfigMissingException(String key)
+    {
+        super("Configuration missing: " + key);
+    }
 }

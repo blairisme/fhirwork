@@ -16,7 +16,11 @@ import org.junit.Test;
 import org.ucl.fhirwork.common.resources.Resources;
 import org.ucl.fhirwork.common.serialization.JsonSerializer;
 import org.ucl.fhirwork.common.serialization.Serializer;
-import org.ucl.fhirwork.test.TestResourceUtils;
+import org.ucl.fhirwork.configuration.data.ConfigType;
+import org.ucl.fhirwork.configuration.data.NetworkConfig;
+import org.ucl.fhirwork.configuration.data.NetworkConfigData;
+import org.ucl.fhirwork.configuration.exception.ConfigIoException;
+import org.ucl.fhirwork.configuration.persistence.ConfigFileManager;
 
 import java.io.File;
 import java.io.Reader;

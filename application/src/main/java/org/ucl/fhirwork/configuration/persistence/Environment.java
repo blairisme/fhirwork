@@ -8,19 +8,17 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.configuration;
+package org.ucl.fhirwork.configuration.persistence;
 
 /**
- * Instances of this exception are thrown if an error occurs while reading or
- * writing configuration files.
+ * Options in this enumeration specify predefined configuration sets.
  *
  * @author Chenghui Fan
  * @author Blair Butterworth
  */
-public class ConfigIoException extends RuntimeException
+public enum Environment
 {
-    public ConfigIoException(Throwable cause)
-    {
-        super(cause);
-    }
+	Testing,
+    Development,
+    Production
 }

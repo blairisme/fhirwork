@@ -8,17 +8,17 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.configuration;
+package org.ucl.fhirwork.configuration.data;
 
 /**
- * Options in this enumeration specify predefined configuration sets.
+ * Options in this enumeration specify the different network configurations
+ * types.
  *
  * @author Chenghui Fan
  * @author Blair Butterworth
  */
-public enum Environment
+public enum NetworkConfigType
 {
-	Testing,
-    Development,
-    Production
+	Empi,
+    Ehr
 }

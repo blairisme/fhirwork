@@ -10,9 +10,11 @@
 
 package org.ucl.fhirwork.mapping.query;
 
-import org.ucl.fhirwork.configuration.ConfigMissingException;
-import org.ucl.fhirwork.configuration.ConfigService;
-import org.ucl.fhirwork.configuration.MappingConfigData;
+import org.ucl.fhirwork.configuration.*;
+import org.ucl.fhirwork.configuration.data.ConfigType;
+import org.ucl.fhirwork.configuration.data.MappingConfig;
+import org.ucl.fhirwork.configuration.data.MappingConfigData;
+import org.ucl.fhirwork.configuration.exception.ConfigMissingException;
 
 import javax.inject.Inject;
 
@@ -28,13 +30,15 @@ public class QueryService
 
     public boolean isSupported(String code)
     {
-        return configuration.hasMappingConfig(code);
+        MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
+        return mappingConfig.hasData(code);
     }
 
     public String getQuery(String code, String ehrId)
     {
         try {
-            MappingConfigData mappingData = configuration.getMappingConfig(code);
+            MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
+            MappingConfigData mappingData = mappingConfig.getData(code);
             return getQuery(mappingData, ehrId);
         }
         catch (ConfigMissingException error) {

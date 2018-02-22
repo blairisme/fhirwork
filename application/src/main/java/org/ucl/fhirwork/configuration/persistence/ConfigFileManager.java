@@ -8,7 +8,7 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.configuration;
+package org.ucl.fhirwork.configuration.persistence;
 
 import java.io.*;
 import java.util.Map;
@@ -16,6 +16,8 @@ import java.util.Map;
 import org.ucl.fhirwork.common.resources.Resources;
 import org.ucl.fhirwork.common.serialization.JsonSerializer;
 import org.ucl.fhirwork.common.serialization.Serializer;
+import org.ucl.fhirwork.configuration.exception.ConfigIoException;
+import org.ucl.fhirwork.configuration.data.ConfigType;
 
 import javax.inject.Inject;
 

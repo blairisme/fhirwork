@@ -8,7 +8,7 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.configuration;
+package org.ucl.fhirwork.configuration.data;
 
 /**
  * Instances of this class contain the information needed to an external server,
