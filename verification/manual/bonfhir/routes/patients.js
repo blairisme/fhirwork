@@ -14,9 +14,10 @@ const express = require('express');
 const router = express.Router();
 const rest = require('restler')
 const config = require('../config.json');
-
+const http = require('http');
+var url = `${config.fhir.address}/Patient?_format=json`;
 router.get('/patients', function (req, res) {
-  var url = `${config.fhir.address}/Patient?_format=json`;
+
   console.log(url);
   rest.get(url).on('complete', function(result) {
     if (result instanceof Error) {
@@ -65,6 +66,20 @@ router.get('/patients', function (req, res) {
     	res.render('patients', {patients: patients, chartAddress: config.growthchart.address, fhirAddress: config.fhir.address})
     }
   });
+});
+
+router.get('/patients/addpatient', function(req,res){
+  res.render('addpatient');
+});
+
+router.post('/patients/addpatient', function(req,res){
+  console.log("HELLO WOOOOOOORRRRRRLLLLDDDDD");
+  console.log(req.body);
+  rest.post(url).on('complete', function(result){
+
+    console.log("?do we get here");
+    res.redirect('/patients')
+  })
 });
 
 module.exports = router;
