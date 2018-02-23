@@ -8,7 +8,7 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.configuration;
+package org.ucl.fhirwork.configuration.persistence;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;

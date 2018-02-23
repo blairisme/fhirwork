@@ -1,14 +1,17 @@
 {
   "testing": {
     "mapping": "configuration/mapping.json",
-    "network": "configuration/network.json"
+    "network": "configuration/network.json",
+    "general": "configuration/general.json"
   },
   "development": {
     "mapping": "configuration/mapping.json",
-    "network": "configuration/network.json"
+    "network": "configuration/network.json",
+    "general": "configuration/general.json"
   },
   "production": {
     "mapping": "configuration/mapping.json",
-    "network": "configuration/network.json"
+    "network": "configuration/network.json",
+    "general": "configuration/general.json"
   }
 }

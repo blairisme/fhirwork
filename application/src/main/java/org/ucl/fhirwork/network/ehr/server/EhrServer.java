@@ -69,15 +69,14 @@ public class EhrServer
         this.server = null;
     }
 
-    public HealthRecord getEhr(String id, String namespace) throws RestException {
-        RestServer server = getServer();
-        RestRequest request = server.get(Ehr);
+    public HealthRecord getEhr(String id, String namespace) throws RestException
+    {
+        RestRequest request = getServer().get(Ehr);
         request.setParameters(ImmutableMap.of(SubjectId, id, SubjectNamespace, namespace));
-        RestResponse response = request.make(HandleFailure.ByException);
-        HealthRecord result = response.asType(HealthRecord.class);
-        return result;
-    }
 
+        RestResponse response = request.make(HandleFailure.ByException);
+        return response.asType(HealthRecord.class);
+    }
 
     public List<Composition> getCompositions(String ehrId) throws RestException, InstantiationException, IllegalAccessException {
         List<Composition> compositions = new ArrayList<>();

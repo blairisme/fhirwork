@@ -10,29 +10,35 @@
 
 package org.ucl.fhirwork.mapping.executor.observation;
 
-import ca.uhn.fhir.model.base.composite.BaseCodingDt;
 import ca.uhn.fhir.model.dstu2.resource.Observation;
-import ca.uhn.fhir.model.primitive.CodeDt;
 import ca.uhn.fhir.rest.param.ReferenceParam;
 import ca.uhn.fhir.rest.param.TokenOrListParam;
-import org.ucl.fhirwork.network.empi.data.Person;
+import org.apache.commons.lang3.Validate;
 import org.ucl.fhirwork.common.framework.ExecutionException;
-import ca.uhn.fhir.model.primitive.IdDt;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
 import org.ucl.fhirwork.common.http.RestException;
+import org.ucl.fhirwork.configuration.ConfigService;
+import org.ucl.fhirwork.configuration.data.ConfigType;
+import org.ucl.fhirwork.configuration.data.GeneralConfig;
 import org.ucl.fhirwork.mapping.data.ObservationFactory;
-import org.ucl.fhirwork.mapping.data.PatientFactory;
 import org.ucl.fhirwork.mapping.query.QueryService;
 import org.ucl.fhirwork.network.NetworkService;
+import org.ucl.fhirwork.network.ehr.data.HealthRecord;
 import org.ucl.fhirwork.network.ehr.data.QueryBundle;
 import org.ucl.fhirwork.network.ehr.server.EhrServer;
+import org.ucl.fhirwork.network.empi.data.Identifier;
+import org.ucl.fhirwork.network.empi.data.Person;
+import org.ucl.fhirwork.network.empi.data.PersonUtils;
 import org.ucl.fhirwork.network.empi.server.EmpiServer;
+import org.ucl.fhirwork.network.fhir.data.TokenListUtils;
+import org.ucl.fhirwork.network.fhir.data.TokenSystem;
 import org.ucl.fhirwork.network.fhir.operations.observation.ReadObservationOperation;
 
-import java.util.*;
-
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Instances of this class convert the read observation FHIR operation into the
@@ -44,26 +50,32 @@ import javax.inject.Inject;
 public class ReadObservationExecutor implements Executor
 {
     private EhrServer ehrServer;
-    private QueryService queryService;
-    private ObservationFactory observationFactory;
     private EmpiServer empiServer;
+    private QueryService queryService;
+    private ConfigService configService;
+    private ObservationFactory observationFactory;
     private ReferenceParam patient;
     private TokenOrListParam tokenList;
 
     @Inject
     public ReadObservationExecutor(
-            NetworkService networkService,
-            QueryService queryService,
-            ObservationFactory observationFactory)
+        NetworkService networkService,
+        ConfigService configService,
+        QueryService queryService,
+        ObservationFactory observationFactory)
     {
         this.ehrServer = networkService.getEhrServer();
         this.empiServer = networkService.getEmpiServer();
         this.queryService = queryService;
+        this.configService = configService;
         this.observationFactory = observationFactory;
     }
 
     @Override
     public void setOperation(Operation operation) {
+        Validate.notNull(operation);
+        Validate.isInstanceOf(ReadObservationOperation.class, operation);
+
         ReadObservationOperation readObservation = (ReadObservationOperation)operation;
         tokenList = readObservation.getCodes();
         patient = readObservation.getPatient();
@@ -72,37 +84,39 @@ public class ReadObservationExecutor implements Executor
     @Override
     public Object invoke() throws ExecutionException
     {
-        try
-        {
+        try {
+            Validate.notNull(tokenList);
+            Validate.notNull(patient);
+
             String patientId = patient.getIdPart();
             String ehrId = getEhrId(patientId);
-            List<String> codes = getCodes(tokenList);
-            return getObservations(codes, ehrId, patientId);
+            return getObservations(tokenList, ehrId, patientId);
         }
-        catch (Throwable error){
+        catch (Throwable error) {
             throw new ExecutionException(error);
         }
     }
 
-    // Todo: Determine ehrId from empi and ehr services
-    private String getEhrId(String patientId)
+    private String getEhrId(String patientId) throws RestException
     {
-        return "c831fe4d-0ce9-4a63-8bfa-2c51007f97e5";
+        String ehrIdSystem = getEhrIdSystem();
+        Person person = empiServer.loadPerson(patientId);
+        Identifier personId = PersonUtils.getIdentifier(person, ehrIdSystem);
+        HealthRecord record  = ehrServer.getEhr(personId.getIdentifier(), ehrIdSystem);
+        return record.getEhrId();
     }
 
-    private List<String> getCodes(TokenOrListParam codes)
+    private String getEhrIdSystem()
     {
-        List<String> result = new ArrayList<>();
-        for (BaseCodingDt coding: codes.getListAsCodings()){
-            result.add(coding.getCodeElement().getValue());
-        }
-        return result;
+        GeneralConfig generalConfig = configService.getConfig(ConfigType.General);
+        return generalConfig.getEhrIdSystem();
     }
 
-    private List<Observation> getObservations(List<String> codes, String ehrId, String patientId) throws RestException
+    private List<Observation> getObservations(TokenOrListParam tokenList, String ehrId, String patientId) throws RestException
     {
         List<Observation> result = new ArrayList<>();
-        for (String code: codes){
+        List<String> codes = TokenListUtils.getCodeElements(tokenList, TokenSystem.Loinc);
+        for (String code: codes) {
             result.addAll(getObservations(code, ehrId, patientId));
         }
         return result;
@@ -115,6 +129,6 @@ public class ReadObservationExecutor implements Executor
             QueryBundle bundle = ehrServer.query(query);
             return observationFactory.fromQueryBundle(code, patientId, bundle);
         }
-        return Collections.emptyList(); //Todo: Should we throw a misconfigured exception?
+        return Collections.emptyList();
     }
 }

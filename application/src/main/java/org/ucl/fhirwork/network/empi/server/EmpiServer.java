@@ -26,6 +26,7 @@ import org.ucl.fhirwork.network.empi.data.AuthenticationRequest;
 import org.ucl.fhirwork.network.empi.data.Identifier;
 import org.ucl.fhirwork.network.empi.data.People;
 import org.ucl.fhirwork.network.empi.data.Person;
+import org.ucl.fhirwork.network.empi.exception.MissingPersonException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -132,28 +133,25 @@ public class EmpiServer
      * Returns biographical information on the {@link Person} with the given
      * EMPI identifier (internal EMPI identifier)
      *
-     * @param personId          the identifier of the {@code Person} to load.
-     * @return                  a {@code Person} instance contain information
-     *                          on the desired person.
-     * @throws RestException    thrown if an error occurs whilst communicating
-     *                          with the EMPI server.
+     * @param personId  the identifier of the {@code Person} to load.
+     * @return          a {@code Person} instance contain information on the
+     *                  desired person.
+     *
+     * @throws RestException            thrown if an error occurs whilst
+     *                                  communicating with the EMPI server.
+     * @throws MissingPersonException   thrown if a person with the given id
+     *                                  cannot be found.
      */
-    //TODO: Handle code 204 operation success but person missing
-    public Person loadPerson(String personId) throws RestException
+    public Person loadPerson(String personId) throws RestException, MissingPersonException
     {
         RestRequest request = getServer().get(LoadPerson);
         request.setParameters(ImmutableMap.of(PersonId, personId));
 
         RestResponse response = request.make(HandleFailure.ByException);
-        Person result;
         if (response.getStatusCode() == 204) {
-//        	   result = new Person();
-        		throw new RestException(204);
+            throw new MissingPersonException(personId);
         }
-        else
-          	result = response.asType(Person.class);
-    
-        return result;
+        return response.asType(Person.class);
     }
 
     /**

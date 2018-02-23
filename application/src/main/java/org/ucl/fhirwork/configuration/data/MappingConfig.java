@@ -51,9 +51,8 @@ public class MappingConfig
         newMappings.put(code, config);
         return new MappingConfig(newMappings);
     }
-    
-    //added by Chenghui Fan
-    public Collection<String> getAllLoinc(){
+
+    public Collection<String> getCodes(){
     	return this.mappings.keySet();
     }
 }

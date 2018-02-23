@@ -21,9 +21,12 @@ import com.google.gson.annotations.SerializedName;
  */
 public enum ConfigType
 {
-    @SerializedName("network")
-	Network,
+    @SerializedName("general")
+    General,
 
     @SerializedName("mapping")
-    Mapping
+    Mapping,
+
+    @SerializedName("network")
+	Network
 }

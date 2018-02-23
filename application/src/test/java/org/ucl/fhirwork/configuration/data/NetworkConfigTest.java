@@ -8,28 +8,27 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.configuration;
+package org.ucl.fhirwork.configuration.data;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.ucl.fhirwork.common.serialization.JsonSerializer;
 import org.ucl.fhirwork.common.serialization.Serializer;
-import org.ucl.fhirwork.configuration.persistence.ConfigFileList;
+import org.ucl.fhirwork.configuration.data.NetworkConfig;
 import org.ucl.fhirwork.test.TestResourceUtils;
 
 import java.io.IOException;
 
-public class ConfigFileListTest
+public class NetworkConfigTest
 {
     @Test
     public void serializationTest() throws IOException
     {
         Serializer serializer = new JsonSerializer();
-        String manifest = TestResourceUtils.readResource("configuration/manifest.json");
+        String network = TestResourceUtils.readResource("configuration/network.json");
 
-        ConfigFileList deserialized = serializer.deserialize(manifest, ConfigFileList.class);
-        Assert.assertEquals(2, deserialized.getTestingConfig().size());
-        Assert.assertEquals(2, deserialized.getDevelopmentConfig().size());
-        Assert.assertEquals(2, deserialized.getProductionConfig().size());
+        NetworkConfig deserialized = serializer.deserialize(network, NetworkConfig.class);
+        Assert.assertEquals("http://localhost:8888", deserialized.getEhr().getAddress());
+        Assert.assertEquals("http://localhost:8080", deserialized.getEmpi().getAddress());
     }
 }

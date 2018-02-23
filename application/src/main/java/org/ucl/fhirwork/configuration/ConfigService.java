@@ -16,6 +16,7 @@ import org.ucl.fhirwork.common.serialization.JsonSerializer;
 import org.ucl.fhirwork.common.serialization.SerializationException;
 import org.ucl.fhirwork.common.serialization.Serializer;
 import org.ucl.fhirwork.configuration.data.ConfigType;
+import org.ucl.fhirwork.configuration.data.GeneralConfig;
 import org.ucl.fhirwork.configuration.data.MappingConfig;
 import org.ucl.fhirwork.configuration.data.NetworkConfig;
 import org.ucl.fhirwork.configuration.exception.ConfigInvalidException;
@@ -62,7 +63,8 @@ public class ConfigService
     private Map<ConfigType, Class<?>> getSupportConfigTypes() {
         return ImmutableMap.of(
                 ConfigType.Mapping, MappingConfig.class,
-                ConfigType.Network, NetworkConfig.class);
+                ConfigType.Network, NetworkConfig.class,
+                ConfigType.General, GeneralConfig.class);
     }
 
     public void addObserver(ConfigObserver observer) {
