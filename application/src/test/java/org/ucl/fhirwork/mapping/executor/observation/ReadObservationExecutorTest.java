@@ -24,7 +24,7 @@ import org.ucl.fhirwork.mapping.data.ObservationFactory;
 import org.ucl.fhirwork.mapping.query.QueryService;
 import org.ucl.fhirwork.network.NetworkService;
 import org.ucl.fhirwork.network.ehr.data.HealthRecord;
-import org.ucl.fhirwork.network.ehr.data.QueryBundle;
+import org.ucl.fhirwork.network.ehr.data.ObservationBundle;
 import org.ucl.fhirwork.network.ehr.exception.MissingHealthRecordException;
 import org.ucl.fhirwork.network.ehr.server.EhrServer;
 import org.ucl.fhirwork.network.empi.data.Identifier;
@@ -104,7 +104,7 @@ public class ReadObservationExecutorTest
 
         verify(empiServer, times(1)).loadPerson(anyString());
         verify(ehrServer, times(1)).getEhr(anyString(), anyString());
-        verify(ehrServer, times(2)).query(anyString());
+        verify(ehrServer, times(2)).query(anyString(),any());
     }
 
     @Test (expected = NullPointerException.class)
@@ -173,11 +173,11 @@ public class ReadObservationExecutorTest
 
         EhrServer ehrServer = networkService.getEhrServer();
         when(ehrServer.getEhr(anyString(), anyString())).thenReturn(mockHealthRecord());
-        when(ehrServer.query(anyString())).thenReturn(mockQueryBundle());
+        when(ehrServer.query(anyString(), any())).thenReturn(mockQueryBundle());
 
         when(queryService.isSupported(anyString())).thenReturn(true);
         when(queryService.getQuery(anyString(), anyString())).thenReturn("query");
-        when(observationFactory.fromQueryBundle(anyString(), anyString(), any(QueryBundle.class))).thenReturn(new ArrayList<>());
+        when(observationFactory.fromQueryBundle(anyString(), anyString(), any(ObservationBundle.class))).thenReturn(new ArrayList<>());
     }
 
     private ReadObservationOperation mockOperation()
@@ -208,8 +208,8 @@ public class ReadObservationExecutorTest
         return new HealthRecord("789");
     }
 
-    private QueryBundle mockQueryBundle()
+    private ObservationBundle mockQueryBundle()
     {
-        return new QueryBundle();
+        return new ObservationBundle();
     }
 }

@@ -23,7 +23,7 @@ import java.util.*;
  */
 public class MappingConfig
 {
-    public Map<String, MappingConfigData> mappings;
+    private Map<String, MappingConfigData> mappings;
 
     public MappingConfig(Map<String, MappingConfigData> mappings) {
         this.mappings = mappings;

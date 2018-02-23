@@ -25,7 +25,7 @@ public class QueryBundleTest
         JsonSerializer serializer = new JsonSerializer();
         String bundle = TestResourceUtils.readResource("ehr/QueryBundle.json");
 
-        QueryBundle deserialized = serializer.deserialize(bundle, QueryBundle.class);
+        ObservationBundle deserialized = serializer.deserialize(bundle, ObservationBundle.class);
         Assert.assertEquals(6, deserialized.getResultSet().size());
     }
 }

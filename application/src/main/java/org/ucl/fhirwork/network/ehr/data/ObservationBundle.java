@@ -13,20 +13,25 @@ package org.ucl.fhirwork.network.ehr.data;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompositionBundle
+/**
+ * Instances of this class are returned when querying an EHR server for
+ * observation information.
+ *
+ * @author Blair Butterworth
+ */
+public class ObservationBundle extends QueryBundle
 {
-    private List<CompositionResult> resultSet;
+    private List<ObservationResult> resultSet;
 
-    public CompositionBundle()
-    {
+    public ObservationBundle() {
         resultSet = new ArrayList<>();
     }
 
-    public CompositionBundle(List<CompositionResult> resultSet) {
+    public ObservationBundle(List<ObservationResult> resultSet) {
         this.resultSet = resultSet;
     }
 
-    public List<CompositionResult> getResultSet() {
+    public List<ObservationResult> getResultSet() {
         return resultSet;
     }
 }

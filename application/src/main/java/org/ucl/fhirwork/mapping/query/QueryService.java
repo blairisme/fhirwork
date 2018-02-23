@@ -17,6 +17,8 @@ import org.ucl.fhirwork.configuration.data.MappingConfigData;
 import org.ucl.fhirwork.configuration.exception.ConfigMissingException;
 
 import javax.inject.Inject;
+import java.util.Collection;
+import java.util.List;
 
 public class QueryService
 {
@@ -32,6 +34,12 @@ public class QueryService
     {
         MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
         return mappingConfig.hasData(code);
+    }
+
+    public Collection<String> getSupported()
+    {
+        MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
+        return mappingConfig.getCodes();
     }
 
     public String getQuery(String code, String ehrId)

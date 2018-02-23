@@ -11,6 +11,7 @@
 package org.ucl.fhirwork.network.fhir.servlet;
 
 import ca.uhn.fhir.model.dstu2.resource.Observation;
+import ca.uhn.fhir.rest.annotation.OptionalParam;
 import ca.uhn.fhir.rest.annotation.RequiredParam;
 import ca.uhn.fhir.rest.annotation.Search;
 import ca.uhn.fhir.rest.param.ReferenceParam;
@@ -31,9 +32,8 @@ import java.util.List;
  *
  * @author Blair Butterworth
  */
-@SuppressWarnings("unused")
-public class ObservationResourceProvider implements IResourceProvider
-{
+@SuppressWarnings({"unused", "unchecked"})
+public class ObservationResourceProvider implements IResourceProvider {
     private ExecutorService executorService;
 
     @Inject
@@ -47,13 +47,24 @@ public class ObservationResourceProvider implements IResourceProvider
     }
 
     @Search
-    @SuppressWarnings("unchecked")
-    public List<Observation> searchObservation(
-            @RequiredParam(name = Observation.SP_CODE) TokenOrListParam codes,
-            @RequiredParam(name = Observation.SP_PATIENT) ReferenceParam patient)
+    public List<Observation> searchByPatient(
+            @OptionalParam(name = Observation.SP_CODE) TokenOrListParam codes,
+            @RequiredParam(name = Observation.SP_PATIENT) ReferenceParam patient) {
+        return search(codes, patient);
+    }
+
+    @Search
+    public List<Observation> searchBySubject(
+            @OptionalParam(name = Observation.SP_CODE) TokenOrListParam codes,
+            @RequiredParam(name = Observation.SP_SUBJECT) ReferenceParam subject) {
+        return search(codes, subject);
+    }
+
+    private List<Observation> search(TokenOrListParam codes, ReferenceParam subject)
     {
         try {
-            ReadObservationOperation operation = new ReadObservationOperation(codes, patient);
+            codes = codes != null ? codes : new TokenOrListParam();
+            ReadObservationOperation operation = new ReadObservationOperation(codes, subject);
             return (List<Observation>)executorService.execute(operation);
         }
         catch (Throwable error) {

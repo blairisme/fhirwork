@@ -16,29 +16,35 @@ import ca.uhn.fhir.model.dstu2.composite.QuantityDt;
 import ca.uhn.fhir.model.dstu2.composite.ResourceReferenceDt;
 import ca.uhn.fhir.model.dstu2.resource.Observation;
 import ca.uhn.fhir.model.primitive.DateTimeDt;
-import org.ucl.fhirwork.network.ehr.data.QueryBundle;
-import org.ucl.fhirwork.network.ehr.data.QueryResult;
+import org.ucl.fhirwork.network.ehr.data.ObservationBundle;
+import org.ucl.fhirwork.network.ehr.data.ObservationResult;
 
 import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Instances of this class create {@link Observation} instances, usually by
+ * converting other objects.
+ *
+ * @author Blair Butterworth
+ */
 public class ObservationFactory
 {
     @Inject
     public ObservationFactory(){
     }
 
-    public List<Observation> fromQueryBundle(String loinc, String patientId, QueryBundle queryBundle)
+    public List<Observation> fromQueryBundle(String loinc, String patientId, ObservationBundle queryBundle)
     {
         List<Observation> result = new ArrayList<>(queryBundle.getResultSet().size());
-        for (QueryResult queryResult: queryBundle.getResultSet()){
+        for (ObservationResult queryResult: queryBundle.getResultSet()){
             result.add(fromQueryResult(patientId, loinc, queryResult));
         }
         return result;
     }
 
-    public Observation fromQueryResult(String patientId, String loinc, QueryResult queryResult)
+    public Observation fromQueryResult(String patientId, String loinc, ObservationResult queryResult)
     {
         Observation observation = new Observation();
         observation.setId(newId());
@@ -54,7 +60,7 @@ public class ObservationFactory
         return String.valueOf(ThreadLocalRandom.current().nextInt());
     }
 
-    private QuantityDt newQuantity(QueryResult queryResult)
+    private QuantityDt newQuantity(ObservationResult queryResult)
     {
         QuantityDt quantity = new QuantityDt();
         quantity.setValue(Double.parseDouble(queryResult.getMagnitude()));
@@ -93,7 +99,7 @@ public class ObservationFactory
         return subject;
     }
 
-    private DateTimeDt newEffective(QueryResult queryResult)
+    private DateTimeDt newEffective(ObservationResult queryResult)
     {
         return new DateTimeDt(queryResult.getDate());
     }

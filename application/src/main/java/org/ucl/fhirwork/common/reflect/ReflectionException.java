@@ -8,15 +8,17 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.network.ehr.data;
+package org.ucl.fhirwork.common.reflect;
 
 /**
- * Instances of this class are returned when an EHR query is made.
+ * Instances of this class are thrown if an error occurs while preforming
+ * reflection.
  *
  * @author Blair Butterworth
  */
-public abstract class QueryBundle
+public class ReflectionException extends RuntimeException
 {
-    public QueryBundle() {
+    public ReflectionException(Throwable cause) {
+        super(cause);
     }
 }

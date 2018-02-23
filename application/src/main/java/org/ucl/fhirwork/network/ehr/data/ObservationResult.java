@@ -10,13 +10,19 @@
 
 package org.ucl.fhirwork.network.ehr.data;
 
-public class QueryResult
+/**
+ * Instances of this class contain represent the information contained in a
+ * single EHR observation entry.
+ *
+ * @author Blair Butterworth
+ */
+public class ObservationResult
 {
     private String date;
     private String magnitude;
     private String unit;
 
-    public QueryResult() {
+    public ObservationResult() {
     }
 
     public String getDate() {

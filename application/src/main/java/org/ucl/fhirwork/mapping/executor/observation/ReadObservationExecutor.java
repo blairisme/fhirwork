@@ -25,6 +25,7 @@ import org.ucl.fhirwork.mapping.data.ObservationFactory;
 import org.ucl.fhirwork.mapping.query.QueryService;
 import org.ucl.fhirwork.network.NetworkService;
 import org.ucl.fhirwork.network.ehr.data.HealthRecord;
+import org.ucl.fhirwork.network.ehr.data.ObservationBundle;
 import org.ucl.fhirwork.network.ehr.data.QueryBundle;
 import org.ucl.fhirwork.network.ehr.server.EhrServer;
 import org.ucl.fhirwork.network.empi.data.Identifier;
@@ -39,6 +40,8 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static org.ucl.fhirwork.network.fhir.data.TokenListUtils.getCodeElements;
 
 /**
  * Instances of this class convert the read observation FHIR operation into the
@@ -114,8 +117,24 @@ public class ReadObservationExecutor implements Executor
 
     private List<Observation> getObservations(TokenOrListParam tokenList, String ehrId, String patientId) throws RestException
     {
+        if (! tokenList.getListAsCodings().isEmpty()){
+            return getObservations(getCodeElements(tokenList, TokenSystem.Loinc), ehrId, patientId);
+        }
+        return getAllObservations(ehrId, patientId);
+    }
+
+    private List<Observation> getAllObservations(String ehrId, String patientId) throws RestException
+    {
         List<Observation> result = new ArrayList<>();
-        List<String> codes = TokenListUtils.getCodeElements(tokenList, TokenSystem.Loinc);
+        for (String code: queryService.getSupported()) {
+            result.addAll(getObservations(code, ehrId, patientId));
+        }
+        return result;
+    }
+
+    private List<Observation> getObservations(List<String> codes, String ehrId, String patientId) throws RestException
+    {
+        List<Observation> result = new ArrayList<>();
         for (String code: codes) {
             result.addAll(getObservations(code, ehrId, patientId));
         }
@@ -126,7 +145,7 @@ public class ReadObservationExecutor implements Executor
     {
         if (queryService.isSupported(code)) {
             String query = queryService.getQuery(code, ehrId);
-            QueryBundle bundle = ehrServer.query(query);
+            ObservationBundle bundle = ehrServer.query(query, ObservationBundle.class);
             return observationFactory.fromQueryBundle(code, patientId, bundle);
         }
         return Collections.emptyList();

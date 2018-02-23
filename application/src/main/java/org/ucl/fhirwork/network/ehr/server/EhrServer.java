@@ -12,9 +12,8 @@ package org.ucl.fhirwork.network.ehr.server;
 
 import com.google.common.collect.ImmutableMap;
 
-
-
 import org.ucl.fhirwork.common.http.*;
+import org.ucl.fhirwork.common.reflect.TypeUtils;
 import org.ucl.fhirwork.common.serialization.JsonSerializer;
 import org.ucl.fhirwork.common.serialization.Serializer;
 import org.ucl.fhirwork.network.ehr.data.SessionToken;
@@ -31,7 +30,7 @@ import static org.ucl.fhirwork.network.ehr.server.EhrHeader.SessionId;
 import static org.ucl.fhirwork.network.ehr.server.EhrParameter.*;
 import static org.ucl.fhirwork.network.ehr.server.EhrResource.*;
 import org.ucl.fhirwork.network.ehr.data.*;
-
+import org.ucl.fhirwork.network.ehr.exception.MissingHealthRecordException;
 
 /**
  * Instances of this class represent an EHR server. Methods exists to create,
@@ -50,7 +49,8 @@ public class EhrServer
     private String password;
 
     @Inject
-    public EhrServer(Provider<RestServer> serverFactory){
+    public EhrServer(Provider<RestServer> serverFactory)
+    {
         this.serverFactory = serverFactory;
     }
 
@@ -62,14 +62,15 @@ public class EhrServer
      * @param username  the name of an account on the EMPI server.
      * @param password  the password of an EMPI account.
      */
-    public synchronized void setConnectionDetails(String address, String username, String password) {
+    public synchronized void setConnectionDetails(String address, String username, String password)
+    {
         this.address = address;
         this.username = username;
         this.password = password;
         this.server = null;
     }
 
-    public HealthRecord getEhr(String id, String namespace) throws RestException
+    public HealthRecord getEhr(String id, String namespace) throws RestException, MissingHealthRecordException
     {
         RestRequest request = getServer().get(Ehr);
         request.setParameters(ImmutableMap.of(SubjectId, id, SubjectNamespace, namespace));
@@ -78,34 +79,16 @@ public class EhrServer
         return response.asType(HealthRecord.class);
     }
 
-    public List<Composition> getCompositions(String ehrId) throws RestException, InstantiationException, IllegalAccessException {
-        List<Composition> compositions = new ArrayList<>();
-        CompositionBundle bundle = query("select a from EHR [ehr_id/value='" + ehrId + "'] contains COMPOSITION a",CompositionBundle.class);
-        for (CompositionResult compositionResult: bundle.getResultSet()) {
-            compositions.add(compositionResult.getComposition());
-        }
-        return compositions;
-    }
-
-    public QueryBundle query(String query) throws RestException
+    public <T extends QueryBundle> T query(String query, Class<T> type) throws RestException
     {
         RestRequest request = getServer().get(Query);
         request.setParameters(of(Aql, query));
 
         RestResponse response = request.make(HandleFailure.ByException);
-        return response.getStatusCode() != 204 ? response.asType(QueryBundle.class) : new QueryBundle();
+        return response.getStatusCode() != 204 ? response.asType(type) : TypeUtils.newInstance(type);
     }
 
-    public <T> T query(String query, Class<T> type) throws RestException, InstantiationException, IllegalAccessException
-    {
-        RestRequest request = getServer().get(Query);
-        request.setParameters(of(Aql, query));
-
-        RestResponse response = request.make(HandleFailure.ByException);
-        return response.getStatusCode() != 204 ? response.asType(type) : type.newInstance();
-    }
-
-    public synchronized RestServer getServer() throws RestException
+    private synchronized RestServer getServer() throws RestException
     {
         if (server == null) {
             String sessionId = getSessionId();
