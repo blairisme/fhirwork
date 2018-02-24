@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="resources/network.css"/>
 </head>
 <body>
-    <div class"container">
+    <div class="container">
         <div class="navigation">
             <a class="link" href="/configuration/mapping">
                 <div class="icon mapping"></div>
