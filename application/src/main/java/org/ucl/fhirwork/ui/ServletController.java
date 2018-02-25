@@ -45,13 +45,7 @@ public class ServletController
         this.configuration = applicationService.get(ConfigService.class);
     }
 
-    @RequestMapping(value = "/mapping", method = RequestMethod.GET)
-    public String mapping(ModelMap model)
-    {       
-    	MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
-        model.addAttribute("allLoinc", mappingConfig.getCodes());
-        return "mapping";
-    }
+ 
 
     @ResponseBody
     @RequestMapping(value = "/mapping/content", method = RequestMethod.GET)
@@ -68,10 +62,31 @@ public class ServletController
     	return data;
     }
     
+    @RequestMapping(value = "/mapping", method = RequestMethod.GET)
+    public String mapping(ModelMap model)
+    {       
+    	MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
+    	MappingConfigData data = new MappingConfigData("", "", "", "", "");
+        model.addAttribute("allLoinc", mappingConfig.getCodes());
+        model.addAttribute("LoincData", data);
+        model.addAttribute("CurrentLoinc", "");
+        return "mapping";
+    }
+    
     @RequestMapping(value = "/mapping", method = RequestMethod.POST)
-    public String mappingSubmit(ModelMap model)
+    public String mappingSubmit(@ModelAttribute MappingConfigData data, @RequestParam("CurrentLoinc") String code,ModelMap model)
     {
-    	//TODO
+  
+    	  System.out.println(code);
+    	  MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
+    	  mappingConfig.setData(code, data);
+        configuration.setConfig(ConfigType.Mapping, mappingConfig);
+
+    
+        model.addAttribute("allLoinc", mappingConfig.getCodes());
+        model.addAttribute("LoincData", data);
+        model.addAttribute("CurrentLoinc", code);
+    	  
         return "mapping";
     }
     

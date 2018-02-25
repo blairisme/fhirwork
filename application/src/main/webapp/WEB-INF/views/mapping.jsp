@@ -20,27 +20,30 @@
             <tbody>
                 <tr class="property">
                     <th><label for="text" class="label">Text</label></th>
-                    <td><input type="text" id="text" value="" class="textbox"/></td>
+                    <td><input type="text" id="text" name="text" value="${LoincData.text}" class="textbox"/></td>
                 </tr>
                 <tr class="property">
                     <th><label for="archetype" class="label">Archetype</label></th>
-                    <td><input type="text" id="archetype" value="" class="textbox"/></td>
+                    <td><input type="text" id="archetype" name="archetype" value="${LoincData.archetype}" class="textbox"/></td>
                 </tr>
                 <tr class="property">
                     <th><label for="date" class="label">Date</label></th>
-                    <td><input type="text" id="date" value="" class="textbox"/></td>
+                    <td><input type="text" id="date" name="date" value="${LoincData.date}" class="textbox"/></td>
                 </tr>
                 <tr class="property">
                     <th><label for="magnitude" class="label">Magnitude</label></th>
-                    <td><input type="text" id="magnitude" value="" class="textbox"/></td>
+                    <td><input type="text" id="magnitude" name="magnitude" value="${LoincData.magnitude}" class="textbox"/></td>
                 </tr>
                 <tr class="property">
                     <th><label for="unit" class="label">Unit</label></th>
-                    <td><input type="text" id="unit" value="" class="textbox"/></td>
+                    <td><input type="text" id="unit" name="unit" value="${LoincData.unit}" class="textbox"/></td>
+                    		
                 </tr>
+                
             </tbody>
         </table>
         <input type="submit" value="Submit" class="button"/>
+        <input type="text" id="CurrentLoinc" name="CurrentLoinc" value="${CurrentLoinc}" class="textbox" style="visibility:hidden;"/>
     </form>
     
     <script>
@@ -52,9 +55,10 @@
                 type:"GET",
                 success:function(data){
                 	updateForm(data);
-                }
-            });
-        }
+                	 }
+            	});
+            $("#CurrentLoinc").val(loinc);
+        	}
         
         function updateForm(data){
             document.getElementById("text").value = data[0];
@@ -62,6 +66,7 @@
             document.getElementById("date").value = data[2];
             document.getElementById("magnitude").value = data[3];
             document.getElementById("unit").value = data[4];
+          
         }
     </script>
 </body>

@@ -26,12 +26,7 @@ public class MappingConfigData
     private String magnitude;
     private String unit;
 
-    public MappingConfigData(
-        String text,
-        String archetype,
-        String date,
-        String magnitude,
-        String unit)
+    public MappingConfigData(String text,String archetype,String date,String magnitude,String unit)
     {
         this.text = text;
         this.archetype = archetype;
