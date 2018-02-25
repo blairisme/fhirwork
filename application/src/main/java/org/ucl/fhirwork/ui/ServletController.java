@@ -76,10 +76,9 @@ public class ServletController
     @RequestMapping(value = "/mapping", method = RequestMethod.POST)
     public String mappingSubmit(@ModelAttribute MappingConfigData data, @RequestParam("CurrentLoinc") String code,ModelMap model)
     {
-  
-    	  System.out.println(code);
+    
     	  MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
-    	  mappingConfig.setData(code, data);
+    	  mappingConfig = mappingConfig.setData(code, data);
         configuration.setConfig(ConfigType.Mapping, mappingConfig);
 
     

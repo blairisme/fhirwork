@@ -113,6 +113,7 @@ public class ConfigService
     }
 
     private void writeConfig(ConfigType type, Object value, Class clazz) {
+   
         try (Writer writer = fileManager.getConfigWriter(type)) {
             serializer.serialize(value, clazz, writer);
         }
