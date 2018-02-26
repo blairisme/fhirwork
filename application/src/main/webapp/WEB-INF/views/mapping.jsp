@@ -4,11 +4,11 @@
 <html>
 <head>
  	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-   <title>Fhirwork Mapping</title>
-   <link rel="stylesheet" type="text/css" href="resources/reset.css"/>
-   <link rel="stylesheet" type="text/css" href="resources/general.css"/>
-   <link rel="stylesheet" type="text/css" href="resources/network.css"/>
-   <script src="//lib.sinaapp.com/js/jquery/1.12.4/jquery-1.12.4.min.js"></script>
+    <title>Fhirwork Mapping</title>
+    <link rel="stylesheet" type="text/css" href="resources/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="resources/general.css"/>
+    <link rel="stylesheet" type="text/css" href="resources/network.css"/>
+    <script src="//lib.sinaapp.com/js/jquery/1.12.4/jquery-1.12.4.min.js"></script>
 </head>
 <body>
 	<div class="container">
@@ -24,15 +24,16 @@
       </div>
       
       <div class="settings">
-			<h1 class="title">FHIR Mappings</h1>
-		   <select id="loinc-selection" onchange="requestMappingConfig();">
-		       <%for(String loinc: (Collection<String>)request.getAttribute("allLoinc")){%>
-		           <option value="<%out.print(loinc);%>"> <%out.print(loinc);%> </option>
-		       <%}%>
-		   </select>
+		  <h1 class="title">FHIR Mappings</h1>
+		  <select id="loinc-selection" onchange="requestMappingConfig();">
+		      <option value="default" selected="selected">(Loinc Code)</option>
+		      <%for(String loinc: (Collection<String>)request.getAttribute("allLoinc")){%>
+		          <option value="<%out.print(loinc);%>"> <%out.print(loinc);%> </option>
+		      <%}%>
+		  </select>
 		    
-			<form action="mapping" method="POST">
-		   	<table>
+		  <form action="mapping" method="POST">
+		      <table>
 		          <tbody>
 		              <tr class="property">
 		                  <th><label for="text" class="label">Text</label></th>
@@ -66,15 +67,23 @@
    <script>
        function requestMappingConfig(){
            var loinc = document.getElementById('loinc-selection').value;
-           $.ajax({
-               url:"mapping/content",
-               data:{"loinc":loinc},
-               type:"GET",
-               success:function(data){
-               	updateForm(data);
-               	 }
-           	});
-           $("#CurrentLoinc").val(loinc);
+           if(loinc != "default"){
+        	   $.ajax({
+                   url:"mapping/content",
+                   data:{"loinc":loinc},
+                   type:"GET",
+                   success:function(data){
+                	    updateForm(data);
+                   },
+                   error:function(){
+                	   alert("The mapping data has not been successfully fetched. Please try again.");
+                	   resetSelection();
+                   }
+                });
+               $("#CurrentLoinc").val(loinc);
+           }
+           else
+        	   resetSelection();
        	}
        
        function updateForm(data){
@@ -83,6 +92,15 @@
            document.getElementById("date").value = data[2];
            document.getElementById("magnitude").value = data[3];
            document.getElementById("unit").value = data[4];
+       }
+       
+       function resetSelection(){
+    	   document.getElementById("loinc-selection").value = "default"; 
+           document.getElementById("text").value = "";
+           document.getElementById("archetype").value = "";
+           document.getElementById("date").value = "";
+           document.getElementById("magnitude").value = "";
+           document.getElementById("unit").value = "";
        }
    </script>
 </body>

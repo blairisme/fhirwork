@@ -45,8 +45,6 @@ public class ServletController
         this.configuration = applicationService.get(ConfigService.class);
     }
 
- 
-
     @ResponseBody
     @RequestMapping(value = "/mapping/content", method = RequestMethod.GET)
     public ArrayList<String> mappingConfigContent(@RequestParam("loinc") String loinc, ModelMap model)
@@ -66,27 +64,27 @@ public class ServletController
     public String mapping(ModelMap model)
     {       
     	MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
-    	MappingConfigData data = new MappingConfigData("", "", "", "", "");
-        model.addAttribute("allLoinc", mappingConfig.getCodes());
-        model.addAttribute("LoincData", data);
-        model.addAttribute("CurrentLoinc", "");
+    	initializeMappingModelMap(mappingConfig, model);
+    	
         return "mapping";
     }
     
     @RequestMapping(value = "/mapping", method = RequestMethod.POST)
     public String mappingSubmit(@ModelAttribute MappingConfigData data, @RequestParam("CurrentLoinc") String code,ModelMap model)
     {
-    
-    	  MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
-    	  mappingConfig = mappingConfig.setData(code, data);
+    	MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
+        initializeMappingModelMap(mappingConfig, model);
+        
+        mappingConfig = mappingConfig.setData(code, data);
         configuration.setConfig(ConfigType.Mapping, mappingConfig);
-
-    
-        model.addAttribute("allLoinc", mappingConfig.getCodes());
-        model.addAttribute("LoincData", data);
-        model.addAttribute("CurrentLoinc", code);
-    	  
+        
         return "mapping";
+    }
+    
+    private void initializeMappingModelMap(MappingConfig mappingConfig, ModelMap model){
+        model.addAttribute("allLoinc", mappingConfig.getCodes());
+        model.addAttribute("LoincData", new MappingConfigData("", "", "", "", ""));
+        model.addAttribute("CurrentLoinc", "");
     }
     
     @RequestMapping(value = "/network", method = RequestMethod.GET)
