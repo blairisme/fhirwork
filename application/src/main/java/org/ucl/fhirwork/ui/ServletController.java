@@ -62,28 +62,29 @@ public class ServletController
     public String mapping(ModelMap model)
     {       
     	MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
-        Map<String, BasicMappingConfig> simpleMapping = mappingConfig.getBasic();
-        BasicMappingConfig data = new BasicMappingConfig("", "", "", "", "");
-        model.addAttribute("allLoinc", simpleMapping.keySet());
-        model.addAttribute("LoincData", data);
-        model.addAttribute("CurrentLoinc", "");
+    	initializeMappingModelMap(mappingConfig, model);
+    	
         return "mapping";
     }
     
     @RequestMapping(value = "/mapping", method = RequestMethod.POST)
     public String mappingSubmit(@ModelAttribute BasicMappingConfig data, @RequestParam("CurrentLoinc") String code,ModelMap model)
     {
-        MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
-        Map<String, BasicMappingConfig> simpleMapping = mappingConfig.getBasic();
-        simpleMapping.put(code, data);
+    	MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
+        initializeMappingModelMap(mappingConfig, model);
+
+        Map<String, BasicMappingConfig> basicConfig = mappingConfig.getBasic();
+        basicConfig.put(code, data);
 
         configuration.setConfig(ConfigType.Mapping, mappingConfig);
-
-        model.addAttribute("allLoinc", simpleMapping.keySet());
-        model.addAttribute("LoincData", data);
-        model.addAttribute("CurrentLoinc", code);
-    	  
         return "mapping";
+    }
+    
+    private void initializeMappingModelMap(MappingConfig mappingConfig, ModelMap model){
+        Map<String, BasicMappingConfig> basicConfig = mappingConfig.getBasic();
+        model.addAttribute("allLoinc", basicConfig.keySet());
+        model.addAttribute("LoincData", new BasicMappingConfig("", "", "", "", ""));
+        model.addAttribute("CurrentLoinc", "");
     }
     
     @RequestMapping(value = "/network", method = RequestMethod.GET)

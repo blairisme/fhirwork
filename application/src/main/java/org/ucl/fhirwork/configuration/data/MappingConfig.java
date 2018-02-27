@@ -71,7 +71,16 @@ public class MappingConfig
     }
 
     public Collection<String> getCodes(){
-    	return this.mappings.keySet();
+    	ArrayList<String> codes = new ArrayList<String>();
+    	codes.addAll(this.mappings.keySet());
+    	Collections.sort(codes,
+                new Comparator<String>(){
+					@Override
+					public int compare(String arg0, String arg1) {
+						return arg0.compareTo(arg1);
+					}        
+                });
+    	return codes;
     }
     */
 }
