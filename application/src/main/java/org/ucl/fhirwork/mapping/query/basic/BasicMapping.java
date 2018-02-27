@@ -1,91 +1,80 @@
+/*
+ * FHIRWork (c) 2018 - Blair Butterworth, Abdul-Qadir Ali, Xialong Chen,
+ * Chenghui Fan, Alperen Karaoglu, Jiaming Zhou
+ *
+ * This work is licensed under the MIT License. To view a copy of this
+ * license, visit
+ *
+ *      https://opensource.org/licenses/MIT
+ */
+
 package org.ucl.fhirwork.mapping.query.basic;
 
+import ca.uhn.fhir.model.dstu2.composite.QuantityDt;
 import ca.uhn.fhir.model.dstu2.resource.Observation;
-import org.ucl.fhirwork.configuration.data.SimpleMappingConfig;
+import ca.uhn.fhir.model.primitive.DateTimeDt;
+import org.ucl.fhirwork.configuration.data.BasicMappingConfig;
 import org.ucl.fhirwork.mapping.data.ObservationFactory;
 import org.ucl.fhirwork.mapping.query.MappingProvider;
 import org.ucl.fhirwork.network.ehr.data.ObservationBundle;
+import org.ucl.fhirwork.network.ehr.data.QueryBuilder;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class BasicMapping implements MappingProvider
 {
-    private SimpleMappingConfig configuration;
+    private BasicMappingConfig configuration;
     private ObservationFactory observationFactory;
 
     @Inject
-    public BasicMapping(ObservationFactory observationFactory)
-    {
+    public BasicMapping(ObservationFactory observationFactory) {
         this.observationFactory = observationFactory;
     }
 
-    public void setConfiguration(SimpleMappingConfig configuration)
-    {
+    public void setConfiguration(BasicMappingConfig configuration) {
         this.configuration = configuration;
     }
 
     @Override
     public String getQuery(String ehrId)
     {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(getSelectStatement());
-        stringBuilder.append(getFromStatement(ehrId));
-        stringBuilder.append(getContainsStatement());
-        return stringBuilder.toString();
+        QueryBuilder query = new QueryBuilder();
+        query.appendSelectStatement(configuration.getText(), configuration.getDate(), "date");
+        query.appendSelectStatement(configuration.getText(), configuration.getMagnitude(), "magnitude");
+        query.appendSelectStatement(configuration.getText(), configuration.getUnit(), "unit");
+        query.appendFromStatement("EHR", "ehr_id/value='" + ehrId + "'");
+        query.appendContainsStatement("COMPOSITION", "c");
+        query.appendContainsStatement("OBSERVATION", configuration.getText(), configuration.getArchetype());
+        return query.build();
     }
 
     @Override
-    public List<Observation> getObservations(String patientId, ObservationBundle result)
+    public List<Observation> getObservations(String code, String patient, ObservationBundle queryBundle)
     {
-        return observationFactory.fromQueryBundle(patientId, "", result);
+        List<Observation> result = new ArrayList<>(queryBundle.getResultSet().size());
+        for (Map<String, String> queryResult: queryBundle.getResultSet()){
+            QuantityDt quantity = newQuantity(queryResult);
+            DateTimeDt effective = newEffective(queryResult);
+            result.add(observationFactory.from(patient, code, quantity, effective));
+        }
+        return result;
     }
 
-    private String getSelectStatement()
+    private QuantityDt newQuantity(Map<String, String> queryResult)
     {
-        String text = configuration.getText();
-
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("select ");
-        stringBuilder.append(getSelectStatement(text, configuration.getDate(), "date"));
-        stringBuilder.append(", ");
-        stringBuilder.append(getSelectStatement(text, configuration.getMagnitude(), "magnitude"));
-        stringBuilder.append(", ");
-        stringBuilder.append(getSelectStatement(text, configuration.getUnit(), "unit"));
-        stringBuilder.append(" ");
-
-        return stringBuilder.toString();
+        QuantityDt quantity = new QuantityDt();
+        quantity.setValue(Double.parseDouble(queryResult.get("magnitude")));
+        quantity.setUnit(queryResult.get("unit"));
+        quantity.setCode(queryResult.get("unit"));
+        quantity.setSystem("http://unitsofmeasure.org");
+        return quantity;
     }
 
-    private String getSelectStatement(String text, String path, String label)
+    private DateTimeDt newEffective(Map<String, String> queryResult)
     {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(text);
-        stringBuilder.append("/");
-        stringBuilder.append(path);
-        stringBuilder.append(" as ");
-        stringBuilder.append(label);
-        return stringBuilder.toString();
-    }
-
-    private String getFromStatement(String ehrId)
-    {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("from EHR [ehr_id/value='");
-        stringBuilder.append(ehrId);
-        stringBuilder.append("'] ");
-        return stringBuilder.toString();
-    }
-
-    private String getContainsStatement()
-    {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("contains COMPOSITION c ");
-        stringBuilder.append("contains OBSERVATION ");
-        stringBuilder.append(configuration.getText());
-        stringBuilder.append("[");
-        stringBuilder.append(configuration.getArchetype());
-        stringBuilder.append("]");
-        return stringBuilder.toString();
+        return new DateTimeDt(queryResult.get("date"));
     }
 }
