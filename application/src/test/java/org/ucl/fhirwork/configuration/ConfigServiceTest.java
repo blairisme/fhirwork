@@ -18,6 +18,7 @@ import org.ucl.fhirwork.configuration.exception.ConfigIoException;
 import org.ucl.fhirwork.configuration.persistence.ConfigFileManager;
 
 import java.io.File;
+import java.util.Map;
 
 public class ConfigServiceTest
 {
@@ -42,7 +43,8 @@ public class ConfigServiceTest
 
         ConfigService configService = new ConfigService(configFileManager);
         MappingConfig mappingConfig = configService.getConfig(ConfigType.Mapping);
-        MappingConfigData mappingData = mappingConfig.getData("3141-9");
+        Map<String, BasicMappingConfig> simpleConfig = mappingConfig.getBasic();
+        BasicMappingConfig mappingData = simpleConfig.get("3141-9");
 
         Assert.assertEquals("openEHR-EHR-OBSERVATION.body_weight.v1", mappingData.getArchetype());
     }

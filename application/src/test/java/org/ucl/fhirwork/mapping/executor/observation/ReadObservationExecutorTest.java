@@ -20,8 +20,8 @@ import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.configuration.ConfigService;
 import org.ucl.fhirwork.configuration.data.ConfigType;
 import org.ucl.fhirwork.configuration.data.GeneralConfig;
-import org.ucl.fhirwork.mapping.data.ObservationFactory;
-import org.ucl.fhirwork.mapping.query.QueryService;
+import org.ucl.fhirwork.mapping.query.MappingProvider;
+import org.ucl.fhirwork.mapping.query.MappingService;
 import org.ucl.fhirwork.network.NetworkService;
 import org.ucl.fhirwork.network.ehr.data.HealthRecord;
 import org.ucl.fhirwork.network.ehr.data.ObservationBundle;
@@ -51,9 +51,8 @@ import static org.mockito.Mockito.never;
 public class ReadObservationExecutorTest
 {
     private NetworkService networkService;
-    private QueryService queryService;
+    private MappingService mappingService;
     private ConfigService configService;
-    private ObservationFactory observationFactory;
     private ReadObservationExecutor executor;
 
     @Before
@@ -61,9 +60,8 @@ public class ReadObservationExecutorTest
     {
         configService = MockConfigService.get();
         networkService = MockNetworkService.get();
-        queryService = mock(QueryService.class);
-        observationFactory = mock(ObservationFactory.class);
-        executor = new ReadObservationExecutor(networkService, configService, queryService, observationFactory);
+        mappingService = mock(MappingService.class);
+        executor = new ReadObservationExecutor(networkService, configService, mappingService);
         setupMockBehaviour();
     }
 
@@ -175,9 +173,12 @@ public class ReadObservationExecutorTest
         when(ehrServer.getEhr(anyString(), anyString())).thenReturn(mockHealthRecord());
         when(ehrServer.query(anyString(), any())).thenReturn(mockQueryBundle());
 
-        when(queryService.isSupported(anyString())).thenReturn(true);
-        when(queryService.getQuery(anyString(), anyString())).thenReturn("query");
-        when(observationFactory.fromQueryBundle(anyString(), anyString(), any(ObservationBundle.class))).thenReturn(new ArrayList<>());
+        MappingProvider provider = mock(MappingProvider.class);
+        when(provider.getQuery(anyString())).thenReturn("query");
+        when(provider.getObservations(anyString(), anyString(), any())).thenReturn(new ArrayList<>());
+
+        when(mappingService.isSupported(anyString())).thenReturn(true);
+        when(mappingService.getMappingProvider(anyString())).thenReturn(provider);
     }
 
     private ReadObservationOperation mockOperation()

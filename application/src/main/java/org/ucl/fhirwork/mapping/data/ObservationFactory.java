@@ -35,13 +35,15 @@ public class ObservationFactory
     public ObservationFactory(){
     }
 
-    public List<Observation> fromQueryBundle(String loinc, String patientId, ObservationBundle queryBundle)
+    public Observation from(String patientId, String code, QuantityDt quantity, DateTimeDt effective)
     {
-        List<Observation> result = new ArrayList<>(queryBundle.getResultSet().size());
-        for (ObservationResult queryResult: queryBundle.getResultSet()){
-            result.add(fromQueryResult(patientId, loinc, queryResult));
-        }
-        return result;
+        Observation observation = new Observation();
+        observation.setId(newId());
+        observation.setSubject(newSubject(patientId));
+        observation.setValue(quantity);
+        observation.setCode(newCode(code));
+        observation.setEffective(effective);
+        return observation;
     }
 
     public Observation fromQueryResult(String patientId, String loinc, ObservationResult queryResult)

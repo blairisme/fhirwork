@@ -12,6 +12,7 @@ package org.ucl.fhirwork.network.ehr.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Instances of this class are returned when querying an EHR server for
@@ -21,17 +22,18 @@ import java.util.List;
  */
 public class ObservationBundle extends QueryBundle
 {
-    private List<ObservationResult> resultSet;
+    //private List<ObservationResult> resultSet;
+    private List<Map<String, String>> resultSet;
 
     public ObservationBundle() {
         resultSet = new ArrayList<>();
     }
 
-    public ObservationBundle(List<ObservationResult> resultSet) {
+    public ObservationBundle(List<Map<String, String>> resultSet) {
         this.resultSet = resultSet;
     }
 
-    public List<ObservationResult> getResultSet() {
+    public List<Map<String, String>> getResultSet() {
         return resultSet;
     }
 }

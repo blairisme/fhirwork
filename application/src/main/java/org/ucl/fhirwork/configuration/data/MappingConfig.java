@@ -23,8 +23,26 @@ import java.util.*;
  */
 public class MappingConfig
 {
-    private Map<String, MappingConfigData> mappings;
+    private Map<String, BasicMappingConfig> basic;
+    private Map<String, ScriptedMappingConfig> scripted;
 
+    public MappingConfig(
+        Map<String, BasicMappingConfig> basic,
+        Map<String, ScriptedMappingConfig> scripted)
+    {
+        this.basic = basic;
+        this.scripted = scripted;
+    }
+
+    public Map<String, BasicMappingConfig> getBasic() {
+        return basic;
+    }
+
+    public Map<String, ScriptedMappingConfig> getScripted() {
+        return scripted;
+    }
+
+/*
     public MappingConfig(Map<String, MappingConfigData> mappings) {
         this.mappings = mappings;
     }
@@ -55,4 +73,5 @@ public class MappingConfig
     public Collection<String> getCodes(){
     	return this.mappings.keySet();
     }
+    */
 }

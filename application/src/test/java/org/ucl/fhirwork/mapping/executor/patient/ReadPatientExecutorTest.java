@@ -67,7 +67,7 @@ public class ReadPatientExecutorTest
 //    @Test (expected = IllegalArgumentException.class)
 //    public void invokeWithoutOperationTest() throws Exception
 //    {
-//        executor.invoke();
+//        mapping.invoke();
 //    }
 
     @Test (expected = ExecutionException.class)

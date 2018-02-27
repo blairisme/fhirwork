@@ -28,6 +28,7 @@ public class MappingConfigTest
         String mapping = TestResourceUtils.readResource("configuration/mapping.json");
 
         MappingConfig deserialized = serializer.deserialize(mapping, MappingConfig.class);
-        Assert.assertEquals(4, deserialized.getMappings().size());
+        Assert.assertEquals(4, deserialized.getBasic().size());
+        Assert.assertEquals(1, deserialized.getScripted().size());
     }
 }

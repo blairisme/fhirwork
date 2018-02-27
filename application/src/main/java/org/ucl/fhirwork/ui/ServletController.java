@@ -24,11 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.ucl.fhirwork.ApplicationService;
 import org.ucl.fhirwork.configuration.*;
-import org.ucl.fhirwork.configuration.data.ConfigType;
-import org.ucl.fhirwork.configuration.data.MappingConfig;
-import org.ucl.fhirwork.configuration.data.MappingConfigData;
-import org.ucl.fhirwork.configuration.data.NetworkConfig;
-import org.ucl.fhirwork.configuration.data.NetworkConfigData;
+import org.ucl.fhirwork.configuration.data.*;
 
 @Controller
 @RequestMapping("/")
@@ -45,14 +41,14 @@ public class ServletController
         this.configuration = applicationService.get(ConfigService.class);
     }
 
- 
-
     @ResponseBody
     @RequestMapping(value = "/mapping/content", method = RequestMethod.GET)
     public ArrayList<String> mappingConfigContent(@RequestParam("loinc") String loinc, ModelMap model)
     {
     	MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
-    	MappingConfigData mappingConfigData = mappingConfig.getData(loinc);
+        Map<String, BasicMappingConfig> simpleMapping = mappingConfig.getBasic();
+        BasicMappingConfig mappingConfigData = simpleMapping.get(loinc);
+
     	ArrayList<String> data = new ArrayList<String>();
     	data.add(mappingConfigData.getText());
     	data.add(mappingConfigData.getArchetype());
@@ -66,23 +62,24 @@ public class ServletController
     public String mapping(ModelMap model)
     {       
     	MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
-    	MappingConfigData data = new MappingConfigData("", "", "", "", "");
-        model.addAttribute("allLoinc", mappingConfig.getCodes());
+        Map<String, BasicMappingConfig> simpleMapping = mappingConfig.getBasic();
+        BasicMappingConfig data = new BasicMappingConfig("", "", "", "", "");
+        model.addAttribute("allLoinc", simpleMapping.keySet());
         model.addAttribute("LoincData", data);
         model.addAttribute("CurrentLoinc", "");
         return "mapping";
     }
     
     @RequestMapping(value = "/mapping", method = RequestMethod.POST)
-    public String mappingSubmit(@ModelAttribute MappingConfigData data, @RequestParam("CurrentLoinc") String code,ModelMap model)
+    public String mappingSubmit(@ModelAttribute BasicMappingConfig data, @RequestParam("CurrentLoinc") String code,ModelMap model)
     {
-    
-    	  MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
-    	  mappingConfig = mappingConfig.setData(code, data);
+        MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
+        Map<String, BasicMappingConfig> simpleMapping = mappingConfig.getBasic();
+        simpleMapping.put(code, data);
+
         configuration.setConfig(ConfigType.Mapping, mappingConfig);
 
-    
-        model.addAttribute("allLoinc", mappingConfig.getCodes());
+        model.addAttribute("allLoinc", simpleMapping.keySet());
         model.addAttribute("LoincData", data);
         model.addAttribute("CurrentLoinc", code);
     	  

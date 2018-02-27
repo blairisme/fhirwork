@@ -22,10 +22,12 @@ import org.ucl.fhirwork.configuration.ConfigService;
 import org.ucl.fhirwork.configuration.data.ConfigType;
 import org.ucl.fhirwork.configuration.data.GeneralConfig;
 import org.ucl.fhirwork.mapping.data.ObservationFactory;
-import org.ucl.fhirwork.mapping.query.QueryService;
+import org.ucl.fhirwork.mapping.query.MappingProvider;
+import org.ucl.fhirwork.mapping.query.MappingService;
 import org.ucl.fhirwork.network.NetworkService;
 import org.ucl.fhirwork.network.ehr.data.HealthRecord;
 import org.ucl.fhirwork.network.ehr.data.ObservationBundle;
+import org.ucl.fhirwork.network.ehr.data.ObservationResult;
 import org.ucl.fhirwork.network.ehr.data.QueryBundle;
 import org.ucl.fhirwork.network.ehr.server.EhrServer;
 import org.ucl.fhirwork.network.empi.data.Identifier;
@@ -54,9 +56,8 @@ public class ReadObservationExecutor implements Executor
 {
     private EhrServer ehrServer;
     private EmpiServer empiServer;
-    private QueryService queryService;
+    private MappingService mappingService;
     private ConfigService configService;
-    private ObservationFactory observationFactory;
     private ReferenceParam patient;
     private TokenOrListParam tokenList;
 
@@ -64,14 +65,12 @@ public class ReadObservationExecutor implements Executor
     public ReadObservationExecutor(
         NetworkService networkService,
         ConfigService configService,
-        QueryService queryService,
-        ObservationFactory observationFactory)
+        MappingService mappingService)
     {
         this.ehrServer = networkService.getEhrServer();
         this.empiServer = networkService.getEmpiServer();
-        this.queryService = queryService;
+        this.mappingService = mappingService;
         this.configService = configService;
-        this.observationFactory = observationFactory;
     }
 
     @Override
@@ -126,7 +125,7 @@ public class ReadObservationExecutor implements Executor
     private List<Observation> getAllObservations(String ehrId, String patientId) throws RestException
     {
         List<Observation> result = new ArrayList<>();
-        for (String code: queryService.getSupported()) {
+        for (String code: mappingService.getSupported()) {
             result.addAll(getObservations(code, ehrId, patientId));
         }
         return result;
@@ -143,10 +142,12 @@ public class ReadObservationExecutor implements Executor
 
     private List<Observation> getObservations(String code, String ehrId, String patientId) throws RestException
     {
-        if (queryService.isSupported(code)) {
-            String query = queryService.getQuery(code, ehrId);
+        if (mappingService.isSupported(code))
+        {
+            MappingProvider mapping = mappingService.getMappingProvider(code);
+            String query = mapping.getQuery(ehrId);
             ObservationBundle bundle = ehrServer.query(query, ObservationBundle.class);
-            return observationFactory.fromQueryBundle(code, patientId, bundle);
+            return mapping.getObservations(code, patientId, bundle);
         }
         return Collections.emptyList();
     }

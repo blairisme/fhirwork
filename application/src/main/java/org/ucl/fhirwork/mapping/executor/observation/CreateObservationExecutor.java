@@ -16,9 +16,7 @@ import ca.uhn.fhir.rest.param.TokenOrListParam;
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
-import org.ucl.fhirwork.common.http.RestException;
 import org.ucl.fhirwork.mapping.data.ObservationFactory;
-import org.ucl.fhirwork.mapping.query.QueryService;
 import org.ucl.fhirwork.network.NetworkService;
 import org.ucl.fhirwork.network.ehr.server.EhrServer;
 import org.ucl.fhirwork.network.empi.server.EmpiServer;
@@ -37,19 +35,16 @@ public class CreateObservationExecutor implements Executor {
     private EmpiServer empiServer;
     private EhrServer ehrServer;
     private ObservationFactory observationFactory;
-    private QueryService queryService;
     private ReferenceParam patient;
     private TokenOrListParam tokenList;
 
     @Inject
     public CreateObservationExecutor(
             NetworkService networkService,
-            QueryService queryService,
             ObservationFactory observationFactory)
     {
         this.ehrServer = networkService.getEhrServer();
         this.empiServer = networkService.getEmpiServer();
-        this.queryService = queryService;
         this.observationFactory = observationFactory;
     }
 

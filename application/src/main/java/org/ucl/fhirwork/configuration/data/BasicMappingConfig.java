@@ -18,7 +18,7 @@ package org.ucl.fhirwork.configuration.data;
  * @author Blair Butterworth
  */
 @SuppressWarnings("UnusedDeclaration")
-public class MappingConfigData
+public class BasicMappingConfig
 {
     private String text;
     private String archetype;
@@ -26,7 +26,12 @@ public class MappingConfigData
     private String magnitude;
     private String unit;
 
-    public MappingConfigData(String text,String archetype,String date,String magnitude,String unit)
+    public BasicMappingConfig(
+        String text,
+        String archetype,
+        String date,
+        String magnitude,
+        String unit)
     {
         this.text = text;
         this.archetype = archetype;

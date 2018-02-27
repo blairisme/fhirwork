@@ -1,5 +1,5 @@
 {
-  "mappings": {
+  "basic": {
     "3141-9": {
       "text": "body_weight",
       "archetype": "openEHR-EHR-OBSERVATION.body_weight.v1",
@@ -18,6 +18,7 @@
       "text": "body_mass_index",
       "archetype": "openEHR-EHR-OBSERVATION.body_mass_index.v1",
       "date": "data[at0001]/origin/value",
+      "precision": "data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/precision",
       "magnitude": "data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/magnitude",
       "unit": "data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/units"
     },
@@ -25,8 +26,14 @@
       "text": "head_circumference",
       "archetype": "openEHR-EHR-OBSERVATION.head_circumference.v0",
       "date": "data[at0001]/origin/value",
+      "precision": "data[at0001]/events[at0010]/data[at0003]/items[at0004]/value/precision",
       "magnitude": "data[at0001]/events[at0010]/data[at0003]/items[at0004]/value/magnitude",
       "unit": "data[at0001]/events[at0010]/data[at0003]/items[at0004]/value/units"
+    }
+  },
+  "scripted": {
+    "37362-1": {
+      "script" : "function Query(selectors, archetype){    this.selectors = selectors;    this.archetype = archetype;}function Quantity(value, unit){    this.value = value;    this.unit = unit;}function getQuery(ehrId){    var archetype = \"openEHR-EHR-OBSERVATION.skeletal_age.v0\";    var selectors = [\"data[at0001]/events[at0002]/data[at0003]/items[at0005]/value/value as value\"];    return new Query(selectors, archetype);}function getQuantity(queryResult){    var value = dateToMonths(queryResult.get(\"value\"));    var unit = \"Months\";    return new Quantity(value, unit);}function dateToMonths(date){    return 4.1;}"
     }
   }
 }

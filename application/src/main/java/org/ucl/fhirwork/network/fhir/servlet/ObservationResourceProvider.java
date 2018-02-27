@@ -33,7 +33,8 @@ import java.util.List;
  * @author Blair Butterworth
  */
 @SuppressWarnings({"unused", "unchecked"})
-public class ObservationResourceProvider implements IResourceProvider {
+public class ObservationResourceProvider implements IResourceProvider
+{
     private ExecutorService executorService;
 
     @Inject
@@ -48,15 +49,17 @@ public class ObservationResourceProvider implements IResourceProvider {
 
     @Search
     public List<Observation> searchByPatient(
-            @OptionalParam(name = Observation.SP_CODE) TokenOrListParam codes,
-            @RequiredParam(name = Observation.SP_PATIENT) ReferenceParam patient) {
+        @OptionalParam(name = Observation.SP_CODE) TokenOrListParam codes,
+        @RequiredParam(name = Observation.SP_PATIENT) ReferenceParam patient)
+    {
         return search(codes, patient);
     }
 
     @Search
     public List<Observation> searchBySubject(
-            @OptionalParam(name = Observation.SP_CODE) TokenOrListParam codes,
-            @RequiredParam(name = Observation.SP_SUBJECT) ReferenceParam subject) {
+        @OptionalParam(name = Observation.SP_CODE) TokenOrListParam codes,
+        @RequiredParam(name = Observation.SP_SUBJECT) ReferenceParam subject)
+    {
         return search(codes, subject);
     }
 
