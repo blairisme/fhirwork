@@ -67,9 +67,7 @@
             <div id="script_page" class="tabpage">
                 <form action="new/script" method="POST">
                     <input type="text" id="code" name="code" value="" class="textbox"/>
-
                     <textarea rows="4" cols="50"></textarea>
-
                     <input type="submit" value="Submit" class="button"/>
                 </form>
             </div>

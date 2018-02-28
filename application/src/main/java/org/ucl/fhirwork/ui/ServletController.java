@@ -128,12 +128,12 @@ public class ServletController
 
         if (basicConfig.containsKey(code)){
             BasicMappingConfig config = basicConfig.get(code);
-            model.addAttribute("code", code);
+            model.addAttribute("type", "basic");
             model.addAttribute("mapping", config);
         }
         if (scriptConfig.containsKey(code)){
             ScriptedMappingConfig config = scriptConfig.get(code);
-            model.addAttribute("code", code);
+            model.addAttribute("type", "scripted");
             model.addAttribute("mapping", config);
         }
         return "mapping_edit";

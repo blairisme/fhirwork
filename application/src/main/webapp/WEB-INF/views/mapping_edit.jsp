@@ -24,6 +24,7 @@
         <div class="content">
             <h1 class="title">Observation Conversion Settings</h1>
 
+            <c:if test="${type == 'basic'}">
             <form action="edit/basic" method="POST">
                 <table>
                     <tbody>
@@ -52,6 +53,16 @@
                 <input type="text" id="code" name="code" value="${code}" style="visibility:hidden;"/>
                 <input type="submit" value="Submit" class="button"/>
             </form>
+            </c:if>
+
+            <c:if test="${type == 'scripted'}">
+            <form action="new/script" method="POST">
+                <input type="text" id="code" name="code" value="${mapping.code}" class="textbox"/>
+                <textarea rows="4" cols="50">${mapping.script}</textarea>
+                <input type="submit" value="Submit" class="button"/>
+            </form>
+            </c:if>
+
         </div>
     </div>
 </body>
