@@ -45,7 +45,7 @@ task integrationTest(type: Test) {
   systemProperty 'network.fhir.address', project.getProperty('network.fhir.address')
 }
 
-check.dependsOn integrationTest
+//check.dependsOn integrationTest
 
 def getTasksByName(def name){
   return rootProject.allprojects.collect { subproject ->
