@@ -188,4 +188,19 @@ public class ServletController
 
         return mappingList(model);
     }
+
+    @RequestMapping(value = "/mapping/delete", method = RequestMethod.GET)
+    public String mappingDelete(@RequestParam("code")String code, ModelMap model)
+    {
+        MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
+
+        Map<String, BasicMappingConfig> basicConfig = mappingConfig.getBasic();
+        Map<String, ScriptedMappingConfig> scriptedConfig = mappingConfig.getScripted();
+
+        basicConfig.remove(code);
+        scriptedConfig.remove(code);
+
+        configuration.setConfig(ConfigType.Mapping, mappingConfig);
+        return mappingList(model);
+    }
 }
