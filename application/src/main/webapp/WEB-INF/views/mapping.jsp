@@ -7,17 +7,17 @@
     <title>Fhirwork Mapping</title>
     <link rel="stylesheet" type="text/css" href="resources/reset.css"/>
     <link rel="stylesheet" type="text/css" href="resources/general.css"/>
-    <link rel="stylesheet" type="text/css" href="resources/network.css"/>
+    <link rel="stylesheet" type="text/css" href="resources/mapping.css"/>
     <script src="//lib.sinaapp.com/js/jquery/1.12.4/jquery-1.12.4.min.js"></script>
 </head>
 <body>
 	<div class="container">
       <div class="navigation">
-          <a class="link" href="/configuration/mapping">
+          <a class="link selected" href="/configuration/mapping">
               <div class="icon mapping"></div>
               <span>FHIR Mappings</span>
           </a>
-          <a class="link selected" href="/configuration/network">
+          <a class="link" href="/configuration/network">
               <div class="icon network"></div>
               <span>Network Settings</span>
           </a>

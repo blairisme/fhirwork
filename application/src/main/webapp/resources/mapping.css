@@ -1,0 +1,30 @@
+.property th {
+    width: 120px;
+    text-align: left;
+}
+
+.property td {
+  padding-bottom: 12px;
+}
+
+.entry th {
+    width: 200px;
+    text-align: left;
+}
+
+.entry td {
+  padding-bottom: 5px;
+}
+
+#basic_page {
+  display: block;
+}
+
+#script_page {
+  display: none;
+}
+
+#script {
+    width: 400px;
+    height: 600px;
+}

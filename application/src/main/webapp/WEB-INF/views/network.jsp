@@ -19,7 +19,7 @@
                 <span>Network Settings</span>
             </a>
         </div>
-        <div class="settings">
+        <div class="content">
             <h1 class="title">EMPI Settings</h1>
             <form action="network" method="POST">
                 <table>

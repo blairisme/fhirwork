@@ -3,6 +3,15 @@
    overflow: hidden;
 }
 
+.content {
+    background-color: #f1f1f1;
+    overflow: hidden;
+    float: none;
+    width: auto;
+    height: 100%;
+    padding: 20px 20px 20px 20px;
+}
+
 .navigation {
     width: 200px;
     height: 100%;
@@ -71,6 +80,8 @@
     font-family: Verdana, Geneva, sans-serif;
 }
 
+
+
 .textbox {
     border: 1px solid #ddd;
     -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.07);
@@ -117,4 +128,22 @@
     font-family: Verdana, Geneva, sans-serif;
     text-decoration: none;
     text-shadow: 0 -1px 1px #006799, 1px 0 1px #006799, 0 1px 1px #006799, -1px 0 1px #006799;
+}
+
+.edit
+{
+    width: 30px;
+    height: 30px;
+
+    background-repeat: no-repeat;
+    background-image: url('./edit.svg');
+}
+
+.delete
+{
+    width: 30px;
+    height: 30px;
+
+    background-repeat: no-repeat;
+    background-image: url('./delete.svg');
 }

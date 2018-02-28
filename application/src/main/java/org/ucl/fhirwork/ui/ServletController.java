@@ -10,10 +10,7 @@
 
 package org.ucl.fhirwork.ui;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -25,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.ucl.fhirwork.ApplicationService;
 import org.ucl.fhirwork.configuration.*;
 import org.ucl.fhirwork.configuration.data.*;
+import org.ucl.fhirwork.mapping.query.scripted.ScriptedMapping;
 
 @Controller
 @RequestMapping("/")
@@ -83,10 +81,10 @@ public class ServletController
     private void initializeMappingModelMap(MappingConfig mappingConfig, ModelMap model){
         Map<String, BasicMappingConfig> basicConfig = mappingConfig.getBasic();
         model.addAttribute("allLoinc", basicConfig.keySet());
-        model.addAttribute("LoincData", new BasicMappingConfig("", "", "", "", ""));
+        model.addAttribute("LoincData", new BasicMappingConfig("", "", "", "", "", ""));
         model.addAttribute("CurrentLoinc", "");
     }
-    
+
     @RequestMapping(value = "/network", method = RequestMethod.GET)
     public String network(ModelMap model)
     {
@@ -104,5 +102,90 @@ public class ServletController
 
         model.addAttribute("empi", data);
         return "network";
+    }
+
+    @RequestMapping(value = "/mapping/list", method = RequestMethod.GET)
+    public String mappingList(ModelMap model)
+    {
+        MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
+        Map<String, BasicMappingConfig> basicConfig = mappingConfig.getBasic();
+        Map<String, ScriptedMappingConfig> scriptConfig = mappingConfig.getScripted();
+
+        Collection<String> mappings = new ArrayList<>();
+        mappings.addAll(basicConfig.keySet());
+        mappings.addAll(scriptConfig.keySet());
+        model.addAttribute("mappings", mappings);
+
+        return "mapping_list";
+    }
+
+    @RequestMapping(value = "/mapping/edit", method = RequestMethod.GET)
+    public String mappingEdit(@RequestParam("code")String code, ModelMap model)
+    {
+        MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
+        Map<String, BasicMappingConfig> basicConfig = mappingConfig.getBasic();
+        Map<String, ScriptedMappingConfig> scriptConfig = mappingConfig.getScripted();
+
+        if (basicConfig.containsKey(code)){
+            BasicMappingConfig config = basicConfig.get(code);
+            model.addAttribute("code", code);
+            model.addAttribute("mapping", config);
+        }
+        if (scriptConfig.containsKey(code)){
+            ScriptedMappingConfig config = scriptConfig.get(code);
+            model.addAttribute("code", code);
+            model.addAttribute("mapping", config);
+        }
+        return "mapping_edit";
+    }
+
+    @RequestMapping(value = "/mapping/edit/basic", method = RequestMethod.POST)
+    public String mappingEditBasic(@ModelAttribute BasicMappingConfig data, ModelMap model)
+    {
+        MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
+        Map<String, BasicMappingConfig> basicConfig = mappingConfig.getBasic();
+        basicConfig.put(data.getCode(), data);
+        configuration.setConfig(ConfigType.Mapping, mappingConfig);
+
+        return mappingList(model);
+    }
+
+    @RequestMapping(value = "/mapping/edit/scripted", method = RequestMethod.POST)
+    public String mappingEditScripted(@ModelAttribute ScriptedMappingConfig data, ModelMap model)
+    {
+        MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
+        Map<String, ScriptedMappingConfig> scriptedConfig = mappingConfig.getScripted();
+        scriptedConfig.put(data.getCode(), data);
+        configuration.setConfig(ConfigType.Mapping, mappingConfig);
+
+        return mappingList(model);
+    }
+
+    @RequestMapping(value = "/mapping/new", method = RequestMethod.GET)
+    public String mappingNew(ModelMap model)
+    {
+        return "mapping_new";
+    }
+
+    @RequestMapping(value = "/mapping/new/basic", method = RequestMethod.POST)
+    public String mappingNewBasic(@ModelAttribute BasicMappingConfig data, ModelMap model)
+    {
+        MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
+        Map<String, BasicMappingConfig> basicConfig = mappingConfig.getBasic();
+        basicConfig.put(data.getCode(), data);
+        configuration.setConfig(ConfigType.Mapping, mappingConfig);
+
+        return mappingList(model);
+    }
+
+    @RequestMapping(value = "/mapping/new/scripted", method = RequestMethod.POST)
+    public String mappingNewScripted(@ModelAttribute ScriptedMappingConfig data, ModelMap model)
+    {
+        MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
+        Map<String, ScriptedMappingConfig> scriptedConfig = mappingConfig.getScripted();
+        scriptedConfig.put(data.getCode(), data);
+        configuration.setConfig(ConfigType.Mapping, mappingConfig);
+
+        return mappingList(model);
     }
 }

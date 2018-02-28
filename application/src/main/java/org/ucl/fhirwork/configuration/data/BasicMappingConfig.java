@@ -20,6 +20,7 @@ package org.ucl.fhirwork.configuration.data;
 @SuppressWarnings("UnusedDeclaration")
 public class BasicMappingConfig
 {
+    private String code;
     private String text;
     private String archetype;
     private String date;
@@ -27,17 +28,23 @@ public class BasicMappingConfig
     private String unit;
 
     public BasicMappingConfig(
+        String code,
         String text,
         String archetype,
         String date,
         String magnitude,
         String unit)
     {
+        this.code = code;
         this.text = text;
         this.archetype = archetype;
         this.date = date;
         this.magnitude = magnitude;
         this.unit = unit;
+    }
+
+    public String getCode() {
+        return code;
     }
 
     public String getArchetype() {

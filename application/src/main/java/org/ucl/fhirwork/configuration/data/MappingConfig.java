@@ -41,4 +41,48 @@ public class MappingConfig
     public Map<String, ScriptedMappingConfig> getScripted() {
         return scripted;
     }
+
+
+
+/*
+    public MappingConfig(Map<String, MappingConfigData> mappings) {
+        this.mappings = mappings;
+    }
+
+    public Map<String, MappingConfigData> getMappings() {
+        return mappings;
+    }
+
+    public boolean hasData(String code){
+        return mappings.containsKey(code);
+    }
+
+    public MappingConfigData getData(String code){
+        MappingConfigData result = mappings.get(code);
+        if (result != null) {
+            return result;
+        }
+        throw new ConfigMissingException(code);
+    }
+
+    public MappingConfig setData(String code, MappingConfigData config) {
+        Map<String, MappingConfigData> newMappings = new HashMap<>();
+        newMappings.putAll(mappings);
+        newMappings.put(code, config);
+        return new MappingConfig(newMappings);
+    }
+
+    public Collection<String> getCodes(){
+    	ArrayList<String> codes = new ArrayList<String>();
+    	codes.addAll(this.mappings.keySet());
+    	Collections.sort(codes,
+                new Comparator<String>(){
+					@Override
+					public int compare(String arg0, String arg1) {
+						return arg0.compareTo(arg1);
+					}
+                });
+    	return codes;
+    }
+    */
 }
