@@ -68,6 +68,7 @@
                             <input type="submit" value="Submit" class="button"/>
                     </form>
                     </section>
+
                     <section id="Advanced" class="tab-panel">
                     <form action="new/script" method="POST">
                         <h2>Loinc Code</h2>
@@ -103,7 +104,7 @@ function Quantity(value, unit)
 */
 function getQuery(ehrId)
 {
-    //To do
+    //Todo
 }
 
 /*
@@ -113,14 +114,15 @@ function getQuery(ehrId)
  */
 function getQuantity(queryResult)
 {
-    //To do
+    //Todo
 }
                         </textarea>
-                        <h2> </h2>
                         <input type="submit" value="Submit" class="button"/>
-                                    </form>
-                                  </div>
-                                </div>
-                        </div>
+                    </form>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
