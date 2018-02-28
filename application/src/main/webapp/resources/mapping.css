@@ -16,17 +16,18 @@
   padding-bottom: 5px;
 }
 
-#basic_page {
-  display: block;
+.script {
+    width: 700px;
+    height: 400px;
+    max-height: 400px;
+    resize: none;
+    overflow-y: scroll;
 }
 
-#script_page {
-  display: none;
-}
-
-#script {
-    width: 400px;
-    height: 600px;
+.script_form label,
+.script_form input,
+.script_form textarea{
+    display: block;
 }
 
 /*

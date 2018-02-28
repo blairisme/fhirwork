@@ -11,7 +11,7 @@
 <body>
     <div class="container">
         <div class="navigation">
-            <a class="link selected" href="/configuration/mapping">
+            <a class="link selected" href="/configuration/mapping/list">
                 <div class="icon mapping"></div>
                 <span>FHIR Mappings</span>
             </a>

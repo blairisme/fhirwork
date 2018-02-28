@@ -13,7 +13,7 @@
 <body>
     <div class="container">
         <div class="navigation">
-            <a class="link selected" href="/configuration/mapping">
+            <a class="link selected" href="/configuration/mapping/list">
                 <div class="icon mapping"></div>
                 <span>FHIR Mappings</span>
             </a>
@@ -70,11 +70,12 @@
                     </section>
 
                     <section id="Advanced" class="tab-panel">
-                    <form action="new/script" method="POST">
-                        <h2>Loinc Code</h2>
+                    <form id="scriptForm" class="script_form" action="new/scripted" method="POST">
+                        <label for="code" class="label">Code</label>
                         <input type="text" id="code" name="code" value="" class="textbox"/>
-                        <h2>Script</h2>
-                        <textarea rows="50" cols="100">
+
+                        <label for="script" class="label">Script</label>
+                        <textarea id="script" name="script" class="script" form="scriptForm" rows="50" cols="100">
 /*
 * Instances of this prototype represent the constituent parts of an EHR query.
 * These will be used to generate a full AQL when combined with query

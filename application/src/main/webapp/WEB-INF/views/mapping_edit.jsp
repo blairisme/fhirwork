@@ -11,7 +11,7 @@
 <body>
     <div class="container">
         <div class="navigation">
-            <a class="link selected" href="/configuration/mapping">
+            <a class="link selected" href="/configuration/mapping/list">
                 <div class="icon mapping"></div>
                 <span>FHIR Mappings</span>
             </a>
@@ -56,9 +56,12 @@
             </c:if>
 
             <c:if test="${type == 'scripted'}">
-            <form action="new/script" method="POST">
+            <form class="script_form" action="new/script" method="POST">
+                <label for="code" class="label">Code</label>
                 <input type="text" id="code" name="code" value="${mapping.code}" class="textbox"/>
-                <textarea rows="4" cols="50">${mapping.script}</textarea>
+
+                <label for="script" class="label">Script</label>
+                <textarea id="script" class="script" rows="50" cols="100">${mapping.script}</textarea>
                 <input type="submit" value="Submit" class="button"/>
             </form>
             </c:if>
