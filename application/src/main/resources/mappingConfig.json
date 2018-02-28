@@ -36,6 +36,9 @@
     }
   },
   "scripted": {
-
+    "37362-1": {
+      "code": "37362-1",
+      "script" : "function Query(selectors, archetype){    this.selectors = selectors;    this.archetype = archetype;}function Quantity(value, unit){    this.value = value;    this.unit = unit;}function getQuery(ehrId){    var archetype = \"openEHR-EHR-OBSERVATION.skeletal_age.v0\";    var selectors = [\"data[at0001]/events[at0002]/data[at0003]/items[at0005]/value/value as value\"];    return new Query(selectors, archetype);}function getQuantity(queryResult){    load('https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js');    var age = queryResult.get(\"value\");    var duration = moment.duration(age);    var value = duration.asMonths();    var unit = \"Months\";    return new Quantity(value, unit);}"
+    }
   }
 }
