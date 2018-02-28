@@ -22,7 +22,7 @@
         </div>
 
         <div class="content">
-            <h1 class="title">Observation Conversion Settings</h1>
+            <h1 class="title">${mapping.code} Settings</h1>
 
             <c:if test="${type == 'basic'}">
             <form action="edit/basic" method="POST">
@@ -50,7 +50,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <input type="text" id="code" name="code" value="${code}" style="visibility:hidden;"/>
+                <input type="text" id="code" name="code" value="${mapping.code}" style="visibility:hidden;"/>
                 <input type="submit" value="Submit" class="button"/>
             </form>
             </c:if>
