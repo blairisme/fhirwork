@@ -128,12 +128,12 @@ public class ServletController
 
         if (basicConfig.containsKey(code)){
             BasicMappingConfig config = basicConfig.get(code);
-            model.addAttribute("code", code);
+            model.addAttribute("type", "basic");
             model.addAttribute("mapping", config);
         }
         if (scriptConfig.containsKey(code)){
             ScriptedMappingConfig config = scriptConfig.get(code);
-            model.addAttribute("code", code);
+            model.addAttribute("type", "scripted");
             model.addAttribute("mapping", config);
         }
         return "mapping_edit";
@@ -186,6 +186,21 @@ public class ServletController
         scriptedConfig.put(data.getCode(), data);
         configuration.setConfig(ConfigType.Mapping, mappingConfig);
 
+        return mappingList(model);
+    }
+
+    @RequestMapping(value = "/mapping/delete", method = RequestMethod.GET)
+    public String mappingDelete(@RequestParam("code")String code, ModelMap model)
+    {
+        MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
+
+        Map<String, BasicMappingConfig> basicConfig = mappingConfig.getBasic();
+        Map<String, ScriptedMappingConfig> scriptedConfig = mappingConfig.getScripted();
+
+        basicConfig.remove(code);
+        scriptedConfig.remove(code);
+
+        configuration.setConfig(ConfigType.Mapping, mappingConfig);
         return mappingList(model);
     }
 }
