@@ -117,3 +117,8 @@ body {
 .tabset {
   max-width: 65em;
 }
+
+html {
+    overflow-y: scroll;
+    overflow: auto;
+}

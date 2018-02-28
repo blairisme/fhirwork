@@ -1,4 +1,4 @@
-%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
@@ -73,7 +73,7 @@
                         <h2>Loinc Code</h2>
                         <input type="text" id="code" name="code" value="" class="textbox"/>
                         <h2>Script</h2>
-                        <textarea rows="50" cols="100">
+                        <textarea rows="45" cols="100">
 /*
 * Instances of this prototype represent the constituent parts of an EHR query.
 * These will be used to generate a full AQL when combined with query
