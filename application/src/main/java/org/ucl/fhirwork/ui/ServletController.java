@@ -69,22 +69,52 @@ public class ServletController
         return "mapping";
     }
     
-    @RequestMapping(value = "/mapping", method = RequestMethod.POST)
-    public String mappingSubmit(@ModelAttribute MappingConfigData data, @RequestParam("CurrentLoinc") String code,ModelMap model)
-    {
+    @RequestMapping(value = "/mapping", method = RequestMethod.POST, params = {"currentLoinc"})
+    public String changeSubmit(ModelMap model, 
+    		@ModelAttribute MappingConfigData data, 
+    		@RequestParam("currentLoinc") String currentLoinc){
+    	
     	MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
         initializeMappingModelMap(mappingConfig, model);
         
-        mappingConfig = mappingConfig.setData(code, data);
+        mappingConfig = mappingConfig.setData(currentLoinc, data);
         configuration.setConfig(ConfigType.Mapping, mappingConfig);
         
         return "mapping";
     }
     
+    @RequestMapping(value = "/mapping", method = RequestMethod.POST, params = {"newLoinc"})
+    public String createMapping(ModelMap model, 
+    		@ModelAttribute MappingConfigData data, 
+    		@RequestParam("newLoinc") String newLoinc){
+    	if(!newLoinc.equals("")){
+        	MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
+            initializeMappingModelMap(mappingConfig, model);
+            
+            mappingConfig = mappingConfig.setData(newLoinc, data);
+            configuration.setConfig(ConfigType.Mapping, mappingConfig);
+    	}
+
+    	return "mapping";
+    }
+    
+    @RequestMapping(value = "/mapping", method = RequestMethod.POST, params = {"loincToRemove"})
+    public String removeMapping(ModelMap model, 
+    		@ModelAttribute MappingConfigData data, 
+    		@RequestParam("loincToRemove") String loincToRemove){
+    	
+    	MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
+        initializeMappingModelMap(mappingConfig, model);
+        
+        mappingConfig = mappingConfig.removeData(loincToRemove);
+        configuration.setConfig(ConfigType.Mapping, mappingConfig);
+    	return "mapping";
+    }
+    
+    
     private void initializeMappingModelMap(MappingConfig mappingConfig, ModelMap model){
         model.addAttribute("allLoinc", mappingConfig.getCodes());
-        model.addAttribute("LoincData", new MappingConfigData("", "", "", "", ""));
-        model.addAttribute("CurrentLoinc", "");
+        model.addAttribute("loincData", new MappingConfigData("", "", "", "", ""));
     }
     
     @RequestMapping(value = "/network", method = RequestMethod.GET)

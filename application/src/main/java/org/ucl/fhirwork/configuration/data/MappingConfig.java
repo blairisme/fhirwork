@@ -51,6 +51,13 @@ public class MappingConfig
         newMappings.put(code, config);
         return new MappingConfig(newMappings);
     }
+    
+    public MappingConfig removeData(String code){
+    	Map<String, MappingConfigData> newMappings = new HashMap<>();
+        newMappings.putAll(mappings);
+        newMappings.remove(code);
+        return new MappingConfig(newMappings);
+    }
 
     public Collection<String> getCodes(){
     	ArrayList<String> codes = new ArrayList<String>();

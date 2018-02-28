@@ -25,48 +25,95 @@
       
       <div class="settings">
 		  <h1 class="title">FHIR Mappings</h1>
-		  <select id="loinc-selection" onchange="requestMappingConfig();">
+		  <select id="changeSelection" onchange="requestMappingConfig();">
 		      <option value="default" selected="selected">(Loinc Code)</option>
 		      <%for(String loinc: (Collection<String>)request.getAttribute("allLoinc")){%>
 		          <option value="<%out.print(loinc);%>"> <%out.print(loinc);%> </option>
 		      <%}%>
 		  </select>
-		    
-		  <form action="mapping" method="POST">
+		  </br></br>
+		  <form action="mapping" method="POST" id="changeForm">
+		      <input type="hidden" id="currentLoinc" name="currentLoinc" value=""/>
 		      <table>
 		          <tbody>
 		              <tr class="property">
 		                  <th><label for="text" class="label">Text</label></th>
-		                  <td><input type="text" id="text" name="text" value="${LoincData.text}" class="textbox"/></td>
+		                  <td><input type="text" id="text" name="text" value="${loincData.text}" class="textbox"/></td>
 		              </tr>
 		              <tr class="property">
 		                  <th><label for="archetype" class="label">Archetype</label></th>
-		                  <td><input type="text" id="archetype" name="archetype" value="${LoincData.archetype}" class="textbox"/></td>
+		                  <td><input type="text" id="archetype" name="archetype" value="${loincData.archetype}" class="textbox"/></td>
 		              </tr>
 		              <tr class="property">
 		                  <th><label for="date" class="label">Date</label></th>
-		                  <td><input type="text" id="date" name="date" value="${LoincData.date}" class="textbox"/></td>
+		                  <td><input type="text" id="date" name="date" value="${loincData.date}" class="textbox"/></td>
 		              </tr>
 		              <tr class="property">
 		                  <th><label for="magnitude" class="label">Magnitude</label></th>
-		                  <td><input type="text" id="magnitude" name="magnitude" value="${LoincData.magnitude}" class="textbox"/></td>
+		                  <td><input type="text" id="magnitude" name="magnitude" value="${loincData.magnitude}" class="textbox"/></td>
 		              </tr>
 		              <tr class="property">
 		                  <th><label for="unit" class="label">Unit</label></th>
-		                  <td><input type="text" id="unit" name="unit" value="${LoincData.unit}" class="textbox"/></td>
+		                  <td><input type="text" id="unit" name="unit" value="${loincData.unit}" class="textbox"/></td>
 		              </tr>
-		              
 		          </tbody>
 		      </table>
-		      <input type="submit" value="Submit" class="button"/>
-				<input type="text" id="CurrentLoinc" name="CurrentLoinc" value="${CurrentLoinc}" class="textbox" style="visibility:hidden;"/>
-		   </form>
+		      <input type="button" onclick="modificationConfirmation('changeForm')" value="Change Mapping" class="button">
+           </form>
+		   
+		   <br/></br>
+		   
+		   <form action="mapping" method="POST" id="creationForm">
+                <table>
+                    <tbody>
+	                   <tr class="property">
+                           <th><label for="newLoinc" class="label">New Loinc Code</label></th>
+                           <td><input type="text" id="newLoinc" name="newLoinc" value="" class="textbox"/></td>
+                       </tr>  
+                       <tr class="property">
+                           <th><label for="text" class="label">Text</label></th>
+                           <td><input type="text" id="text" name="text" value="${loincData.text}" class="textbox"/></td>
+                       </tr>
+                       <tr class="property">
+                           <th><label for="archetype" class="label">Archetype</label></th>
+                           <td><input type="text" id="archetype" name="archetype" value="${loincData.archetype}" class="textbox"/></td>
+                       </tr>
+                       <tr class="property">
+                           <th><label for="date" class="label">Date</label></th>
+                           <td><input type="text" id="date" name="date" value="${loincData.date}" class="textbox"/></td>
+                       </tr>
+                       <tr class="property">
+                           <th><label for="magnitude" class="label">Magnitude</label></th>
+                           <td><input type="text" id="magnitude" name="magnitude" value="${loincData.magnitude}" class="textbox"/></td>
+                       </tr>
+                       <tr class="property">
+                           <th><label for="unit" class="label">Unit</label></th>
+                           <td><input type="text" id="unit" name="unit" value="${loincData.unit}" class="textbox"/></td>
+                       </tr>
+	               </tbody>
+                </table>
+                <input type="button" onclick="creationFormChecking()" value="Create mapping" class="button">
+            </form>
+            
+            </br></br>
+            
+            <select id="removeSelection" onchange="setMappingToRemove();">
+                <option value="default" selected="selected">(Loinc Code)</option>
+                <%for(String loinc: (Collection<String>)request.getAttribute("allLoinc")){%>
+                    <option value="<%out.print(loinc);%>"> <%out.print(loinc);%> </option>
+                <%}%>
+            </select>
+            </br></br>
+            <form action="mapping" method="POST" id="removalForm">
+                <input type="hidden" id="loincToRemove" name="loincToRemove" value=""/>
+                <input type="button" onclick="modificationConfirmation('removalForm')" value="Remove Mapping" class="button">
+            </form>
 		</div>
 	</div>
     
    <script>
        function requestMappingConfig(){
-           var loinc = document.getElementById('loinc-selection').value;
+           var loinc = document.getElementById('changeSelection').value;
            if(loinc != "default"){
         	   $.ajax({
                    url:"mapping/content",
@@ -80,11 +127,34 @@
                 	   resetSelection();
                    }
                 });
-               $("#CurrentLoinc").val(loinc);
+               $("#currentLoinc").val(loinc);
            }
            else
         	   resetSelection();
        	}
+       
+       function creationFormChecking(){
+    	   if(document.getElementById('newLoinc').value == ""){
+    		   alert("The loinc code for the new mapping has not been defined");
+    	   }
+    	   else{
+    		   modificationConfirmation("creationForm");
+    	   }
+       }
+       
+       function setMappingToRemove(){
+    	   var loincToRemove = document.getElementById('removeSelection').value;
+    	   if(loincToRemove != "default"){
+    		    $("#loincToRemove").val(loincToRemove);
+    	   }
+       }
+       
+       function modificationConfirmation(form){
+		   if(confirm("Are you sure you want to make this modification?")){
+		       document.getElementById(form).submit();
+		       alert("The modification has been submitted, it takes some time to make the updated configuration available to this page.");
+		   }
+       }
        
        function updateForm(data){
            document.getElementById("text").value = data[0];
@@ -95,7 +165,8 @@
        }
        
        function resetSelection(){
-    	   document.getElementById("loinc-selection").value = "default"; 
+    	   document.getElementById("changeSelection").value = "default"; 
+    	   document.getElementById("removeSelection").value = "default"; 
            document.getElementById("text").value = "";
            document.getElementById("archetype").value = "";
            document.getElementById("date").value = "";
