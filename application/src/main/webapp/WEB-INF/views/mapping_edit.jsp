@@ -56,7 +56,7 @@
             </c:if>
 
             <c:if test="${type == 'scripted'}">
-            <form class="script_form" action="new/script" method="POST">
+            <form class="script_form" action="edit/scripted" method="POST">
                 <label for="code" class="label">Code</label>
                 <input type="text" id="code" name="code" value="${mapping.code}" class="textbox"/>
 
