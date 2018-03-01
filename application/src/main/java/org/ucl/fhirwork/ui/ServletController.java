@@ -149,7 +149,7 @@ public class ServletController
         basicConfig.put(data.getCode(), data);
         configuration.setConfig(ConfigType.Mapping, mappingConfig);
 
-        return mappingList(model);
+        return "redirect:/configuration/mapping/list";
     }
 
     @RequestMapping(value = "/mapping/edit/scripted", method = RequestMethod.POST)
@@ -160,7 +160,7 @@ public class ServletController
         scriptedConfig.put(data.getCode(), data);
         configuration.setConfig(ConfigType.Mapping, mappingConfig);
 
-        return mappingList(model);
+        return "redirect:/configuration/mapping/list";
     }
 
     @RequestMapping(value = "/mapping/new", method = RequestMethod.GET)
@@ -177,7 +177,7 @@ public class ServletController
         basicConfig.put(data.getCode(), data);
         configuration.setConfig(ConfigType.Mapping, mappingConfig);
 
-        return mappingList(model);
+        return "redirect:/configuration/mapping/list";
     }
 
     @RequestMapping(value = "/mapping/new/scripted", method = RequestMethod.POST)
@@ -188,7 +188,7 @@ public class ServletController
         scriptedConfig.put(data.getCode(), data);
         configuration.setConfig(ConfigType.Mapping, mappingConfig);
 
-        return mappingList(model);
+        return "redirect:/configuration/mapping/list";
     }
 
     @RequestMapping(value = "/mapping/delete", method = RequestMethod.GET)
@@ -203,6 +203,6 @@ public class ServletController
         scriptedConfig.remove(code);
 
         configuration.setConfig(ConfigType.Mapping, mappingConfig);
-        return mappingList(model);
+        return "redirect:/configuration/mapping/list";
     }
 }
