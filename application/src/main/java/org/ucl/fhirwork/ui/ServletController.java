@@ -12,6 +12,7 @@ package org.ucl.fhirwork.ui;
 
 import java.util.*;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,6 +26,7 @@ import org.ucl.fhirwork.configuration.data.*;
 import org.ucl.fhirwork.mapping.query.scripted.ScriptedMapping;
 
 @Controller
+@Scope("session")
 @RequestMapping("/")
 @SuppressWarnings("unused")
 public class ServletController
@@ -55,16 +57,16 @@ public class ServletController
     	data.add(mappingConfigData.getUnit());
     	return data;
     }
-    
+
     @RequestMapping(value = "/mapping", method = RequestMethod.GET)
     public String mapping(ModelMap model)
-    {       
+    {
     	MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
     	initializeMappingModelMap(mappingConfig, model);
-    	
+
         return "mapping";
     }
-    
+
     @RequestMapping(value = "/mapping", method = RequestMethod.POST)
     public String mappingSubmit(@ModelAttribute BasicMappingConfig data, @RequestParam("CurrentLoinc") String code,ModelMap model)
     {
@@ -77,7 +79,7 @@ public class ServletController
         configuration.setConfig(ConfigType.Mapping, mappingConfig);
         return "mapping";
     }
-    
+
     private void initializeMappingModelMap(MappingConfig mappingConfig, ModelMap model){
         Map<String, BasicMappingConfig> basicConfig = mappingConfig.getBasic();
         model.addAttribute("allLoinc", basicConfig.keySet());

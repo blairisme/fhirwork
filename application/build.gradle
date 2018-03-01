@@ -35,6 +35,8 @@ apply plugin: 'org.akhikhl.gretty'
 gretty {
     contextPath = '/'
     httpPort = 8090
+
+    // Overwrite application configuration with Gradle properties
     jvmArgs = [
       '-Dnetwork.ehr.address=' + project.getProperty('network.ehr.address'),
       '-Dnetwork.ehr.username=' + project.getProperty('network.ehr.username'),
@@ -42,6 +44,9 @@ gretty {
       '-Dnetwork.empi.address=' + project.getProperty('network.empi.address'),
       '-Dnetwork.empi.username=' + project.getProperty('network.empi.username'),
       '-Dnetwork.empi.password=' + project.getProperty('network.empi.password')]
+
+    //disables hot deployment to prevent bug when config writing causes servlet reload
+    scanInterval = 0
 }
 
 war {
