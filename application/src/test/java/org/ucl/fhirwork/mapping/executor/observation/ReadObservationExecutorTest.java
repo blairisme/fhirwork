@@ -25,13 +25,13 @@ import org.ucl.fhirwork.mapping.query.MappingService;
 import org.ucl.fhirwork.network.NetworkService;
 import org.ucl.fhirwork.network.ehr.data.HealthRecord;
 import org.ucl.fhirwork.network.ehr.data.ObservationBundle;
-import org.ucl.fhirwork.network.ehr.exception.MissingHealthRecordException;
+import org.ucl.fhirwork.network.ehr.exception.MissingRecordException;
 import org.ucl.fhirwork.network.ehr.server.EhrServer;
 import org.ucl.fhirwork.network.empi.data.Identifier;
 import org.ucl.fhirwork.network.empi.data.IdentifierDomain;
 import org.ucl.fhirwork.network.empi.data.Person;
 import org.ucl.fhirwork.network.empi.exception.IdentifierMissingException;
-import org.ucl.fhirwork.network.empi.exception.MissingPersonException;
+import org.ucl.fhirwork.network.empi.exception.PersonMissingException;
 import org.ucl.fhirwork.network.empi.server.EmpiServer;
 import org.ucl.fhirwork.network.fhir.operations.observation.ReadObservationOperation;
 import org.ucl.fhirwork.network.fhir.operations.patient.UpdatePatientOperation;
@@ -46,7 +46,6 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.never;
 
 public class ReadObservationExecutorTest
 {
@@ -101,7 +100,7 @@ public class ReadObservationExecutorTest
         EhrServer ehrServer = networkService.getEhrServer();
 
         verify(empiServer, times(1)).loadPerson(anyString());
-        verify(ehrServer, times(1)).getEhr(anyString(), anyString());
+        verify(ehrServer, times(1)).getHealthRecord(anyString(), anyString());
         verify(ehrServer, times(2)).query(anyString(),any());
     }
 
@@ -116,12 +115,12 @@ public class ReadObservationExecutorTest
         }
     }
 
-    @Test (expected = MissingPersonException.class)
+    @Test (expected = PersonMissingException.class)
     public void invokePersonMissing() throws Throwable
     {
         try {
             EmpiServer empiServer = networkService.getEmpiServer();
-            when(empiServer.loadPerson(anyString())).thenThrow(MissingPersonException.class);
+            when(empiServer.loadPerson(anyString())).thenThrow(PersonMissingException.class);
 
             executor.setOperation(mockOperation());
             executor.invoke();
@@ -146,12 +145,12 @@ public class ReadObservationExecutorTest
         }
     }
 
-    @Test (expected = MissingHealthRecordException.class)
+    @Test (expected = MissingRecordException.class)
     public void invokeHealthRecordMissing() throws Throwable
     {
         try {
             EhrServer ehrServer = networkService.getEhrServer();
-            when(ehrServer.getEhr(anyString(), anyString())).thenThrow(new MissingHealthRecordException());
+            when(ehrServer.getHealthRecord(anyString(), anyString())).thenThrow(new MissingRecordException());
 
             executor.setOperation(mockOperation());
             executor.invoke();
@@ -170,7 +169,7 @@ public class ReadObservationExecutorTest
         when(empiServer.loadPerson(anyString())).thenReturn(mockPerson());
 
         EhrServer ehrServer = networkService.getEhrServer();
-        when(ehrServer.getEhr(anyString(), anyString())).thenReturn(mockHealthRecord());
+        when(ehrServer.getHealthRecord(anyString(), anyString())).thenReturn(mockHealthRecord());
         when(ehrServer.query(anyString(), any())).thenReturn(mockQueryBundle());
 
         MappingProvider provider = mock(MappingProvider.class);

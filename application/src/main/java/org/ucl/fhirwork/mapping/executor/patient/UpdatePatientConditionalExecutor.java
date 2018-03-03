@@ -24,6 +24,7 @@ import org.ucl.fhirwork.network.fhir.data.SearchParameter;
 import org.ucl.fhirwork.network.fhir.operations.patient.UpdatePatientOperation;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -75,7 +76,7 @@ public class UpdatePatientConditionalExecutor  implements Executor
     {
         try {
             Person template = personFactory.fromSearchParameters(searchParameters);
-            List<Person> people = empiServer.findPersonsByAttributes(template);
+            Collection<Person> people = empiServer.findPersons(template);
 
             if (people.isEmpty()){
                 throw new ExecutionException("Missing resource");
@@ -83,7 +84,7 @@ public class UpdatePatientConditionalExecutor  implements Executor
             if (people.size() > 1){
                 throw new ExecutionException("Ambiguous resource");
             }
-            return people.get(0);
+            return people.iterator().next();
         }
         catch (RestException cause){
             throw new ExecutionException(cause);

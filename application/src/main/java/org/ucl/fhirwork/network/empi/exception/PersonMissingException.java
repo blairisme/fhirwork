@@ -8,8 +8,12 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.network.ehr.exception;
+package org.ucl.fhirwork.network.empi.exception;
 
-public class MissingHealthRecordException extends RuntimeException
+public class PersonMissingException extends RuntimeException
 {
+    public PersonMissingException(String personId)
+    {
+        super("Person not found: " + personId);
+    }
 }

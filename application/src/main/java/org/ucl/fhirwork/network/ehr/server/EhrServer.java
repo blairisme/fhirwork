@@ -10,27 +10,10 @@
 
 package org.ucl.fhirwork.network.ehr.server;
 
-import com.google.common.collect.ImmutableMap;
-
-import org.ucl.fhirwork.common.http.*;
-import org.ucl.fhirwork.common.reflect.TypeUtils;
-import org.ucl.fhirwork.common.serialization.JsonSerializer;
-import org.ucl.fhirwork.common.serialization.Serializer;
-import org.ucl.fhirwork.network.ehr.data.SessionToken;
+import org.ucl.fhirwork.common.http.RestException;
+import org.ucl.fhirwork.network.ehr.data.HealthRecord;
 import org.ucl.fhirwork.network.ehr.data.QueryBundle;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
-import java.util.*;
-import static com.google.common.collect.ImmutableBiMap.of;
-import static org.ucl.fhirwork.common.http.HttpHeader.Accept;
-import static org.ucl.fhirwork.common.http.HttpHeader.ContentType;
-import static org.ucl.fhirwork.common.http.MimeType.Json;
-import static org.ucl.fhirwork.network.ehr.server.EhrHeader.SessionId;
-import static org.ucl.fhirwork.network.ehr.server.EhrParameter.*;
-import static org.ucl.fhirwork.network.ehr.server.EhrResource.*;
-import org.ucl.fhirwork.network.ehr.data.*;
-import org.ucl.fhirwork.network.ehr.exception.MissingHealthRecordException;
+import org.ucl.fhirwork.network.ehr.exception.MissingRecordException;
 
 /**
  * Instances of this class represent an EHR server. Methods exists to create,
@@ -40,20 +23,8 @@ import org.ucl.fhirwork.network.ehr.exception.MissingHealthRecordException;
  * @author Xiaolong Chen
  * @author Jiaming Zhou
  */
-public class EhrServer
+public interface EhrServer
 {
-    private Provider<RestServer> serverFactory;
-    private RestServer server;
-    private String address;
-    private String username;
-    private String password;
-
-    @Inject
-    public EhrServer(Provider<RestServer> serverFactory)
-    {
-        this.serverFactory = serverFactory;
-    }
-
     /**
      * Sets the address and authentication information used to connect to the
      * EHR server.
@@ -62,59 +33,26 @@ public class EhrServer
      * @param username  the name of an account on the EMPI server.
      * @param password  the password of an EMPI account.
      */
-    public synchronized void setConnectionDetails(String address, String username, String password)
-    {
-        this.address = address;
-        this.username = username;
-        this.password = password;
-        this.server = null;
-    }
+    void setConnectionDetails(String address, String username, String password);
 
-    public HealthRecord getEhr(String id, String namespace) throws RestException, MissingHealthRecordException
-    {
-        RestRequest request = getServer().get(Ehr);
-        request.setParameters(ImmutableMap.of(SubjectId, id, SubjectNamespace, namespace));
+    /**
+     *
+     * @param id
+     * @param namespace
+     * @return
+     * @throws RestException
+     * @throws MissingRecordException
+     */
+    HealthRecord getHealthRecord(String id, String namespace) throws RestException, MissingRecordException;
 
-        RestResponse response = request.make(HandleFailure.ByException);
-        return response.asType(HealthRecord.class);
-    }
-
-    public <T extends QueryBundle> T query(String query, Class<T> type) throws RestException
-    {
-        RestRequest request = getServer().get(Query);
-        request.setParameters(of(Aql, query));
-
-        RestResponse response = request.make(HandleFailure.ByException);
-        return response.getStatusCode() != 204 ? response.asType(type) : TypeUtils.newInstance(type);
-    }
-
-    private synchronized RestServer getServer() throws RestException
-    {
-        if (server == null) {
-            String sessionId = getSessionId();
-            server = newServer(address, new JsonSerializer(), ImmutableMap.of(ContentType, Json, Accept, Json, SessionId, sessionId));
-        }
-        return server;
-    }
-
-    private String getSessionId() throws RestException
-    {
-        RestServer rest = newServer(address, new JsonSerializer(), ImmutableMap.of(ContentType, Json, Accept, Json));
-        RestRequest request = rest.post(Session).setParameters(ImmutableMap.of(Username, username, Password, password));
-
-        RestResponse response = request.make(HandleFailure.ByException);
-        SessionToken sessionToken = response.asType(SessionToken.class);
-
-        return sessionToken.getSessionId();
-    }
-
-    private RestServer newServer(String address, Serializer serializer, Map<Object, Object> headers)
-    {
-        RestServer result = serverFactory.get();
-        result.setAddress(address);
-        result.setSerializer(serializer);
-        result.setHeaders(headers);
-        return result;
-    }
+    /**
+     *
+     * @param query
+     * @param type
+     * @param <T>
+     * @return
+     * @throws RestException
+     */
+    <T extends QueryBundle> T query(String query, Class<T> type) throws RestException;
 }
 

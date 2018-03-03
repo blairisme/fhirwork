@@ -36,7 +36,7 @@ public class EhrServerTest {
         request  = mock(RestRequest.class);
         response  = mock(RestResponse.class);
         restServer = mock(RestServer.class);
-        ehrServer = new EhrServer(new MockProvider(restServer));
+        ehrServer = new BasicEhrServer(new MockProvider(restServer));
         ehrServer.setConnectionDetails("testAddress", "testUserName", "testPassword");
         sessionToken = mock(SessionToken.class);
 
@@ -75,7 +75,7 @@ public class EhrServerTest {
 
         HealthRecord expectedResult = mock(HealthRecord.class);
         when(response.asType(HealthRecord.class)).thenReturn(expectedResult);
-        HealthRecord result = ehrServer.getEhr(id, namespace);
+        HealthRecord result = ehrServer.getHealthRecord(id, namespace);
 
         verify(restServer, times(1)).get(EhrResource.Ehr);
         verify(request, times(1)).setParameters(of(EhrParameter.SubjectId, id, EhrParameter.SubjectNamespace, namespace));

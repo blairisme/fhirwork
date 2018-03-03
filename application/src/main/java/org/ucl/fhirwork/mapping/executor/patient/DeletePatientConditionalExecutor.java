@@ -22,6 +22,7 @@ import org.ucl.fhirwork.network.fhir.data.SearchParameter;
 import org.ucl.fhirwork.network.fhir.operations.patient.DeletePatientOperation;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -61,7 +62,7 @@ public class DeletePatientConditionalExecutor implements Executor
         try
         {
             Person template = personFactory.fromSearchParameters(searchParameters);
-            List<Person> people = empiServer.findPersonsByAttributes(template);
+            Collection<Person> people = empiServer.findPersons(template);
 
             for (Person person: people){
                 empiServer.removePerson(person.getPersonId());

@@ -23,6 +23,7 @@ import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
 
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -62,7 +63,7 @@ public class ReadPatientConditionalExecutor implements Executor
     {
         try
         {
-            List<Person> people = findPeople(searchParameters);
+            Collection<Person> people = findPeople(searchParameters);
             return patientFactory.fromPeople(people);
         }
         catch (RestException cause){
@@ -70,11 +71,11 @@ public class ReadPatientConditionalExecutor implements Executor
         }
     }
 
-    private List<Person> findPeople(Map<SearchParameter, Object> searchParameters) throws RestException
+    private Collection<Person> findPeople(Map<SearchParameter, Object> searchParameters) throws RestException
     {
         if (! searchParameters.isEmpty()){
             Person template = personFactory.fromSearchParameters(searchParameters);
-            return empiServer.findPersonsByAttributes(template);
+            return empiServer.findPersons(template);
         }
         return empiServer.loadAllPersons(0, 100); //TODO: Paging mechanism needed. Is included in FHIR spec
     }
