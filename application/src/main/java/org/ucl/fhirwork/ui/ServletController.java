@@ -208,15 +208,13 @@ public class ServletController
     @RequestMapping(value = "/cache", method = RequestMethod.GET)
     public String cache(ModelMap model)
     {
-	model.addAttribute("checked", "false");
         return "cache";
     }
     @RequestMapping(value = "/cache", method = RequestMethod.POST)
     public String cacheChecked(@ModelAttribute CacheConfig cache, ModelMap model)
     {
-	System.out.println(cache.getEnable());
+	
 	  if(cache.getEnable()) {
-	      System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 	      model.addAttribute("checked", "true");
 	  }
         return "cache";
