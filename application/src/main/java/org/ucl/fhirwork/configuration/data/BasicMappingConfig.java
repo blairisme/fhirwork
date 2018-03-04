@@ -42,6 +42,10 @@ public class BasicMappingConfig
         this.magnitude = magnitude;
         this.unit = unit;
     }
+    public boolean isEqual(BasicMappingConfig basic) {
+    	
+    	return true;
+    }
 
     public String getCode() {
         return code;

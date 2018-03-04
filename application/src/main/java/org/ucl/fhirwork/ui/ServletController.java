@@ -58,34 +58,34 @@ public class ServletController
     	return data;
     }
 
-    @RequestMapping(value = "/mapping", method = RequestMethod.GET)
-    public String mapping(ModelMap model)
-    {
-    	MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
-    	initializeMappingModelMap(mappingConfig, model);
-
-        return "mapping";
-    }
-
-    @RequestMapping(value = "/mapping", method = RequestMethod.POST)
-    public String mappingSubmit(@ModelAttribute BasicMappingConfig data, @RequestParam("CurrentLoinc") String code,ModelMap model)
-    {
-    	MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
-        initializeMappingModelMap(mappingConfig, model);
-
-        Map<String, BasicMappingConfig> basicConfig = mappingConfig.getBasic();
-        basicConfig.put(code, data);
-
-        configuration.setConfig(ConfigType.Mapping, mappingConfig);
-        return "mapping";
-    }
-
-    private void initializeMappingModelMap(MappingConfig mappingConfig, ModelMap model){
-        Map<String, BasicMappingConfig> basicConfig = mappingConfig.getBasic();
-        model.addAttribute("allLoinc", basicConfig.keySet());
-        model.addAttribute("LoincData", new BasicMappingConfig("", "", "", "", "", ""));
-        model.addAttribute("CurrentLoinc", "");
-    }
+//    @RequestMapping(value = "/mapping", method = RequestMethod.GET)
+//    public String mapping(ModelMap model)
+//    {
+//    	MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
+//    	initializeMappingModelMap(mappingConfig, model);
+//
+//        return "mapping";
+//    }
+//
+//    @RequestMapping(value = "/mapping", method = RequestMethod.POST)
+//    public String mappingSubmit(@ModelAttribute BasicMappingConfig data, @RequestParam("CurrentLoinc") String code,ModelMap model)
+//    {
+//    	MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
+//        initializeMappingModelMap(mappingConfig, model);
+//
+//        Map<String, BasicMappingConfig> basicConfig = mappingConfig.getBasic();
+//        basicConfig.put(code, data);
+//
+//        configuration.setConfig(ConfigType.Mapping, mappingConfig);
+//        return "mapping";
+//    }
+//
+//    private void initializeMappingModelMap(MappingConfig mappingConfig, ModelMap model){
+//        Map<String, BasicMappingConfig> basicConfig = mappingConfig.getBasic();
+//        model.addAttribute("allLoinc", basicConfig.keySet());
+//        model.addAttribute("LoincData", new BasicMappingConfig("", "", "", "", "", ""));
+//        model.addAttribute("CurrentLoinc", "");
+//    }
 
     @RequestMapping(value = "/network", method = RequestMethod.GET)
     public String network(ModelMap model)
@@ -204,5 +204,19 @@ public class ServletController
 
         configuration.setConfig(ConfigType.Mapping, mappingConfig);
         return "redirect:/configuration/mapping/list";
+    }
+    @RequestMapping(value = "/cache", method = RequestMethod.GET)
+    public String cache(ModelMap model)
+    {
+        return "cache";
+    }
+    @RequestMapping(value = "/cache", method = RequestMethod.POST)
+    public String cacheChecked(@ModelAttribute CacheConfig cache, ModelMap model)
+    {
+	
+	  if(cache.getEnable()) {
+	      model.addAttribute("checked", "true");
+	  }
+        return "cache";
     }
 }

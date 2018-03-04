@@ -1,13 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-<%@ page import="java.util.*"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
- 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>Fhirwork Mapping</title>
-    <link rel="stylesheet" type="text/css" href="resources/reset.css"/>
-    <link rel="stylesheet" type="text/css" href="resources/general.css"/>
-    <link rel="stylesheet" type="text/css" href="resources/mapping.css"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title>Fhirwork Mapping Configuration</title>
+
+    <link rel="stylesheet" type="text/css" href="/resources/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="/resources/general.css"/>
+    <link rel="stylesheet" type="text/css" href="/resources/mapping.css"/>
     <script src="//lib.sinaapp.com/js/jquery/1.12.4/jquery-1.12.4.min.js"></script>
 </head>
 <body>
@@ -23,13 +23,13 @@
           </a>
       </div>
       
-      <div class="settings">
-		  <h1 class="title">FHIR Mappings</h1>
+      <div class="content">
+		  <h1 class="title">Observation Conversion Settings</h1>
 		  <select id="loinc-selection" onchange="requestMappingConfig();">
 		      <option value="default" selected="selected">(Loinc Code)</option>
-		      <%for(String loinc: (Collection<String>)request.getAttribute("allLoinc")){%>
-		          <option value="<%out.print(loinc);%>"> <%out.print(loinc);%> </option>
-		      <%}%>
+		      <c:forEach var="loinc" items="${allLoinc}">
+		          <option value="${loinc}"> ${loinc} </option>
+		      </c:forEach>
 		  </select>
 		    
 		  <form action="mapping" method="POST">
