@@ -61,6 +61,14 @@
     background-color: white;
 
     -webkit-mask-image: url('./tools.svg');
+	 mask-image: url(icon.svg);
+}
+
+.cache {
+	 background-repeat: no-repeat;
+    background-color: white;
+
+    -webkit-mask-image: url('./tools.svg');
     mask-image: url(icon.svg);
 }
 

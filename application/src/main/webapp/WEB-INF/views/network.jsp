@@ -18,6 +18,10 @@
                 <div class="icon network"></div>
                 <span>Network Settings</span>
             </a>
+            <a class="link" href="/configuration/cache">
+                <div class="icon cache"></div>
+                <span>Cache Settings</span>
+            </a>
         </div>
         <div class="content">
             <h1 class="title">EMPI Settings</h1>

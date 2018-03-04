@@ -2,8 +2,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
+	 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <title>Fhirwork Mapping Configuration</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    
     <link href="<c:url value="/resources/reset.css"/>" rel="stylesheet"></link>
     <link href="<c:url value="/resources/general.css"/>" rel="stylesheet"></link>
     <link href="<c:url value="/resources/mapping.css"/>" rel="stylesheet"></link>
@@ -20,6 +21,10 @@
             <a class="link" href="/configuration/network">
                 <div class="icon network"></div>
                 <span>Network Settings</span>
+            </a>
+            <a class="link" href="/configuration/cache">
+                <div class="icon cache"></div>
+                <span>Cache Settings</span>
             </a>
         </div>
 
