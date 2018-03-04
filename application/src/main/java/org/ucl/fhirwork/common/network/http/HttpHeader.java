@@ -8,7 +8,7 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.common.http;
+package org.ucl.fhirwork.common.network.http;
 
 /**
  * Options in this enumeration specify identifiers for HTTP header key value

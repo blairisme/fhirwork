@@ -10,5 +10,15 @@
 
 package org.ucl.fhirwork.common.network.exception;
 
-public class AmbiguousResultException {
+public class AmbiguousResultException extends NetworkException
+{
+    public AmbiguousResultException(String message)
+    {
+        super(message);
+    }
+
+    public AmbiguousResultException(String type, String search)
+    {
+        this("Ambiguous results for " + type + " search: " + search);
+    }
 }
