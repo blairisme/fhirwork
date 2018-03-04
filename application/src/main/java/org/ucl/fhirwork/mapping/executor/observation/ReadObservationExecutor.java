@@ -17,7 +17,7 @@ import org.apache.commons.lang3.Validate;
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
-import org.ucl.fhirwork.common.http.RestException;
+import org.ucl.fhirwork.common.network.Rest.RestException;
 import org.ucl.fhirwork.configuration.ConfigService;
 import org.ucl.fhirwork.configuration.data.ConfigType;
 import org.ucl.fhirwork.configuration.data.GeneralConfig;

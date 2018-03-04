@@ -17,6 +17,7 @@ import ca.uhn.fhir.rest.param.TokenOrListParam;
 import org.junit.Before;
 import org.junit.Test;
 import org.ucl.fhirwork.common.framework.ExecutionException;
+import org.ucl.fhirwork.common.network.exception.ResourceMissingException;
 import org.ucl.fhirwork.configuration.ConfigService;
 import org.ucl.fhirwork.configuration.data.ConfigType;
 import org.ucl.fhirwork.configuration.data.GeneralConfig;
@@ -31,7 +32,6 @@ import org.ucl.fhirwork.network.empi.data.Identifier;
 import org.ucl.fhirwork.network.empi.data.IdentifierDomain;
 import org.ucl.fhirwork.network.empi.data.Person;
 import org.ucl.fhirwork.network.empi.exception.IdentifierMissingException;
-import org.ucl.fhirwork.network.empi.exception.PersonMissingException;
 import org.ucl.fhirwork.network.empi.server.EmpiServer;
 import org.ucl.fhirwork.network.fhir.operations.observation.ReadObservationOperation;
 import org.ucl.fhirwork.network.fhir.operations.patient.UpdatePatientOperation;
@@ -40,12 +40,7 @@ import org.ucl.fhirwork.test.MockNetworkService;
 
 import java.util.ArrayList;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.*;
 
 public class ReadObservationExecutorTest
 {
@@ -115,12 +110,12 @@ public class ReadObservationExecutorTest
         }
     }
 
-    @Test (expected = PersonMissingException.class)
+    @Test (expected = ResourceMissingException.class)
     public void invokePersonMissing() throws Throwable
     {
         try {
             EmpiServer empiServer = networkService.getEmpiServer();
-            when(empiServer.loadPerson(anyString())).thenThrow(PersonMissingException.class);
+            when(empiServer.loadPerson(anyString())).thenThrow(ResourceMissingException.class);
 
             executor.setOperation(mockOperation());
             executor.invoke();
@@ -135,7 +130,7 @@ public class ReadObservationExecutorTest
     {
         try {
             GeneralConfig generalConfig = configService.getConfig(ConfigType.General);
-            when(generalConfig.getEhrIdSystem()).thenReturn("http://different.com");
+            when(generalConfig.getEhrIdSystem()).thenReturn("network://different.com");
 
             executor.setOperation(mockOperation());
             executor.invoke();
@@ -163,7 +158,7 @@ public class ReadObservationExecutorTest
     private void setupMockBehaviour() throws Throwable
     {
         GeneralConfig generalConfig = configService.getConfig(ConfigType.General);
-        when(generalConfig.getEhrIdSystem()).thenReturn("http://fhirwork.com");
+        when(generalConfig.getEhrIdSystem()).thenReturn("network://fhirwork.com");
 
         EmpiServer empiServer = networkService.getEmpiServer();
         when(empiServer.loadPerson(anyString())).thenReturn(mockPerson());
@@ -182,7 +177,7 @@ public class ReadObservationExecutorTest
 
     private ReadObservationOperation mockOperation()
     {
-        TokenOrListParam codes = new TokenOrListParam("http://loinc.org", "3141-9", "8302-2");
+        TokenOrListParam codes = new TokenOrListParam("network://loinc.org", "3141-9", "8302-2");
         ReferenceParam patient = new ReferenceParam("123");
         return new ReadObservationOperation(codes, patient);
     }
@@ -190,7 +185,7 @@ public class ReadObservationExecutorTest
     private Person mockPerson()
     {
         IdentifierDomain identifierDomain = new IdentifierDomain();
-        identifierDomain.setIdentifierDomainName("http://fhirwork.com");
+        identifierDomain.setIdentifierDomainName("network://fhirwork.com");
 
         Identifier identifier = new Identifier();
         identifier.setIdentifier("456");

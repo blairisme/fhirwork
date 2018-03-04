@@ -11,7 +11,8 @@
 package org.ucl.fhirwork.network.ehr.server;
 
 import com.google.common.collect.ImmutableMap;
-import org.ucl.fhirwork.common.http.*;
+import org.ucl.fhirwork.common.network.Rest.*;
+import org.ucl.fhirwork.common.network.exception.AuthenticationException;
 import org.ucl.fhirwork.common.reflect.TypeUtils;
 import org.ucl.fhirwork.common.serialization.JsonSerializer;
 import org.ucl.fhirwork.common.serialization.Serializer;
@@ -24,10 +25,12 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Map;
 
-import static com.google.common.collect.ImmutableBiMap.of;
-import static org.ucl.fhirwork.common.http.HttpHeader.Accept;
-import static org.ucl.fhirwork.common.http.HttpHeader.ContentType;
-import static org.ucl.fhirwork.common.http.MimeType.Json;
+import static com.google.common.collect.ImmutableMap.of;
+import static org.ucl.fhirwork.common.network.Rest.RestStatusHandlers.throwOnFailedStatus;
+import static org.ucl.fhirwork.common.network.Rest.RestStatusHandlers.throwOnFailureExcept;
+import static org.ucl.fhirwork.common.network.http.HttpHeader.Accept;
+import static org.ucl.fhirwork.common.network.http.HttpHeader.ContentType;
+import static org.ucl.fhirwork.common.network.http.MimeType.Json;
 import static org.ucl.fhirwork.network.ehr.server.EhrHeader.SessionId;
 import static org.ucl.fhirwork.network.ehr.server.EhrParameter.*;
 import static org.ucl.fhirwork.network.ehr.server.EhrResource.*;
@@ -69,7 +72,7 @@ public class BasicEhrServer implements EhrServer
         RestRequest request = getServer().get(Ehr);
         request.setParameters(ImmutableMap.of(SubjectId, id, SubjectNamespace, namespace));
 
-        RestResponse response = request.make(HandleFailure.ByException);
+        RestResponse response = request.make(throwOnFailedStatus());
         return response.asType(HealthRecord.class);
     }
 
@@ -79,7 +82,7 @@ public class BasicEhrServer implements EhrServer
         RestRequest request = getServer().get(Query);
         request.setParameters(of(Aql, query));
 
-        RestResponse response = request.make(HandleFailure.ByException);
+        RestResponse response = request.make(throwOnFailedStatus());
         return response.getStatusCode() != 204 ? response.asType(type) : TypeUtils.newInstance(type);
     }
 
@@ -87,19 +90,21 @@ public class BasicEhrServer implements EhrServer
     {
         if (server == null) {
             String sessionId = getSessionId();
-            server = newServer(address, new JsonSerializer(), ImmutableMap.of(ContentType, Json, Accept, Json, SessionId, sessionId));
+            server = newServer(address, new JsonSerializer(), of(ContentType, Json, Accept, Json, SessionId, sessionId));
         }
         return server;
     }
 
     private String getSessionId() throws RestException
     {
-        RestServer rest = newServer(address, new JsonSerializer(), ImmutableMap.of(ContentType, Json, Accept, Json));
-        RestRequest request = rest.post(Session).setParameters(ImmutableMap.of(Username, username, Password, password));
+        RestServer rest = newServer(address, new JsonSerializer(), of(ContentType, Json, Accept, Json));
+        RestRequest request = rest.post(Session).setParameters(of(Username, username, Password, password));
 
-        RestResponse response = request.make(HandleFailure.ByException);
+        RestResponse response = request.make(throwOnFailureExcept(401));
+        if (response.getStatusCode() == 401) {
+            throw new AuthenticationException(address, username);
+        }
         SessionToken sessionToken = response.asType(SessionToken.class);
-
         return sessionToken.getSessionId();
     }
 

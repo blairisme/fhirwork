@@ -68,7 +68,7 @@ public class ObservationFactory
         quantity.setValue(Double.parseDouble(queryResult.getMagnitude()));
         quantity.setUnit(queryResult.getUnit());
         quantity.setCode(queryResult.getUnit());
-        quantity.setSystem("http://unitsofmeasure.org");
+        quantity.setSystem("network://unitsofmeasure.org");
         return quantity;
     }
 
@@ -77,7 +77,7 @@ public class ObservationFactory
         Map<String, String> codeMap = getCodeMap();
 
         CodeableConceptDt code = new CodeableConceptDt();
-        code.addCoding(new CodingDt("http://loinc.org", loinc));
+        code.addCoding(new CodingDt("network://loinc.org", loinc));
         code.setText(codeMap.get(loinc));
         return code;
     }

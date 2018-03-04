@@ -8,15 +8,9 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.common.http;
+package org.ucl.fhirwork.common.network.Rest;
 
-/**
- * Options in this enumeration specify strategies for handling errors.
- *
- * @author Blair Butterworth
- */
-public enum HandleFailure
-{
-    ByException,
-    ByErrorCode
+import java.util.function.Predicate;
+
+public interface RestStatusHandler extends Predicate<RestResponse> {
 }

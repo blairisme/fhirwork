@@ -13,7 +13,6 @@ package org.ucl.fhirwork.mapping.executor.patient;
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
-import org.ucl.fhirwork.common.http.RestException;
 import org.ucl.fhirwork.mapping.data.PersonFactory;
 import org.ucl.fhirwork.network.NetworkService;
 import org.ucl.fhirwork.network.empi.data.Person;
@@ -23,7 +22,6 @@ import org.ucl.fhirwork.network.fhir.operations.patient.DeletePatientOperation;
 
 import javax.inject.Inject;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**

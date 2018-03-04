@@ -8,7 +8,7 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.common.http;
+package org.ucl.fhirwork.common.network.Rest;
 
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.request.GetRequest;

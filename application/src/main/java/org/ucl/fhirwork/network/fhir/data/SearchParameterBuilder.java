@@ -94,7 +94,7 @@ public class SearchParameterBuilder
 
     private List<NameValuePair> getQueryParameters(String conditional)
     {
-        URI syntheticUri = URI.create("http://fhir.com/" + conditional);
+        URI syntheticUri = URI.create("network://fhir.com/" + conditional);
         return URLEncodedUtils.parse(syntheticUri, "UTF-8");
     }
 

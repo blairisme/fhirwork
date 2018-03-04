@@ -69,7 +69,7 @@ public class BasicMapping implements MappingProvider
         quantity.setValue(Double.parseDouble(queryResult.get("magnitude")));
         quantity.setUnit(queryResult.get("unit"));
         quantity.setCode(queryResult.get("unit"));
-        quantity.setSystem("http://unitsofmeasure.org");
+        quantity.setSystem("network://unitsofmeasure.org");
         return quantity;
     }
 

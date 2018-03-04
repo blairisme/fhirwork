@@ -10,10 +10,10 @@
 
 package org.ucl.fhirwork.network.empi.server;
 
-import org.ucl.fhirwork.common.http.RestException;
+import org.ucl.fhirwork.common.network.Rest.RestException;
+import org.ucl.fhirwork.common.network.exception.AmbiguousResultException;
+import org.ucl.fhirwork.common.network.exception.ResourceMissingException;
 import org.ucl.fhirwork.network.empi.data.Person;
-import org.ucl.fhirwork.network.empi.exception.PersonExistsException;
-import org.ucl.fhirwork.network.empi.exception.PersonMissingException;
 
 import java.util.Collection;
 import java.util.List;
@@ -47,19 +47,24 @@ public interface EmpiServer
      * @throws RestException    thrown if an error occurs whilst communicating
      *                          with the EMPI server.
      */
-    Person addPerson(Person person) throws RestException, PersonExistsException;
+    Person addPerson(Person person) throws RestException;
 
     /**
      * This method returns a {@link Person} that matches any of the attributes
      * that are provided in the given {@code Person} search template.
      *
-     * @param template          the search criteria, contained in a
-     *                          {@code Person} template.
-     * @return                  a {@code Person} matching the given template.
-     * @throws RestException    thrown if an error occurs whilst communicating
-     *                          with the EMPI server.
+     * @param template  the search criteria, contained in a {@code Person}
+     *                  template.
+     * @return          a {@code Person} matching the given template.
+     *
+     * @throws RestException            thrown if an error occurs whilst
+     *                                  communicating with the EMPI server.
+     * @throws ResourceMissingException thrown if a matching {@code Person}
+     *                                  isn't found.
+     * @throws AmbiguousResultException thrown more than one {@code Person}
+     *                                  match the given search template.
      */
-    Person findPerson(Person template) throws RestException;
+    Person findPerson(Person template) throws RestException, ResourceMissingException, AmbiguousResultException;
 
     /**
      * This method returns a {@link List} of {@link Person} records that match
@@ -85,10 +90,10 @@ public interface EmpiServer
      *
      * @throws RestException            thrown if an error occurs whilst
      *                                  communicating with the EMPI server.
-     * @throws PersonMissingException   thrown if a person with the given id
+     * @throws ResourceMissingException thrown if a person with the given id
      *                                  cannot be found.
      */
-    Person loadPerson(String personId) throws RestException, PersonMissingException;
+    Person loadPerson(String personId) throws RestException, ResourceMissingException;
 
     /**
      * Returns biographical information on all people in the EMPI system.
@@ -104,7 +109,8 @@ public interface EmpiServer
     /**
      * This method removes a {@@link Person} from the EMPI system. The system
      * locates the {@code Person} record using their internal unique id. If the
-     * record is found, the record is removed from the system completely.
+     * record is found, the record is removed from the system completely. If
+     * the record isn't found, no changes will be made.
      *
      * @param personId          the identifier of the {@code Person} to remove.
      * @throws RestException    thrown if an error occurs whilst communicating
@@ -120,8 +126,11 @@ public interface EmpiServer
      *
      * @param person            the {@code Person} to updated.
      * @return                  the updated {@code Person}.
-     * @throws RestException    thrown if an error occurs whilst communicating
-     *                          with the EMPI server.
+     *
+     * @throws RestException            thrown if an error occurs whilst
+     *                                  communicating with the EMPI server.
+     * @throws ResourceMissingException thrown if the person being updated
+     *                                  cannot be found.
      */
-    Person updatePerson(Person person) throws RestException, PersonMissingException;
+    Person updatePerson(Person person) throws RestException, ResourceMissingException;
 }

@@ -12,7 +12,7 @@ package org.ucl.fhirwork.mapping.executor.patient;
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
-import org.ucl.fhirwork.common.http.RestException;
+import org.ucl.fhirwork.common.network.Rest.RestException;
 import org.ucl.fhirwork.mapping.data.PatientFactory;
 import org.ucl.fhirwork.mapping.data.PersonFactory;
 import org.ucl.fhirwork.network.NetworkService;

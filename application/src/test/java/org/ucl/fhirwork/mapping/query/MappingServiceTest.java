@@ -68,36 +68,4 @@ public class MappingServiceTest
         return configService;
     }
     */
-
-
-    @Test
-    public void sandboxTest()
-    {
-        try {
-            String script = TestResourceUtils.readResource("mapping/script.js");
-            //String script = "function Query(selectors, archetype){    this.selectors = selectors;    this.archetype = archetype;}function Quantity(value, unit){    this.value = value;    this.unit = unit;}function getQuery(ehrId){    var archetype = \"openEHR-EHR-OBSERVATION.skeletal_age.v0\";    var selectors = [\"/data[at0001]/events[at0002]/data[at0003]/items[at0005]/value/value as value\"];    return new Query(selectors, archetype);}function getQuantity(queryResult){    var value = dateToMonths(queryResult.get(\"value\"));    var unit = \"Months\";    return new Quantity(value, unit);}function dateToMonths(date){    return 4.1;}";
-
-            ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
-            engine.eval(script);
-
-            Invocable invocable = (Invocable)engine;
-            ScriptObjectMirror queryMirror = (ScriptObjectMirror)invocable.invokeFunction("getQuery", "c831fe4d-0ce9-4a63-8bfa-2c51007f97e5");
-            ScriptQuery query = new ScriptQuery(queryMirror);
-
-            System.out.println(query.getArchetype());
-            System.out.println(query.getSelectors());
-
-            Map<String, String> foo = new HashMap<>();
-            foo.put("value", "P6Y");
-
-            ScriptObjectMirror quantityMirror = (ScriptObjectMirror)invocable.invokeFunction("getQuantity", foo);
-            ScriptQuantity quantity = new ScriptQuantity(quantityMirror);
-
-            System.out.println(quantity.getUnit());
-            System.out.println(quantity.getValue());
-        }
-        catch (Throwable error){
-            error.printStackTrace();
-        }
-    }
 }

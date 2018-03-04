@@ -24,7 +24,6 @@ import org.ucl.fhirwork.network.empi.data.Person;
 import org.ucl.fhirwork.network.fhir.data.SearchParameter;
 
 import javax.inject.Inject;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -194,9 +193,8 @@ public class PersonFactory
 
     private void setDateChanged(Person person)
     {
-        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss[.SSS]'Z'", Locale.ENGLISH);
-        //String dateNow = formatter.format(LocalDateTime.now());
-        String dateNow = "2019-03-04T08:38:02.705Z";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss[.SSS]'Z'", Locale.ENGLISH);
+        String dateNow = formatter.format(LocalDateTime.now());
         person.setDateChanged(dateNow);
     }
 

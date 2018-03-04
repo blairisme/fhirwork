@@ -16,7 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.ucl.fhirwork.common.framework.ExecutionException;
-import org.ucl.fhirwork.common.http.RestException;
+import org.ucl.fhirwork.common.network.Rest.RestException;
 import org.ucl.fhirwork.mapping.data.PatientFactory;
 import org.ucl.fhirwork.network.NetworkService;
 import org.ucl.fhirwork.network.empi.server.EmpiServer;

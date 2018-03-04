@@ -10,7 +10,8 @@
 
 package org.ucl.fhirwork.network.ehr.server;
 
-import org.ucl.fhirwork.common.http.RestException;
+import org.ucl.fhirwork.common.network.Rest.RestException;
+import org.ucl.fhirwork.common.network.exception.ResourceMissingException;
 import org.ucl.fhirwork.network.ehr.data.HealthRecord;
 import org.ucl.fhirwork.network.ehr.data.QueryBundle;
 import org.ucl.fhirwork.network.ehr.exception.MissingRecordException;
@@ -36,22 +37,29 @@ public interface EhrServer
     void setConnectionDetails(String address, String username, String password);
 
     /**
+     * Returns the {@link HealthRecord} belonging to the patient with the given
+     * identifier.
      *
-     * @param id
-     * @param namespace
-     * @return
-     * @throws RestException
-     * @throws MissingRecordException
+     * @param id        the identifier of a patient.
+     * @param namespace the namespace the given identifier belongs to.
+     * @return          a {@code HealthRecord}.
+     * @throws RestException            thrown if an error occurs whilst
+     *                                  communicating with the EHR server.
+     * @throws ResourceMissingException thrown if a matching {@code HealthRecord}
+     *                                  isn't found.
      */
     HealthRecord getHealthRecord(String id, String namespace) throws RestException, MissingRecordException;
 
     /**
+     * Executes the given AQL query and returns the results serialized into
+     * the given class.
      *
-     * @param query
+     * @param query an AQL query.
      * @param type
      * @param <T>
      * @return
-     * @throws RestException
+     * @throws RestException            thrown if an error occurs whilst
+     *                                  communicating with the EHR server.
      */
     <T extends QueryBundle> T query(String query, Class<T> type) throws RestException;
 }

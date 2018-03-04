@@ -8,12 +8,7 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.network.empi.exception;
+package org.ucl.fhirwork.common.network.exception;
 
-public class PersonMissingException extends RuntimeException
-{
-    public PersonMissingException(String personId)
-    {
-        super("Person not found: " + personId);
-    }
+public class AmbiguousResultException {
 }

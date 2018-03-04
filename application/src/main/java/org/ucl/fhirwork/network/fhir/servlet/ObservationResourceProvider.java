@@ -25,6 +25,8 @@ import org.ucl.fhirwork.network.fhir.operations.observation.ReadObservationOpera
 import javax.inject.Inject;
 import java.util.List;
 
+import static org.ucl.fhirwork.network.fhir.data.ExceptionUtils.getFrameworkException;
+
 /**
  * Instances of this class provide implement functions defined in the FHIR
  * specification related to Observations. Once implemented these operation can
@@ -71,7 +73,7 @@ public class ObservationResourceProvider implements IResourceProvider
             return (List<Observation>)executorService.execute(operation);
         }
         catch (Throwable error) {
-            throw new InternalErrorException(error);
+            throw getFrameworkException(error);
         }
     }
 }

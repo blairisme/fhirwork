@@ -12,7 +12,8 @@ package org.ucl.fhirwork.network.empi.server;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.ucl.fhirwork.common.http.*;
+import org.ucl.fhirwork.common.network.Rest.*;
+import org.ucl.fhirwork.common.network.exception.ResourceExistsException;
 import org.ucl.fhirwork.network.empi.data.Person;
 import org.ucl.fhirwork.test.MockProvider;
 
@@ -37,7 +38,7 @@ public class EmpiServerTest
         empiServer = new BasicEmpiServer(new MockProvider(restServer));
 
         when(restServer.put(any(RestResource.class))).thenReturn(request);
-        when(request.make(any(HandleFailure.class))).thenReturn(response);
+        when(request.make(any(RestStatusHandler.class))).thenReturn(response);
         when(response.asString()).thenReturn("session");
     }
 
@@ -53,7 +54,7 @@ public class EmpiServerTest
         verify(response, times(1)).asType(Person.class);
     }
 
-    @Test
+    @Test (expected = ResourceExistsException.class)
     public void addPersonAlreadyExistsTest() throws RestException
     {
         when(response.getStatusCode()).thenReturn(204);
@@ -70,7 +71,7 @@ public class EmpiServerTest
     @Test (expected = RestException.class)
     public void addPersonConnectionExceptionTest() throws RestException
     {
-        when(request.make(any(HandleFailure.class))).thenThrow(RestException.class);
+        when(request.make(any(RestStatusHandler.class))).thenThrow(RestException.class);
         empiServer.addPerson(mock(Person.class));
     }
 }
