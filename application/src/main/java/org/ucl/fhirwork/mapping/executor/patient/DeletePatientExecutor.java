@@ -60,7 +60,7 @@ public class DeletePatientExecutor implements Executor
             empiServer.removePerson(personId);
             return null;
         }
-        catch (RestException cause){
+        catch (Throwable cause){
             throw new ExecutionException(cause);
         }
     }

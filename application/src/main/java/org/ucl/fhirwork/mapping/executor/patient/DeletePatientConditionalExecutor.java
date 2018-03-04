@@ -69,7 +69,7 @@ public class DeletePatientConditionalExecutor implements Executor
             }
             return null;
         }
-        catch (RestException cause){
+        catch (Throwable cause){
             throw new ExecutionException(cause);
         }
     }

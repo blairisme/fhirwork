@@ -62,8 +62,19 @@ public class Person
     private String familyName;
     private Gender gender;
     private String dateOfBirth;
+    private String dateChanged;
 
     public Person() {
+    }
+
+    public Person(Person person) {
+        this.personId = person.personId;
+        this.personIdentifiers = person.personIdentifiers;
+        this.givenName = person.givenName;
+        this.familyName = person.familyName;
+        this.gender = person.gender;
+        this.dateOfBirth = person.dateOfBirth;
+        this.dateChanged = person.dateChanged;
     }
 
     public String getPersonId() {
@@ -112,5 +123,13 @@ public class Person
 
     public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getDateChanged() {
+        return dateChanged;
+    }
+
+    public void setDateChanged(String dateChanged) {
+        this.dateChanged = dateChanged;
     }
 }

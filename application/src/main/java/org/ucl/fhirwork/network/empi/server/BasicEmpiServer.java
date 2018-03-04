@@ -19,6 +19,7 @@ import org.ucl.fhirwork.network.empi.data.Identifier;
 import org.ucl.fhirwork.network.empi.data.People;
 import org.ucl.fhirwork.network.empi.data.Person;
 import org.ucl.fhirwork.network.empi.exception.PersonMissingException;
+import sun.tools.java.AmbiguousClass;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -51,14 +52,7 @@ public class BasicEmpiServer implements EmpiServer
         this.serverFactory = serverFactory;
     }
 
-    /**
-     * Sets the address and authentication information used to connect to the
-     * EMPI server.
-     *
-     * @param address   the URL of an EMPI server.
-     * @param username  the name of an account on the EMPI server.
-     * @param password  the password of an EMPI account.
-     */
+    @Override
     public synchronized void setConnectionDetails(String address, String username, String password) {
         this.address = address;
         this.username = username;
@@ -66,17 +60,7 @@ public class BasicEmpiServer implements EmpiServer
         this.server = null;
     }
 
-    /**
-     * This methods adds a {@link Person} to the EMPI system. The system will
-     * first check to see if a {@code Person} with the same identifier is
-     * already known to the system. If the {@code Person} is known already then
-     * nothing further will be done.
-     *
-     * @param person            the {@ode Person} to add.
-     * @return                  the {@ode Person} that was added.
-     * @throws RestException    thrown if an error occurs whilst communicating
-     *                          with the EMPI server.
-     */
+    @Override
     public Person addPerson(Person person) throws RestException
     {
         RestRequest request = getServer().put(AddPerson);
@@ -86,20 +70,25 @@ public class BasicEmpiServer implements EmpiServer
         return response.getStatusCode() != 204 ? response.asType(Person.class) : person;
     }
 
-    /**
-     * This method returns a {@link List} of {@link Person} records that match
-     * any of the person attributes that are provided in the search {@code
-     * Person} object which acts as a template.
-     *
-     * @return                  a collection of people matching the given
-     *                          {@code Person} template.
-     * @throws RestException    thrown if an error occurs whilst communicating
-     *                          with the EMPI server.
-     */
-    public List<Person> findPersons(Person person) throws RestException
+    @Override
+    public Person findPerson(Person template) throws RestException
+    {
+        List<Person> people = findPersons(template);
+
+        if (people.isEmpty()){
+            throw new RuntimeException(); //Todo: better exceptions
+        }
+        if (people.size() > 1){
+            throw new RuntimeException(); //Todo: better exceptions
+        }
+        return people.get(0);
+    }
+
+    @Override
+    public List<Person> findPersons(Person template) throws RestException
     {
         RestRequest request = getServer().post(FindPersonsByAttributes);
-        request.setBody(person, Person.class);
+        request.setBody(template, Person.class);
 
         RestResponse response = request.make(HandleFailure.ByException);
         People people = response.asType(People.class);
@@ -107,19 +96,7 @@ public class BasicEmpiServer implements EmpiServer
         return Arrays.asList(people.getPerson());
     }
 
-    /**
-     * Returns biographical information on the {@link Person} with the given
-     * EMPI identifier (internal EMPI identifier)
-     *
-     * @param personId  the identifier of the {@code Person} to load.
-     * @return          a {@code Person} instance contain information on the
-     *                  desired person.
-     *
-     * @throws RestException            thrown if an error occurs whilst
-     *                                  communicating with the EMPI server.
-     * @throws PersonMissingException   thrown if a person with the given id
-     *                                  cannot be found.
-     */
+    @Override
     public Person loadPerson(String personId) throws RestException, PersonMissingException
     {
         RestRequest request = getServer().get(LoadPerson);
@@ -132,15 +109,7 @@ public class BasicEmpiServer implements EmpiServer
         return response.asType(Person.class);
     }
 
-    /**
-     * Returns biographical information on all people in the EMPI system.
-     *
-     * @param index             the index to read people from.
-     * @param count             the maximum number of people to read.
-     * @return                  a list of people.
-     * @throws RestException    thrown if an error occurs whilst communicating
-     *                          with the EMPI server.
-     */
+    @Override
     public List<Person> loadAllPersons(int index, int count) throws RestException
     {
         RestRequest request = getServer().get(LoadAllPersons);
@@ -152,35 +121,7 @@ public class BasicEmpiServer implements EmpiServer
         return Arrays.asList(people.getPerson());
     }
 
-    /**
-     * Determines whether a person with the given identifier is stored in the
-     * EMPI system.
-     *
-     * @param personId          the identifier of the person whose existence is
-     *                          in question.
-     * @return                  {@code true} if a person exists, otherwise
-     *                          {@code false}.
-     * @throws RestException    thrown if an error occurs whilst communicating
-     *                          with the EMPI server.
-     */
-    public boolean personExists(String personId) throws RestException
-    {
-        RestRequest request = getServer().get(LoadPerson);
-        request.setParameters(ImmutableMap.of(PersonId, personId));
-
-        RestResponse response = request.make(HandleFailure.ByException);
-        return response.getStatusCode() == 204;
-    }
-
-    /**
-     * This method removes a {@@link Person} from the EMPI system. The system
-     * locates the {@code Person} record using their internal unique id. If the
-     * record is found, the record is removed from the system completely.
-     *
-     * @param personId          the identifier of the {@code Person} to remove.
-     * @throws RestException    thrown if an error occurs whilst communicating
-     *                          with the EMPI server.
-     */
+    @Override
     public void removePerson(String personId) throws RestException
     {
         RestRequest request = getServer().post(RemovePerson);
@@ -188,25 +129,16 @@ public class BasicEmpiServer implements EmpiServer
         request.make(HandleFailure.ByException);
     }
 
-    /**
-     * This method updates the attributes maintained in the EMPI system about
-     * the given {@link Person}. The system will locate the {@code Person}
-     * record using the internal person identifier. The attributes in the given
-     * {@code Person} are used to update the {@code Person}'s record.
-     *
-     * @param person            the {@code Person} to updated.
-     * @return                  the updated {@code Person}.
-     * @throws RestException    thrown if an error occurs whilst communicating
-     *                          with the EMPI server.
-     */
+    @Override
     //TODO: Documentation suggests this method will throw if the person isnt found - evaluate if this is appropriate.
     //TODO: Returns 304 if the person isnt modified - evaluate if we should throw
     public Person updatePerson(Person person) throws RestException
     {
-        String personId = person.getPersonId();
-        removePerson(personId);
-        person.setPersonId(null);
-        return addPerson(person);
+        RestRequest request = getServer().put(UpdatePerson);
+        request.setBody(person, Person.class);
+
+        RestResponse response = request.make(HandleFailure.ByException);
+        return response.getStatusCode() != 204 ? response.asType(Person.class) : person;
     }
 
     private synchronized RestServer getServer() throws RestException

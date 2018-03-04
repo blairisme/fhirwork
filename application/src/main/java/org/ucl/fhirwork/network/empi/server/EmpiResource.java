@@ -27,7 +27,7 @@ public enum EmpiResource implements RestResource
     LoadPerson              ("openempi-admin/openempi-ws-rest/person-query-resource/loadPerson"),
     LoadAllPersons          ("openempi-admin/openempi-ws-rest/person-query-resource/loadAllPersonsPaged"),
     RemovePerson            ("openempi-admin/openempi-ws-rest/person-manager-resource/removePersonById"),
-    UpdatePerson            ("openempi-admin/openempi-ws-rest/person-manager-resource/updatePerson");
+    UpdatePerson            ("openempi-admin/openempi-ws-rest/person-manager-resource/updatePersonById");
 
     private String path;
 

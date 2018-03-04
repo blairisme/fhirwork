@@ -24,8 +24,12 @@ import org.ucl.fhirwork.network.empi.data.Person;
 import org.ucl.fhirwork.network.fhir.data.SearchParameter;
 
 import javax.inject.Inject;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -63,6 +67,17 @@ public class PersonFactory
         setFirstName(result, searchParameters);
         setLastName(result, searchParameters);
         setGender(result, searchParameters);
+        return result;
+    }
+
+    public Person update(Person person, Patient patient)
+    {
+        Person result = new Person(person);
+        setId(result, patient);
+        setIdentifiers(result, patient);
+        setName(result, patient);
+        setGender(result, patient);
+        setDateChanged(person);
         return result;
     }
 
@@ -176,4 +191,15 @@ public class PersonFactory
             person.setGender(gender);
         }
     }
+
+    private void setDateChanged(Person person)
+    {
+        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss[.SSS]'Z'", Locale.ENGLISH);
+        //String dateNow = formatter.format(LocalDateTime.now());
+        String dateNow = "2019-03-04T08:38:02.705Z";
+        person.setDateChanged(dateNow);
+    }
+
+
+
 }

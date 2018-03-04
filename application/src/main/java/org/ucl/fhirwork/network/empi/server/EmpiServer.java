@@ -50,16 +50,30 @@ public interface EmpiServer
     Person addPerson(Person person) throws RestException, PersonExistsException;
 
     /**
+     * This method returns a {@link Person} that matches any of the attributes
+     * that are provided in the given {@code Person} search template.
+     *
+     * @param template          the search criteria, contained in a
+     *                          {@code Person} template.
+     * @return                  a {@code Person} matching the given template.
+     * @throws RestException    thrown if an error occurs whilst communicating
+     *                          with the EMPI server.
+     */
+    Person findPerson(Person template) throws RestException;
+
+    /**
      * This method returns a {@link List} of {@link Person} records that match
      * any of the person attributes that are provided in the search {@code
      * Person} object which acts as a template.
      *
+     * @param template          the search criteria, contained in a
+     *                          {@code Person} template.
      * @return                  a collection of people matching the given
      *                          {@code Person} template.
      * @throws RestException    thrown if an error occurs whilst communicating
      *                          with the EMPI server.
      */
-    Collection<Person> findPersons(Person person) throws RestException;
+    Collection<Person> findPersons(Person template) throws RestException;
 
     /**
      * Returns biographical information on the {@link Person} with the given
