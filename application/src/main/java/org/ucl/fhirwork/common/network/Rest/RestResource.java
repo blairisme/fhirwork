@@ -8,7 +8,7 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.common.http;
+package org.ucl.fhirwork.common.network.Rest;
 
 /**
  * Implementors of this interface represent the address of an HTTP resource to

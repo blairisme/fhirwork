@@ -12,7 +12,7 @@ package org.ucl.fhirwork.mapping.executor.patient;
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
-import org.ucl.fhirwork.common.http.RestException;
+import org.ucl.fhirwork.common.network.Rest.RestException;
 import org.ucl.fhirwork.mapping.data.PatientFactory;
 import org.ucl.fhirwork.mapping.data.PersonFactory;
 import org.ucl.fhirwork.network.NetworkService;
@@ -22,8 +22,7 @@ import org.ucl.fhirwork.network.fhir.data.SearchParameter;
 import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
 
 import javax.inject.Inject;
-import java.text.SimpleDateFormat;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -62,19 +61,19 @@ public class ReadPatientConditionalExecutor implements Executor
     {
         try
         {
-            List<Person> people = findPeople(searchParameters);
+            Collection<Person> people = findPeople(searchParameters);
             return patientFactory.fromPeople(people);
         }
-        catch (RestException cause){
+        catch (Throwable cause){
             throw new ExecutionException(cause);
         }
     }
 
-    private List<Person> findPeople(Map<SearchParameter, Object> searchParameters) throws RestException
+    private Collection<Person> findPeople(Map<SearchParameter, Object> searchParameters) throws RestException
     {
         if (! searchParameters.isEmpty()){
             Person template = personFactory.fromSearchParameters(searchParameters);
-            return empiServer.findPersonsByAttributes(template);
+            return empiServer.findPersons(template);
         }
         return empiServer.loadAllPersons(0, 100); //TODO: Paging mechanism needed. Is included in FHIR spec
     }

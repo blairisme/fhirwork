@@ -29,7 +29,7 @@ public class Identifier
 
     public static Identifier fromToken(String token)
     {
-        return new Identifier(token, new IdentifierDomain("SSN"));
+        return new Identifier(token, new IdentifierDomain("SSN", "2.16.840.1.113883.4.1", "2.16.840.1.113883.4.1", "SSN"));
     }
 
     public String getIdentifier() {

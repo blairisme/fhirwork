@@ -10,7 +10,6 @@
 
 package org.ucl.fhirwork.network.fhir.servlet;
 
-import ca.uhn.fhir.model.dstu2.resource.OperationOutcome;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.model.primitive.StringDt;
@@ -19,18 +18,21 @@ import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.param.DateParam;
 import ca.uhn.fhir.rest.param.TokenParam;
 import ca.uhn.fhir.rest.server.IResourceProvider;
-import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import ca.uhn.fhir.rest.server.exceptions.NotImplementedOperationException;
-import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.ucl.fhirwork.mapping.ExecutorService;
 import org.ucl.fhirwork.network.fhir.data.SearchParameter;
-import org.ucl.fhirwork.network.fhir.operations.patient.*;
 import org.ucl.fhirwork.network.fhir.data.SearchParameterBuilder;
+import org.ucl.fhirwork.network.fhir.operations.patient.CreatePatientOperation;
+import org.ucl.fhirwork.network.fhir.operations.patient.DeletePatientOperation;
+import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
+import org.ucl.fhirwork.network.fhir.operations.patient.UpdatePatientOperation;
 
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
+
+import static org.ucl.fhirwork.network.fhir.data.ExceptionUtils.getFrameworkException;
 
 /**
  * Instances of this class provide implement functions defined in the FHIR
@@ -59,19 +61,17 @@ public class PatientResourceProvider implements IResourceProvider
     @Create
     public MethodOutcome create(@ResourceParam Patient patient)
     {
-        MethodOutcome result = new MethodOutcome();
-        OperationOutcome outcome = new OperationOutcome();
-
         try {
             CreatePatientOperation operation = new CreatePatientOperation(patient);
             Patient response = (Patient)executorService.execute(operation);
+
+            MethodOutcome result = new MethodOutcome();
             result.setId(new IdDt("Patient", response.getId().getIdPart(), "1"));
+            return result;
         }
         catch (Throwable error) {
-            outcome.addIssue().setDiagnostics(error.getMessage());
-            result.setOperationOutcome(outcome);
+            throw getFrameworkException(error);
         }
-        return result;
     }
 
     @Delete
@@ -81,8 +81,8 @@ public class PatientResourceProvider implements IResourceProvider
             DeletePatientOperation operation = new DeletePatientOperation(patientId);
             executorService.execute(operation);
         }
-        catch (Exception e) {
-            throw new ResourceNotFoundException(Patient.class, patientId);
+        catch (Throwable error) {
+            throw getFrameworkException(error);
         }
     }
 
@@ -93,8 +93,8 @@ public class PatientResourceProvider implements IResourceProvider
             DeletePatientOperation operation = new DeletePatientOperation(patientId, getSearchParameters(condition));
             executorService.execute(operation);
         }
-        catch (Exception e) {
-            throw new ResourceNotFoundException(Patient.class, patientId);
+        catch (Throwable error) {
+            throw getFrameworkException(error);
         }
     }
 
@@ -105,8 +105,8 @@ public class PatientResourceProvider implements IResourceProvider
             ReadPatientOperation operation = new ReadPatientOperation(patientId);
             return (Patient)executorService.execute(operation);
         }
-        catch (Exception e) {
-            throw new ResourceNotFoundException(Patient.class, patientId);
+        catch (Throwable error) {
+            throw getFrameworkException(error);
         }
     }
 
@@ -131,45 +131,43 @@ public class PatientResourceProvider implements IResourceProvider
             return (List<Patient>)executorService.execute(operation);
         }
         catch (Throwable error) {
-            throw new InternalErrorException(error);
+            throw getFrameworkException(error);
         }
     }
 
     @Update
     public MethodOutcome update(@IdParam IdDt patientId, @ResourceParam Patient patient)
     {
-        MethodOutcome result = new MethodOutcome();
-        OperationOutcome outcome = new OperationOutcome();
-
         try {
             UpdatePatientOperation operation = new UpdatePatientOperation(patientId, patient);
             Patient response = (Patient)executorService.execute(operation);
+
+            MethodOutcome result = new MethodOutcome();
             result.setId(new IdDt("Patient", response.getId().getIdPart(), "1"));
+            return result;
         }
         catch (Throwable error) {
-            outcome.addIssue().setDiagnostics(error.getMessage());
-            result.setOperationOutcome(outcome);
+            throw getFrameworkException(error);
         }
-        return result;
     }
 
     @Update
     public MethodOutcome updateConditional(@ResourceParam Patient patient, @IdParam IdDt id, @ConditionalUrlParam String condition)
     {
-        MethodOutcome result = new MethodOutcome();
-        OperationOutcome outcome = new OperationOutcome();
         Map<SearchParameter, Object> parameters = getSearchParameters(condition);
 
         try {
             UpdatePatientOperation operation = new UpdatePatientOperation(patient, parameters);
             Patient response = (Patient)executorService.execute(operation);
+
+            MethodOutcome result = new MethodOutcome();
             result.setId(new IdDt("Patient", response.getId().getIdPart(), "1"));
+            return result;
         }
         catch (Throwable error) {
-            outcome.addIssue().setDiagnostics(error.getMessage());
-            result.setOperationOutcome(outcome);
+            throw getFrameworkException(error);
         }
-        return result;
+
     }
 
     private Map<SearchParameter, Object> getSearchParameters(String condition)

@@ -8,7 +8,7 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.common.http;
+package org.ucl.fhirwork.common.network.Rest;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -53,14 +53,14 @@ public class RestRequest
         throw new IllegalArgumentException();
     }
 
-    public RestResponse make(HandleFailure mode) throws RestException
+    public RestResponse make(RestStatusHandler statusHandler) throws RestException
     {
         try
         {
             HttpResponse<String> response = request.asString();
             RestResponse result = new RestResponse(response, serializer);
-            
-            if (! result.wasSuccessful() && mode == HandleFailure.ByException){
+
+            if (! statusHandler.test(result)){
                 throw new RestException(result.getStatusCode());
             }
             return result;

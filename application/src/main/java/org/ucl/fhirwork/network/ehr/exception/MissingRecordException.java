@@ -8,15 +8,8 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.common.http;
+package org.ucl.fhirwork.network.ehr.exception;
 
-/**
- * Options in this enumeration specify strategies for handling errors.
- *
- * @author Blair Butterworth
- */
-public enum HandleFailure
+public class MissingRecordException extends RuntimeException
 {
-    ByException,
-    ByErrorCode
 }

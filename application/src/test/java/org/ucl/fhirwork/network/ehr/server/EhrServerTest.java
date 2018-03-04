@@ -13,7 +13,7 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.ucl.fhirwork.common.http.*;
+import org.ucl.fhirwork.common.network.Rest.*;
 import org.ucl.fhirwork.network.ehr.data.HealthRecord;
 import org.ucl.fhirwork.network.ehr.data.ObservationBundle;
 import org.ucl.fhirwork.network.ehr.data.SessionToken;
@@ -32,24 +32,25 @@ public class EhrServerTest {
     private SessionToken sessionToken;
 
     @Before
-    public  void setUp() throws RestException{
+    public void setUp() throws RestException {
         request  = mock(RestRequest.class);
         response  = mock(RestResponse.class);
         restServer = mock(RestServer.class);
-        ehrServer = new EhrServer(new MockProvider(restServer));
+        ehrServer = new BasicEhrServer(new MockProvider(restServer));
         ehrServer.setConnectionDetails("testAddress", "testUserName", "testPassword");
         sessionToken = mock(SessionToken.class);
 
         when(restServer.post(any(RestResource.class))).thenReturn(request);
         when(restServer.get(any(EhrResource.class))).thenReturn(request);
         when(request.setParameters(any(ImmutableMap.class))).thenReturn(request);
-        when(request.make(any(HandleFailure.class))).thenReturn(response);
+        when(request.make(any(RestStatusHandler.class))).thenReturn(response);
         when(response.asType((SessionToken.class))).thenReturn(sessionToken);
         when(sessionToken.getSessionId()).thenReturn("session");
     }
 
     @Test
-    public void queryTest() throws RestException {
+    public void queryTest() throws RestException
+    {
         String query = "";
 
         when(response.getStatusCode()).thenReturn(200);
@@ -66,8 +67,8 @@ public class EhrServerTest {
     }
 
     @Test
-    public void getEhrTest() throws RestException{
-
+    public void getEhrTest() throws RestException
+    {
         String id = "testId";
         String namespace = "testNamespace";
 
@@ -75,12 +76,11 @@ public class EhrServerTest {
 
         HealthRecord expectedResult = mock(HealthRecord.class);
         when(response.asType(HealthRecord.class)).thenReturn(expectedResult);
-        HealthRecord result = ehrServer.getEhr(id, namespace);
+        HealthRecord result = ehrServer.getHealthRecord(id, namespace);
 
         verify(restServer, times(1)).get(EhrResource.Ehr);
         verify(request, times(1)).setParameters(of(EhrParameter.SubjectId, id, EhrParameter.SubjectNamespace, namespace));
         verify(response, times(1)).asType(HealthRecord.class);
         Assert.assertEquals(expectedResult, result);
-
     }
 }

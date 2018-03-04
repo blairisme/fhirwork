@@ -8,7 +8,7 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.common.http;
+package org.ucl.fhirwork.common.network.Rest;
 
 import com.mashape.unirest.http.HttpResponse;
 import org.ucl.fhirwork.common.serialization.Serializer;
@@ -36,10 +36,10 @@ public class RestResponse
         return response.getStatus();
     }
 
-    public boolean wasSuccessful()
+    public boolean isEmpty()
     {
-        int code = getStatusCode();
-        return (code >= 200 && code <= 299);
+        String body = response.getBody();
+        return body == null || body.isEmpty();
     }
 
     public String asString()

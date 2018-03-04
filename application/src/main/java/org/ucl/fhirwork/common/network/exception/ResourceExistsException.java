@@ -8,8 +8,12 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.network.ehr.exception;
+package org.ucl.fhirwork.common.network.exception;
 
-public class MissingHealthRecordException extends RuntimeException
+public class ResourceExistsException extends NetworkException
 {
+    public ResourceExistsException(String type, String id)
+    {
+        super(type + " already exists: " + id);
+    }
 }

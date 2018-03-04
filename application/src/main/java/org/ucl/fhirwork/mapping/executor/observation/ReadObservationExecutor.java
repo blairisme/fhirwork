@@ -17,24 +17,20 @@ import org.apache.commons.lang3.Validate;
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
-import org.ucl.fhirwork.common.http.RestException;
+import org.ucl.fhirwork.common.network.Rest.RestException;
 import org.ucl.fhirwork.configuration.ConfigService;
 import org.ucl.fhirwork.configuration.data.ConfigType;
 import org.ucl.fhirwork.configuration.data.GeneralConfig;
-import org.ucl.fhirwork.mapping.data.ObservationFactory;
 import org.ucl.fhirwork.mapping.query.MappingProvider;
 import org.ucl.fhirwork.mapping.query.MappingService;
 import org.ucl.fhirwork.network.NetworkService;
 import org.ucl.fhirwork.network.ehr.data.HealthRecord;
 import org.ucl.fhirwork.network.ehr.data.ObservationBundle;
-import org.ucl.fhirwork.network.ehr.data.ObservationResult;
-import org.ucl.fhirwork.network.ehr.data.QueryBundle;
 import org.ucl.fhirwork.network.ehr.server.EhrServer;
 import org.ucl.fhirwork.network.empi.data.Identifier;
 import org.ucl.fhirwork.network.empi.data.Person;
 import org.ucl.fhirwork.network.empi.data.PersonUtils;
 import org.ucl.fhirwork.network.empi.server.EmpiServer;
-import org.ucl.fhirwork.network.fhir.data.TokenListUtils;
 import org.ucl.fhirwork.network.fhir.data.TokenSystem;
 import org.ucl.fhirwork.network.fhir.operations.observation.ReadObservationOperation;
 
@@ -104,7 +100,7 @@ public class ReadObservationExecutor implements Executor
         String ehrIdSystem = getEhrIdSystem();
         Person person = empiServer.loadPerson(patientId);
         Identifier personId = PersonUtils.getIdentifier(person, ehrIdSystem);
-        HealthRecord record  = ehrServer.getEhr(personId.getIdentifier(), ehrIdSystem);
+        HealthRecord record  = ehrServer.getHealthRecord(personId.getIdentifier(), ehrIdSystem);
         return record.getEhrId();
     }
 

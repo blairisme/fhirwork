@@ -14,7 +14,6 @@ import ca.uhn.fhir.model.dstu2.resource.Patient;
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
-import org.ucl.fhirwork.common.http.RestException;
 import org.ucl.fhirwork.mapping.data.PatientFactory;
 import org.ucl.fhirwork.mapping.data.PersonFactory;
 import org.ucl.fhirwork.network.NetworkService;
@@ -24,7 +23,6 @@ import org.ucl.fhirwork.network.fhir.data.SearchParameter;
 import org.ucl.fhirwork.network.fhir.operations.patient.UpdatePatientOperation;
 
 import javax.inject.Inject;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -63,48 +61,15 @@ public class UpdatePatientConditionalExecutor  implements Executor
     @Override
     public Object invoke() throws ExecutionException
     {
-        Person newPerson = personFactory.fromPatient(patient);
-        Person oldPerson = findPerson(parameters);
-        Person mergedPerson = merge(oldPerson, newPerson);
-        Person updatedPerson = update(mergedPerson);
-        return patientFactory.fromPerson(updatedPerson);
-    }
-
-    //TODO: Exception handling needs improvement
-    private Person findPerson(Map<SearchParameter, Object> searchParameters) throws ExecutionException
-    {
         try {
-            Person template = personFactory.fromSearchParameters(searchParameters);
-            List<Person> people = empiServer.findPersonsByAttributes(template);
-
-            if (people.isEmpty()){
-                throw new ExecutionException("Missing resource");
-            }
-            if (people.size() > 1){
-                throw new ExecutionException("Ambiguous resource");
-            }
-            return people.get(0);
+            Person searchTemplate = personFactory.fromSearchParameters(parameters);
+            Person currentPerson = empiServer.findPerson(searchTemplate);
+            Person newPerson = personFactory.update(currentPerson, patient);
+            Person updatedPerson = empiServer.updatePerson(newPerson);
+            return patientFactory.fromPerson(updatedPerson);
         }
-        catch (RestException cause){
-            throw new ExecutionException(cause);
-        }
-    }
-
-    //TODO: Merging needs improvement
-    private Person merge(Person oldPerson, Person newPerson)
-    {
-        newPerson.setPersonId(oldPerson.getPersonId());
-        return newPerson;
-    }
-
-    private Person update(Person newPerson) throws ExecutionException
-    {
-        try
-        {
-            return empiServer.updatePerson(newPerson);
-        }
-        catch (RestException cause){
-            throw new ExecutionException(cause);
+        catch (Throwable error){
+            throw new ExecutionException(error);
         }
     }
 }

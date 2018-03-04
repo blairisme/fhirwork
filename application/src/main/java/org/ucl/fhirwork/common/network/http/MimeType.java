@@ -8,22 +8,21 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.common.http;
+package org.ucl.fhirwork.common.network.http;
 
 /**
- * Options in this enumeration specify identifiers for HTTP header key value
- * pairs.
+ * Options in this enumeration specify MIME types, identifiers of file formats.
  *
  * @author Blair Butterworth
  */
-public enum HttpHeader
+public enum MimeType
 {
-    Accept      ("accept"),
-    ContentType ("Content-Type");
+    Json    ("application/json"),
+    Xml     ("application/xml");
 
     private String value;
 
-    HttpHeader(String value)
+    MimeType(String value)
     {
         this.value = value;
     }

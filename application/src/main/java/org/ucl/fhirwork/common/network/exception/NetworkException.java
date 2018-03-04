@@ -8,12 +8,15 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.network.empi.exception;
+package org.ucl.fhirwork.common.network.exception;
 
-public class MissingPersonException extends RuntimeException
+public class NetworkException extends RuntimeException
 {
-    public MissingPersonException(String personId)
-    {
-        super("Person not found: " + personId);
+    public NetworkException(Throwable cause) {
+        super(cause);
+    }
+
+    public NetworkException(String message) {
+        super(message);
     }
 }

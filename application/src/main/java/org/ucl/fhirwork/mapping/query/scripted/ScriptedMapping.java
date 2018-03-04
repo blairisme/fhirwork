@@ -120,7 +120,7 @@ public class ScriptedMapping implements MappingProvider
         quantity.setValue(scriptInfo.getValue());
         quantity.setUnit(scriptInfo.getUnit());
         quantity.setCode(quantity.getUnit());
-        quantity.setSystem("http://unitsofmeasure.org");
+        quantity.setSystem("network://unitsofmeasure.org");
 
         return quantity;
     }

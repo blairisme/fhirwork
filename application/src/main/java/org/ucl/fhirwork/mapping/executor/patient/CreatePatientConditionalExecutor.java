@@ -14,7 +14,6 @@ import ca.uhn.fhir.model.dstu2.resource.Patient;
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
-import org.ucl.fhirwork.common.http.RestException;
 import org.ucl.fhirwork.mapping.data.PatientFactory;
 import org.ucl.fhirwork.mapping.data.PersonFactory;
 import org.ucl.fhirwork.network.NetworkService;
@@ -31,6 +30,7 @@ import java.util.Map;
  * operation into the appropriate EMPI service calls.
  *
  * @author Alperen Karaoglu
+ * @author Blair Butterworth
  */
 public class CreatePatientConditionalExecutor implements Executor {
     private Patient patient;
@@ -66,7 +66,7 @@ public class CreatePatientConditionalExecutor implements Executor {
             Person personOutput = empiServer.addPerson(personInput);
             return patientFactory.fromPerson(personOutput);
         }
-        catch (RestException cause){
+        catch (Throwable cause){
             throw new ExecutionException(cause);
         }
     }

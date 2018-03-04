@@ -39,7 +39,7 @@ import java.util.*;
  * @author Chenghui Fan
  * @author Blair Butterworth
  */
-//TODO: Make thread safe
+//Todo: Consider replacing with https://github.com/lightbend/config
 @Singleton
 @SuppressWarnings("unchecked")
 public class ConfigService

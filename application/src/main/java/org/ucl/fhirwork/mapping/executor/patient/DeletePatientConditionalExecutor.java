@@ -13,7 +13,6 @@ package org.ucl.fhirwork.mapping.executor.patient;
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
-import org.ucl.fhirwork.common.http.RestException;
 import org.ucl.fhirwork.mapping.data.PersonFactory;
 import org.ucl.fhirwork.network.NetworkService;
 import org.ucl.fhirwork.network.empi.data.Person;
@@ -22,7 +21,7 @@ import org.ucl.fhirwork.network.fhir.data.SearchParameter;
 import org.ucl.fhirwork.network.fhir.operations.patient.DeletePatientOperation;
 
 import javax.inject.Inject;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -61,14 +60,14 @@ public class DeletePatientConditionalExecutor implements Executor
         try
         {
             Person template = personFactory.fromSearchParameters(searchParameters);
-            List<Person> people = empiServer.findPersonsByAttributes(template);
+            Collection<Person> people = empiServer.findPersons(template);
 
             for (Person person: people){
                 empiServer.removePerson(person.getPersonId());
             }
             return null;
         }
-        catch (RestException cause){
+        catch (Throwable cause){
             throw new ExecutionException(cause);
         }
     }
