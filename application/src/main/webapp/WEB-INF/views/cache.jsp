@@ -35,7 +35,7 @@
     </div>
     <script type="text/javascript">
 	 	  window.onload=function(){
-	 	  	    if(document.getElementById('currentCacheChecked').value.equals("true")){
+	 	  	    if(document.getElementById('currentCacheChecked').value=="true"){
 	 	  	        document.getElementById('check').checked=true; 
 	 	  	     }
    		   }
