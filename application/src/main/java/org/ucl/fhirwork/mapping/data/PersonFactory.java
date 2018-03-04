@@ -26,10 +26,7 @@ import org.ucl.fhirwork.network.fhir.data.SearchParameter;
 import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Instances of this class create {@link Person} instances, usually by
@@ -72,8 +69,6 @@ public class PersonFactory
     public Person update(Person person, Patient patient)
     {
         Person result = new Person(person);
-        setId(result, patient);
-        setIdentifiers(result, patient);
         setName(result, patient);
         setGender(result, patient);
         setDateChanged(person);

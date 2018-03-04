@@ -15,14 +15,24 @@ import javax.xml.bind.annotation.XmlRootElement;
 @SuppressWarnings("unused")
 public class IdentifierDomain
 {
+    private String identifierDomainName;
     private String namespaceIdentifier;
+    private String universalIdentifier;
+    private String universalIdentifierTypeCode;
 
     public IdentifierDomain() {
-        this(null);
     }
 
-    public IdentifierDomain(String namespaceIdentifier) {
+    public IdentifierDomain(
+        String identifierDomainName,
+        String namespaceIdentifier,
+        String universalIdentifier,
+        String universalIdentifierTypeCode)
+    {
+        this.identifierDomainName = identifierDomainName;
         this.namespaceIdentifier = namespaceIdentifier;
+        this.universalIdentifier = universalIdentifier;
+        this.universalIdentifierTypeCode = universalIdentifierTypeCode;
     }
 
     public String getNamespaceIdentifier() {
