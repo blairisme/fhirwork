@@ -40,7 +40,7 @@ public class PatientFactoryTest
         Person person = readPerson("empi/PersonExample.xml");
         Patient patient = patientFactory.fromPerson(person);
 
-        Assert.assertEquals("123", patient.getId().toString());
+        Assert.assertEquals("123", patient.getId().getIdPart());
 
         List<IdentifierDt> identifiers = patient.getIdentifier();
         Assert.assertEquals(2, identifiers.size());
