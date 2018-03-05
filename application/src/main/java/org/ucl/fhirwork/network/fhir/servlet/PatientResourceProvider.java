@@ -144,7 +144,7 @@ public class PatientResourceProvider implements IResourceProvider
             throw MethodOutcomes.error(throwable);
         }
     }
-    
+
     @Update
     public MethodOutcome updateConditional(
             @ResourceParam Patient patient,
