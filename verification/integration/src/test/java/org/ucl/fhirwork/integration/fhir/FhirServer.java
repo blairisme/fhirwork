@@ -95,9 +95,24 @@ public class FhirServer
         return getPatients(bundle);
     }
 
-    public List<Observation> searchObservation(String patient, String code) throws RestServerException
+    public List<Observation> searchPatientObservations(String patient) throws RestServerException
     {
-        ObservationBundle bundle = server.get(FhirEndpoint.Observation, ObservationBundle.class, ImmutableMap.of(Code, code, "patient", patient, "_format", "json"));
+        ObservationBundle bundle = server.get(FhirEndpoint.Observation, ObservationBundle.class,
+                ImmutableMap.of(FhirParameter.Patient, patient, "_format", "json"));
+        return getObservations(bundle);
+    }
+
+    public List<Observation> searchPatientObservations(String patient, String codes) throws RestServerException
+    {
+        ObservationBundle bundle = server.get(FhirEndpoint.Observation, ObservationBundle.class,
+                ImmutableMap.of(Code, codes, FhirParameter.Patient, patient, "_format", "json"));
+        return getObservations(bundle);
+    }
+
+    public List<Observation> searchSubjectObservations(String subject, String codes) throws RestServerException
+    {
+        ObservationBundle bundle = server.get(FhirEndpoint.Observation, ObservationBundle.class,
+                ImmutableMap.of(Code, codes, FhirParameter.Subject, subject, "_format", "json"));
         return getObservations(bundle);
     }
 

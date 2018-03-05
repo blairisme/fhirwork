@@ -112,18 +112,44 @@ public class ObservationSteps extends IntegrationSteps
         ehrServer.createComposition(record, composition, GrowthChartComposition.class);
     }
 
-
-
-    @When("^the user searches for observations belonging to patient \"(.*)\"$")
-    public void observationSearch(String patient) throws RestServerException
+    @When("^the user searches for all observations belonging to patient \"(.*)\"$")
+    public void readAllObservations(String patient) throws RestServerException
     {
         Person person = getPersonByName(patient);
-        observations = fhirServer.searchObservation(person.getPersonId(), "http://loinc.org|3141-9");
+        observations = fhirServer.searchPatientObservations(person.getPersonId());
     }
 
-    @Then("^the user should receive a list of (\\d) observations$")
+    @When("^the user searches for observations belonging to patient \"(.*)\" with LOINC code \"(.*)\"$")
+    public void readPatientObservations(String name, String code) throws RestServerException
+    {
+        Person person = getPersonByName(name);
+        String codes = getCodeParameter(code);
+        observations = fhirServer.searchPatientObservations(person.getPersonId(), codes);
+    }
+
+    @When("^the user searches for observations belonging to subject \"(.*)\" with LOINC code \"(.*)\"$")
+    public void readSubjectObservations(String name, String code) throws RestServerException
+    {
+        Person person = getPersonByName(name);
+        String codes = getCodeParameter(code);
+        observations = fhirServer.searchSubjectObservations(person.getPersonId(), codes);
+    }
+
+    @Then("^the user should receive a list of (\\d*) observations$")
     public void assertObservationList(int observationsCount)
     {
         Assert.assertEquals(observationsCount, observations.size());
+    }
+
+    private String getCodeParameter(String code)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String subSequence: code.split(",")){
+            stringBuilder.append("http://loinc.org|");
+            stringBuilder.append(subSequence);
+            stringBuilder.append(",");
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        return stringBuilder.toString();
     }
 }
