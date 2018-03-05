@@ -21,6 +21,7 @@ import org.ucl.fhirwork.common.network.Rest.RestException;
 import org.ucl.fhirwork.configuration.ConfigService;
 import org.ucl.fhirwork.configuration.data.ConfigType;
 import org.ucl.fhirwork.configuration.data.GeneralConfig;
+import org.ucl.fhirwork.mapping.data.InternalIdentifierFactory;
 import org.ucl.fhirwork.mapping.query.MappingProvider;
 import org.ucl.fhirwork.mapping.query.MappingService;
 import org.ucl.fhirwork.network.NetworkService;
@@ -28,6 +29,7 @@ import org.ucl.fhirwork.network.ehr.data.HealthRecord;
 import org.ucl.fhirwork.network.ehr.data.ObservationBundle;
 import org.ucl.fhirwork.network.ehr.server.EhrServer;
 import org.ucl.fhirwork.network.empi.data.Identifier;
+import org.ucl.fhirwork.network.empi.data.InternalIdentifier;
 import org.ucl.fhirwork.network.empi.data.Person;
 import org.ucl.fhirwork.network.empi.data.PersonUtils;
 import org.ucl.fhirwork.network.empi.server.EmpiServer;
@@ -50,27 +52,32 @@ import static org.ucl.fhirwork.network.fhir.data.TokenListUtils.getCodeElements;
  */
 public class ReadObservationExecutor implements Executor
 {
+    private ReferenceParam patient;
+    private TokenOrListParam tokenList;
+
     private EhrServer ehrServer;
     private EmpiServer empiServer;
     private MappingService mappingService;
     private ConfigService configService;
-    private ReferenceParam patient;
-    private TokenOrListParam tokenList;
+    private InternalIdentifierFactory identifierFactory;
 
     @Inject
     public ReadObservationExecutor(
         NetworkService networkService,
         ConfigService configService,
-        MappingService mappingService)
+        MappingService mappingService,
+        InternalIdentifierFactory identifierFactory)
     {
         this.ehrServer = networkService.getEhrServer();
         this.empiServer = networkService.getEmpiServer();
         this.mappingService = mappingService;
         this.configService = configService;
+        this.identifierFactory = identifierFactory;
     }
 
     @Override
-    public void setOperation(Operation operation) {
+    public void setOperation(Operation operation)
+    {
         Validate.notNull(operation);
         Validate.isInstanceOf(ReadObservationOperation.class, operation);
 
@@ -87,7 +94,7 @@ public class ReadObservationExecutor implements Executor
             Validate.notNull(patient);
 
             String patientId = patient.getIdPart();
-            String ehrId = getEhrId(patientId);
+            String ehrId = getEhrId(patient);
             return getObservations(tokenList, ehrId, patientId);
         }
         catch (Throwable error) {
@@ -95,10 +102,11 @@ public class ReadObservationExecutor implements Executor
         }
     }
 
-    private String getEhrId(String patientId) throws RestException
+    private String getEhrId(ReferenceParam patient) throws RestException
     {
         String ehrIdSystem = getEhrIdSystem();
-        Person person = empiServer.loadPerson(patientId);
+        InternalIdentifier identifier = identifierFactory.fromReference(patient);
+        Person person = empiServer.loadPerson(identifier);
         Identifier personId = PersonUtils.getIdentifier(person, ehrIdSystem);
         HealthRecord record  = ehrServer.getHealthRecord(personId.getIdentifier(), ehrIdSystem);
         return record.getEhrId();

@@ -9,6 +9,7 @@
  */
 package org.ucl.fhirwork.mapping.executor.patient;
 
+import org.apache.commons.lang3.Validate;
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
@@ -51,7 +52,9 @@ public class ReadPatientConditionalExecutor implements Executor
     }
 
     @Override
-    public void setOperation(Operation operation){
+    public void setOperation(Operation operation)
+    {
+        Validate.notNull(operation);
         ReadPatientOperation readPatient = (ReadPatientOperation)operation;
         searchParameters = readPatient.getSearchParameters();
     }
@@ -59,8 +62,7 @@ public class ReadPatientConditionalExecutor implements Executor
     @Override
     public Object invoke() throws ExecutionException
     {
-        try
-        {
+        try {
             Collection<Person> people = findPeople(searchParameters);
             return patientFactory.fromPeople(people);
         }

@@ -46,30 +46,9 @@ public class ObservationFactory
         return observation;
     }
 
-    public Observation fromQueryResult(String patientId, String loinc, ObservationResult queryResult)
-    {
-        Observation observation = new Observation();
-        observation.setId(newId());
-        observation.setSubject(newSubject(patientId));
-        observation.setValue(newQuantity(queryResult));
-        observation.setCode(newCode(loinc));
-        observation.setEffective(newEffective(queryResult));
-        return observation;
-    }
-
     private String newId()
     {
         return String.valueOf(ThreadLocalRandom.current().nextInt());
-    }
-
-    private QuantityDt newQuantity(ObservationResult queryResult)
-    {
-        QuantityDt quantity = new QuantityDt();
-        quantity.setValue(Double.parseDouble(queryResult.getMagnitude()));
-        quantity.setUnit(queryResult.getUnit());
-        quantity.setCode(queryResult.getUnit());
-        quantity.setSystem("network://unitsofmeasure.org");
-        return quantity;
     }
 
     private CodeableConceptDt newCode(String loinc)
@@ -77,7 +56,7 @@ public class ObservationFactory
         Map<String, String> codeMap = getCodeMap();
 
         CodeableConceptDt code = new CodeableConceptDt();
-        code.addCoding(new CodingDt("network://loinc.org", loinc));
+        code.addCoding(new CodingDt("http://loinc.org", loinc));
         code.setText(codeMap.get(loinc));
         return code;
     }
@@ -99,10 +78,5 @@ public class ObservationFactory
         ResourceReferenceDt subject = new ResourceReferenceDt();
         subject.setReference(patientId);
         return subject;
-    }
-
-    private DateTimeDt newEffective(ObservationResult queryResult)
-    {
-        return new DateTimeDt(queryResult.getDate());
     }
 }

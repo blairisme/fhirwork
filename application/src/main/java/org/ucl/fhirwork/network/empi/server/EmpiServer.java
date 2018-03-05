@@ -13,6 +13,7 @@ package org.ucl.fhirwork.network.empi.server;
 import org.ucl.fhirwork.common.network.Rest.RestException;
 import org.ucl.fhirwork.common.network.exception.AmbiguousResultException;
 import org.ucl.fhirwork.common.network.exception.ResourceMissingException;
+import org.ucl.fhirwork.network.empi.data.InternalIdentifier;
 import org.ucl.fhirwork.network.empi.data.Person;
 
 import java.util.Collection;
@@ -82,18 +83,18 @@ public interface EmpiServer
 
     /**
      * Returns biographical information on the {@link Person} with the given
-     * EMPI identifier (internal EMPI identifier)
+     * EMPI {@link InternalIdentifier}.
      *
-     * @param personId  the identifier of the {@code Person} to load.
-     * @return          a {@code Person} instance contain information on the
-     *                  desired person.
+     * @param identifier    the identifier of the {@code Person} to load.
+     * @return              a {@code Person} instance contain information on
+     *                      the desired person.
      *
      * @throws RestException            thrown if an error occurs whilst
      *                                  communicating with the EMPI server.
      * @throws ResourceMissingException thrown if a person with the given id
      *                                  cannot be found.
      */
-    Person loadPerson(String personId) throws RestException, ResourceMissingException;
+    Person loadPerson(InternalIdentifier identifier) throws RestException, ResourceMissingException;
 
     /**
      * Returns biographical information on all people in the EMPI system.
@@ -112,11 +113,11 @@ public interface EmpiServer
      * record is found, the record is removed from the system completely. If
      * the record isn't found, no changes will be made.
      *
-     * @param personId          the identifier of the {@code Person} to remove.
+     * @param identifier        the identifier of the {@code Person} to remove.
      * @throws RestException    thrown if an error occurs whilst communicating
      *                          with the EMPI server.
      */
-    void removePerson(String personId) throws RestException;
+    void removePerson(InternalIdentifier identifier) throws RestException;
 
     /**
      * This method updates the attributes maintained in the EMPI system about

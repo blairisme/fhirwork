@@ -11,6 +11,7 @@
 package org.ucl.fhirwork.mapping.executor.patient;
 
 import ca.uhn.fhir.model.dstu2.resource.Patient;
+import org.apache.commons.lang3.Validate;
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
@@ -53,6 +54,7 @@ public class UpdatePatientConditionalExecutor  implements Executor
     @Override
     public void setOperation(Operation operation)
     {
+        Validate.notNull(operation);
         UpdatePatientOperation updatePatient = (UpdatePatientOperation)operation;
         patient = updatePatient.getPatient();
         parameters = updatePatient.getSearchParameters();
@@ -68,7 +70,7 @@ public class UpdatePatientConditionalExecutor  implements Executor
             Person updatedPerson = empiServer.updatePerson(newPerson);
             return patientFactory.fromPerson(updatedPerson);
         }
-        catch (Throwable error){
+        catch (Throwable error) {
             throw new ExecutionException(error);
         }
     }

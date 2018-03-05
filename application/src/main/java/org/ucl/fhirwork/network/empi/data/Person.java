@@ -85,6 +85,10 @@ public class Person
         this.personId = personId;
     }
 
+    public InternalIdentifier getInternalIdentifier() {
+        return new InternalIdentifier(personId);
+    }
+
     public Identifier[] getPersonIdentifiers() {
         return personIdentifiers;
     }

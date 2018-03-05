@@ -10,8 +10,6 @@
 
 package org.ucl.fhirwork.network.fhir.data;
 
-import ca.uhn.fhir.rest.param.TokenParam;
-
 /**
  * Options in this enumeration specify supported FHIR search parameter
  * identifiers. The full list of all possible search parameters can be found
@@ -34,6 +32,10 @@ public enum SearchParameter
         switch (text.toLowerCase())
         {
             case "identifier": return Identifier;
+            case "given": return GivenName;
+            case "family": return FamilyName;
+            case "gender": return Gender;
+            case "birthdate": return BirthDate;
             default: throw new IllegalArgumentException("Unknown search parameter: " + text);
         }
     }

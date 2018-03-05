@@ -16,6 +16,7 @@ import org.ucl.fhirwork.common.network.exception.*;
 import org.ucl.fhirwork.common.serialization.Serializer;
 import org.ucl.fhirwork.common.serialization.XmlSerializer;
 import org.ucl.fhirwork.network.empi.data.AuthenticationRequest;
+import org.ucl.fhirwork.network.empi.data.InternalIdentifier;
 import org.ucl.fhirwork.network.empi.data.People;
 import org.ucl.fhirwork.network.empi.data.Person;
 
@@ -100,14 +101,14 @@ public class BasicEmpiServer implements EmpiServer
     }
 
     @Override
-    public Person loadPerson(String personId) throws RestException, ResourceMissingException
+    public Person loadPerson(InternalIdentifier identifier) throws RestException, ResourceMissingException
     {
         RestRequest request = getServer().get(LoadPerson);
-        request.setParameters(ImmutableMap.of(PersonId, personId));
+        request.setParameters(ImmutableMap.of(PersonId, identifier.getValue()));
 
         RestResponse response = request.make(throwOnFailedStatus());
         if (response.getStatusCode() == 204 || response.isEmpty()) {
-            throw new ResourceMissingException("Person", personId);
+            throw new ResourceMissingException("Person", identifier.getValue());
         }
         return response.asType(Person.class);
     }
@@ -125,10 +126,10 @@ public class BasicEmpiServer implements EmpiServer
     }
 
     @Override
-    public void removePerson(String personId) throws RestException
+    public void removePerson(InternalIdentifier identifier) throws RestException
     {
         RestRequest request = getServer().post(RemovePerson);
-        request.setParameters(ImmutableMap.of(PersonId, personId));
+        request.setParameters(ImmutableMap.of(PersonId, identifier.getValue()));
         request.make(throwOnFailedStatus());
     }
 

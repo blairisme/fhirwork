@@ -21,6 +21,7 @@ import org.ucl.fhirwork.common.network.exception.ResourceMissingException;
 import org.ucl.fhirwork.configuration.ConfigService;
 import org.ucl.fhirwork.configuration.data.ConfigType;
 import org.ucl.fhirwork.configuration.data.GeneralConfig;
+import org.ucl.fhirwork.mapping.data.InternalIdentifierFactory;
 import org.ucl.fhirwork.mapping.query.MappingProvider;
 import org.ucl.fhirwork.mapping.query.MappingService;
 import org.ucl.fhirwork.network.NetworkService;
@@ -48,6 +49,7 @@ public class ReadObservationExecutorTest
     private MappingService mappingService;
     private ConfigService configService;
     private ReadObservationExecutor executor;
+    private InternalIdentifierFactory identifierFactory;
 
     @Before
     public void setup() throws Throwable
@@ -55,7 +57,8 @@ public class ReadObservationExecutorTest
         configService = MockConfigService.get();
         networkService = MockNetworkService.get();
         mappingService = mock(MappingService.class);
-        executor = new ReadObservationExecutor(networkService, configService, mappingService);
+        identifierFactory = new InternalIdentifierFactory();
+        executor = new ReadObservationExecutor(networkService, configService, mappingService, identifierFactory);
         setupMockBehaviour();
     }
 
@@ -94,7 +97,7 @@ public class ReadObservationExecutorTest
         EmpiServer empiServer = networkService.getEmpiServer();
         EhrServer ehrServer = networkService.getEhrServer();
 
-        verify(empiServer, times(1)).loadPerson(anyString());
+        verify(empiServer, times(1)).loadPerson(any());
         verify(ehrServer, times(1)).getHealthRecord(anyString(), anyString());
         verify(ehrServer, times(2)).query(anyString(),any());
     }
@@ -115,7 +118,7 @@ public class ReadObservationExecutorTest
     {
         try {
             EmpiServer empiServer = networkService.getEmpiServer();
-            when(empiServer.loadPerson(anyString())).thenThrow(ResourceMissingException.class);
+            when(empiServer.loadPerson(any())).thenThrow(ResourceMissingException.class);
 
             executor.setOperation(mockOperation());
             executor.invoke();
@@ -161,7 +164,7 @@ public class ReadObservationExecutorTest
         when(generalConfig.getEhrIdSystem()).thenReturn("network://fhirwork.com");
 
         EmpiServer empiServer = networkService.getEmpiServer();
-        when(empiServer.loadPerson(anyString())).thenReturn(mockPerson());
+        when(empiServer.loadPerson(any())).thenReturn(mockPerson());
 
         EhrServer ehrServer = networkService.getEhrServer();
         when(ehrServer.getHealthRecord(anyString(), anyString())).thenReturn(mockHealthRecord());

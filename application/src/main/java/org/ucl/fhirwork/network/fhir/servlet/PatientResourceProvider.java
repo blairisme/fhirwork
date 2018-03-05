@@ -152,12 +152,13 @@ public class PatientResourceProvider implements IResourceProvider
     }
 
     @Update
-    public MethodOutcome updateConditional(@ResourceParam Patient patient, @IdParam IdDt id, @ConditionalUrlParam String condition)
+    public MethodOutcome updateConditional(
+            @ResourceParam Patient patient,
+            @IdParam IdDt id,
+            @ConditionalUrlParam String condition)
     {
-        Map<SearchParameter, Object> parameters = getSearchParameters(condition);
-
         try {
-            UpdatePatientOperation operation = new UpdatePatientOperation(patient, parameters);
+            UpdatePatientOperation operation = new UpdatePatientOperation(patient, getSearchParameters(condition));
             Patient response = (Patient)executorService.execute(operation);
 
             MethodOutcome result = new MethodOutcome();

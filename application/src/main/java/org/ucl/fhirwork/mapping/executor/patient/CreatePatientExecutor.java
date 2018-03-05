@@ -11,6 +11,7 @@
 package org.ucl.fhirwork.mapping.executor.patient;
 
 import ca.uhn.fhir.model.dstu2.resource.Patient;
+import org.apache.commons.lang3.Validate;
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
@@ -50,6 +51,7 @@ public class CreatePatientExecutor implements Executor
     @Override
     public void setOperation(Operation operation)
     {
+        Validate.notNull(operation);
         CreatePatientOperation createPatient = (CreatePatientOperation)operation;
         patient = createPatient.getPatient();
     }

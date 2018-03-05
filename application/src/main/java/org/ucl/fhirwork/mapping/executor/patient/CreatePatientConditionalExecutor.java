@@ -11,6 +11,7 @@
 package org.ucl.fhirwork.mapping.executor.patient;
 
 import ca.uhn.fhir.model.dstu2.resource.Patient;
+import org.apache.commons.lang3.Validate;
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
@@ -32,12 +33,12 @@ import java.util.Map;
  * @author Alperen Karaoglu
  * @author Blair Butterworth
  */
-public class CreatePatientConditionalExecutor implements Executor {
-    private Patient patient;
-    private Map<SearchParameter, Object> searchParameters;
+public class CreatePatientConditionalExecutor implements Executor
+{
     private EmpiServer empiServer;
     private PatientFactory patientFactory;
     private PersonFactory personFactory;
+    private Map<SearchParameter, Object> searchParameters;
 
     @Inject
     public CreatePatientConditionalExecutor(
@@ -53,8 +54,8 @@ public class CreatePatientConditionalExecutor implements Executor {
     @Override
     public void setOperation(Operation operation)
     {
+        Validate.notNull(operation);
         CreatePatientOperation createPatient = (CreatePatientOperation)operation;
-        patient = createPatient.getPatient();
         searchParameters = createPatient.getSearchParameters();
     }
 
