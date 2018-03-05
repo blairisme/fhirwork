@@ -23,16 +23,15 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.ucl.fhirwork.mapping.ExecutorService;
 import org.ucl.fhirwork.network.fhir.data.SearchParameter;
 import org.ucl.fhirwork.network.fhir.data.SearchParameterBuilder;
-import org.ucl.fhirwork.network.fhir.operations.patient.CreatePatientOperation;
-import org.ucl.fhirwork.network.fhir.operations.patient.DeletePatientOperation;
-import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
-import org.ucl.fhirwork.network.fhir.operations.patient.UpdatePatientOperation;
+import org.ucl.fhirwork.network.fhir.operations.patient.*;
 
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 
 import static org.ucl.fhirwork.network.fhir.data.ExceptionUtils.getFrameworkException;
+import static org.ucl.fhirwork.network.fhir.data.MethodOutcomeUtils.patientResult;
+import static org.ucl.fhirwork.network.fhir.data.SearchParameter.*;
 
 /**
  * Instances of this class provide implement functions defined in the FHIR
@@ -63,11 +62,8 @@ public class PatientResourceProvider implements IResourceProvider
     {
         try {
             CreatePatientOperation operation = new CreatePatientOperation(patient);
-            Patient response = (Patient)executorService.execute(operation);
-
-            MethodOutcome result = new MethodOutcome();
-            result.setId(new IdDt("Patient", response.getId().getIdPart(), "1"));
-            return result;
+            Patient result = (Patient)executorService.execute(operation);
+            return patientResult(result);
         }
         catch (Throwable error) {
             throw getFrameworkException(error);
@@ -75,22 +71,24 @@ public class PatientResourceProvider implements IResourceProvider
     }
 
     @Delete
-    public void delete(@IdParam IdDt patientId)
+    public void delete(
+        @IdParam IdDt patientId,
+        @OptionalParam(name = Patient.SP_IDENTIFIER) TokenParam identifier,
+        @OptionalParam(name = Patient.SP_GIVEN) StringDt givenName,
+        @OptionalParam(name = Patient.SP_FAMILY) StringDt familyName,
+        @OptionalParam(name = Patient.SP_GENDER) StringDt gender,
+        @OptionalParam(name = Patient.SP_BIRTHDATE) DateParam birthDate)
     {
         try {
-            DeletePatientOperation operation = new DeletePatientOperation(patientId);
-            executorService.execute(operation);
-        }
-        catch (Throwable error) {
-            throw getFrameworkException(error);
-        }
-    }
+            DeletePatientOperationBuilder operationBuilder = new DeletePatientOperationBuilder();
+            operationBuilder.append(patientId);
+            operationBuilder.append(Identifier, identifier);
+            operationBuilder.append(GivenName, givenName);
+            operationBuilder.append(FamilyName, familyName);
+            operationBuilder.append(Gender, gender);
+            operationBuilder.append(BirthDate, birthDate);
 
-    @Delete
-    public void deleteConditional(@IdParam IdDt patientId, @ConditionalUrlParam String condition)
-    {
-        try {
-            DeletePatientOperation operation = new DeletePatientOperation(patientId, getSearchParameters(condition));
+            DeletePatientOperation operation = operationBuilder.build();
             executorService.execute(operation);
         }
         catch (Throwable error) {
@@ -112,19 +110,19 @@ public class PatientResourceProvider implements IResourceProvider
 
     @Search
     @SuppressWarnings("unchecked")
-    public List<Patient> readConditional(
-            @OptionalParam(name = Patient.SP_IDENTIFIER) TokenParam identifier,
-            @OptionalParam(name = Patient.SP_GIVEN) StringDt givenName,
-            @OptionalParam(name = Patient.SP_FAMILY) StringDt familyName,
-            @OptionalParam(name = Patient.SP_GENDER) StringDt gender,
-            @OptionalParam(name = Patient.SP_BIRTHDATE) DateParam birthDate)
+    public List<Patient> search(
+        @OptionalParam(name = Patient.SP_IDENTIFIER) TokenParam identifier,
+        @OptionalParam(name = Patient.SP_GIVEN) StringDt givenName,
+        @OptionalParam(name = Patient.SP_FAMILY) StringDt familyName,
+        @OptionalParam(name = Patient.SP_GENDER) StringDt gender,
+        @OptionalParam(name = Patient.SP_BIRTHDATE) DateParam birthDate)
     {
         try {
             SearchParameterBuilder parameterBuilder = new SearchParameterBuilder();
-            parameterBuilder.append(SearchParameter.Identifier, identifier);
-            parameterBuilder.append(SearchParameter.GivenName, givenName);
-            parameterBuilder.append(SearchParameter.FamilyName, familyName);
-            parameterBuilder.append(SearchParameter.Gender, gender);
+            parameterBuilder.append(Identifier, identifier);
+            parameterBuilder.append(GivenName, givenName);
+            parameterBuilder.append(FamilyName, familyName);
+            parameterBuilder.append(Gender, gender);
             parameterBuilder.append(SearchParameter.BirthDate, birthDate);
 
             ReadPatientOperation operation = new ReadPatientOperation(parameterBuilder.build());
@@ -140,11 +138,8 @@ public class PatientResourceProvider implements IResourceProvider
     {
         try {
             UpdatePatientOperation operation = new UpdatePatientOperation(patientId, patient);
-            Patient response = (Patient)executorService.execute(operation);
-
-            MethodOutcome result = new MethodOutcome();
-            result.setId(new IdDt("Patient", response.getId().getIdPart(), "1"));
-            return result;
+            Patient result = (Patient)executorService.execute(operation);
+            return patientResult(result);
         }
         catch (Throwable error) {
             throw getFrameworkException(error);
@@ -159,11 +154,8 @@ public class PatientResourceProvider implements IResourceProvider
     {
         try {
             UpdatePatientOperation operation = new UpdatePatientOperation(patient, getSearchParameters(condition));
-            Patient response = (Patient)executorService.execute(operation);
-
-            MethodOutcome result = new MethodOutcome();
-            result.setId(new IdDt("Patient", response.getId().getIdPart(), "1"));
-            return result;
+            Patient result = (Patient)executorService.execute(operation);
+            return patientResult(result);
         }
         catch (Throwable error) {
             throw getFrameworkException(error);

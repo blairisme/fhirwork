@@ -17,11 +17,7 @@ import ca.uhn.fhir.rest.server.IResourceProvider;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.interceptor.CorsInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import org.hl7.fhir.exceptions.FHIRException;
 import org.springframework.web.cors.CorsConfiguration;
-import org.ucl.fhirwork.ApplicationModule;
 import org.ucl.fhirwork.ApplicationService;
 
 import javax.servlet.annotation.WebServlet;
@@ -46,11 +42,13 @@ public class FhirServer extends RestfulServer
 {
     private ApplicationService applicationService;
 
-    public FhirServer(){
+    public FhirServer()
+    {
         this(ApplicationService.instance());
     }
 
-    public FhirServer(ApplicationService applicationService){
+    public FhirServer(ApplicationService applicationService)
+    {
         super(FhirContext.forDstu2());
         this.applicationService = applicationService;
     }

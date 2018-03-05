@@ -137,8 +137,7 @@ public class PatientSteps extends IntegrationSteps
     public void deletePatientById(String patientName) throws RestServerException
     {
         Person person = getPersonByName(patientName);
-        String personId = person.getPersonId();
-        fhirServer.deletePatientById(personId);
+        fhirServer.deletePatientById(person.getPersonId());
     }
 
     @When("^the user deletes the patient named \"(.*)\"$")

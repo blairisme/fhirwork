@@ -59,8 +59,9 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    compile group: 'ca.uhn.hapi.fhir', name:'hapi-fhir-base', version:'2.5'
-    compile group: 'ca.uhn.hapi.fhir', name: 'hapi-fhir-structures-dstu2', version: '2.5'
+    compile group: 'ca.uhn.hapi.fhir', name: 'hapi-fhir-base', version: '3.2.0'
+    compile group: 'ca.uhn.hapi.fhir', name: 'hapi-fhir-server', version: '3.2.0'
+    compile group: 'ca.uhn.hapi.fhir', name: 'hapi-fhir-structures-dstu2', version: '3.2.0'
     compile group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.9.RELEASE'
     compile group: 'org.springframework', name: 'spring-web', version: '5.0.2.RELEASE'
     compile group: 'org.springframework', name: 'spring-webmvc', version: '5.0.2.RELEASE'
