@@ -1,14 +1,11 @@
 dist: trusty
 
-sudo: required
+sudo: false
 
 language: java
 
 jdk:
   - oraclejdk8
-
-services:
-  - docker
 
 script:
   - gradle clean assemble check report
