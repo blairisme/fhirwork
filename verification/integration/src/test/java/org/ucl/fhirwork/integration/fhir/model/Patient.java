@@ -34,7 +34,7 @@ public class Patient
     {
         return new Patient(
             Arrays.asList(Name.from(profile.getFirst(), profile.getLast())),
-            Arrays.asList(Identifier.from(profile.getId())),
+            Arrays.asList(Identifier.from(profile.getDomain(), profile.getId())),
             profile.getGender());
     }
 

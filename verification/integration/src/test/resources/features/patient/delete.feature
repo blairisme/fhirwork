@@ -3,10 +3,10 @@ Feature: Delete patient
 
 Background:
   Given the system has the following patients:
-    | id    | first     | last          | gender    |
-    | 1     | harry     | potter        | male      |
-    | 2     | hermione  | granger       | female    |
-    | 3     | ron       | weasley       | male      |
+    | id        | domain    | first     | last      | gender    | birthday              |
+    | 1         | SSN       | harry     | potter    | male      | 1980-01-01T00:00:00Z  |
+    | 2         | SSN       | hermione  | granger   | female    | 1980-01-01T00:00:00Z  |
+    | 3         | SSN       | ron       | weasley   | male      | 1980-01-01T00:00:00Z  |
 
 #Scenario: Delete patient by id
 #     When the user deletes the patient named "hermione" using their id

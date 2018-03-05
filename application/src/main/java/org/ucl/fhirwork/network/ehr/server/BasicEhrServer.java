@@ -43,6 +43,7 @@ import static org.ucl.fhirwork.network.ehr.server.EhrResource.*;
  * @author Xiaolong Chen
  * @author Jiaming Zhou
  */
+//Todo: Handle 403 error when session expires
 public class BasicEhrServer implements EhrServer
 {
     private Provider<RestServer> serverFactory;

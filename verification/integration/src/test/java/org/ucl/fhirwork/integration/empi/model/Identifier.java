@@ -27,9 +27,9 @@ public class Identifier
         this.identifierDomain = identifierDomain;
     }
 
-    public static Identifier fromToken(String token)
+    public static Identifier fromText(String identifier, String domain)
     {
-        return new Identifier(token, new IdentifierDomain("SSN", "2.16.840.1.113883.4.1", "2.16.840.1.113883.4.1", "SSN"));
+        return new Identifier(identifier, IdentifierDomain.fromText(domain));
     }
 
     public String getIdentifier() {

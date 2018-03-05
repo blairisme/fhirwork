@@ -133,7 +133,7 @@ public class ReadObservationExecutorTest
     {
         try {
             GeneralConfig generalConfig = configService.getConfig(ConfigType.General);
-            when(generalConfig.getEhrIdSystem()).thenReturn("network://different.com");
+            when(generalConfig.getEhrIdSystem()).thenReturn("http://different.com");
 
             executor.setOperation(mockOperation());
             executor.invoke();
@@ -161,7 +161,7 @@ public class ReadObservationExecutorTest
     private void setupMockBehaviour() throws Throwable
     {
         GeneralConfig generalConfig = configService.getConfig(ConfigType.General);
-        when(generalConfig.getEhrIdSystem()).thenReturn("network://fhirwork.com");
+        when(generalConfig.getEhrIdSystem()).thenReturn("http://fhirwork.com");
 
         EmpiServer empiServer = networkService.getEmpiServer();
         when(empiServer.loadPerson(any())).thenReturn(mockPerson());
@@ -180,7 +180,7 @@ public class ReadObservationExecutorTest
 
     private ReadObservationOperation mockOperation()
     {
-        TokenOrListParam codes = new TokenOrListParam("network://loinc.org", "3141-9", "8302-2");
+        TokenOrListParam codes = new TokenOrListParam("http://loinc.org", "3141-9", "8302-2");
         ReferenceParam patient = new ReferenceParam("123");
         return new ReadObservationOperation(codes, patient);
     }
@@ -188,7 +188,7 @@ public class ReadObservationExecutorTest
     private Person mockPerson()
     {
         IdentifierDomain identifierDomain = new IdentifierDomain();
-        identifierDomain.setIdentifierDomainName("network://fhirwork.com");
+        identifierDomain.setIdentifierDomainName("http://fhirwork.com");
 
         Identifier identifier = new Identifier();
         identifier.setIdentifier("456");

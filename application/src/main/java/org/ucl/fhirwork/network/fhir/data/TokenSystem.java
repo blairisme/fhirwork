@@ -20,7 +20,7 @@ import ca.uhn.fhir.model.primitive.UriDt;
  */
 public enum TokenSystem
 {
-    Loinc (new UriDt("network://loinc.org"));
+    Loinc (new UriDt("http://loinc.org"));
 
     private UriDt systemUri;
 

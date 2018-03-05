@@ -18,8 +18,8 @@ public class Identifier {
         this.value = value;
     }
 
-    public static Identifier from(String id){
-        return new Identifier("SSN", id);
+    public static Identifier from(String system, String id){
+        return new Identifier(system, id);
     }
 
     public String getSystem() {

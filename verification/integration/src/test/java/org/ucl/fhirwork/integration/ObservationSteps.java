@@ -12,56 +12,45 @@ import org.ucl.fhirwork.integration.cucumber.HealthData;
 import org.ucl.fhirwork.integration.cucumber.StepUtils;
 import org.ucl.fhirwork.integration.ehr.EhrServer;
 import org.ucl.fhirwork.integration.ehr.model.*;
+import org.ucl.fhirwork.integration.empi.model.Person;
 import org.ucl.fhirwork.integration.fhir.FhirServer;
 import org.ucl.fhirwork.integration.fhir.model.Observation;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @StepDefAnnotation
 @SuppressWarnings("unused")
-public class ObservationSteps
+public class ObservationSteps extends IntegrationSteps
 {
-    private static boolean serversPinged = false;
-    private FhirServer fhirServer;
-    private EhrServer ehrServer;
     private List<Observation> observations;
 
     @Before
     public void setup() throws Exception
     {
-        fhirServer = new FhirServer(
-                System.getProperty("network.fhir.address", "http://localhost:8090"));
-        ehrServer = new EhrServer(
-            System.getProperty("network.ehr.address", "http://localhost:8888/rest/v1"),
-            System.getProperty("network.ehr.username", "guest"),
-            System.getProperty("network.ehr.password", "guest"));
-
-        if (! serversPinged) {
-            StepUtils.wait(60, TimeUnit.SECONDS, () -> ehrServer.ping());
-            StepUtils.wait(60, TimeUnit.SECONDS, () -> fhirServer.ping());
-            serversPinged = true;
-        }
+        super.setup();
+        observations = new ArrayList<>();
     }
 
     @Given("^the system has the following health data:$")
     public void initializeHealthData(List<HealthData> healthData) throws IOException, RestServerException
     {
-        installTemplates();
-        for (HealthData data: healthData){
-            HealthRecord record = getHealthRecord(data);
-            createComposition(data, record);
-        }
+        createTemplates();
+        createHealthRecords(healthData);
+        removeCompositions(healthData);
+        createCompositions(healthData);
     }
 
-    private void installTemplates() throws IOException, RestServerException
+    private void createTemplates() throws IOException, RestServerException
     {
-        installTemplate("RIPPLE - Personal Notes.v1", "templates/Ripple_Personal_Notes_v1.xml");
-        installTemplate("Smart Growth Chart Data.v0", "templates/Smart_Growth_Chart_Data_v0.xml");
+        createTemplate("RIPPLE - Personal Notes.v1", "templates/Ripple_Personal_Notes_v1.xml");
+        createTemplate("Smart Growth Chart Data.v0", "templates/Smart_Growth_Chart_Data_v0.xml");
     }
 
-    private void installTemplate(String id, String resource) throws IOException, RestServerException
+    private void createTemplate(String id, String resource) throws IOException, RestServerException
     {
         if (! ehrServer.templateExists(id)){
             TemplateReference template = new TemplateReference(resource);
@@ -69,21 +58,36 @@ public class ObservationSteps
         }
     }
 
-    private HealthRecord getHealthRecord(HealthData healthData) throws RestServerException
+    private void createHealthRecords(List<HealthData> dataList) throws RestServerException
+    {
+        for (HealthData data: dataList){
+            createHealthRecord(data);
+        }
+    }
+
+    private void createHealthRecord(HealthData healthData) throws RestServerException
     {
         String subjectId = healthData.getSubject();
         String subjectNamespace = healthData.getNamespace();
 
         if (! ehrServer.ehrExists(subjectId, subjectNamespace)){
-            return ehrServer.createEhr(subjectId, subjectNamespace);
+            ehrServer.createEhr(subjectId, subjectNamespace);
         }
+    }
+
+    private HealthRecord getHealthRecord(HealthData healthData) throws RestServerException
+    {
+        String subjectId = healthData.getSubject();
+        String subjectNamespace = healthData.getNamespace();
         return ehrServer.getEhr(subjectId, subjectNamespace);
     }
 
-    private void createComposition(HealthData data, HealthRecord record) throws RestServerException
+    private void removeCompositions(List<HealthData> dataList) throws RestServerException
     {
-        GrowthChartComposition composition = GrowthChartComposition.fromHealthData(data);
-        ehrServer.createComposition(record, composition, GrowthChartComposition.class);
+        for (HealthData healthData: dataList){
+            HealthRecord healthRecord = getHealthRecord(healthData);
+            removeCompositions(healthRecord);
+        }
     }
 
     private void removeCompositions(HealthRecord record) throws RestServerException
@@ -94,15 +98,32 @@ public class ObservationSteps
         }
     }
 
-    @When("^the user searches for observations$")
-    public void observationSearch() throws RestServerException
+    private void createCompositions(List<HealthData> healthDataList) throws RestServerException
     {
-        //observations = fhirServer.searchObservation("SSN|1", "http://loinc.org|3141-9");
+        for (HealthData healthData: healthDataList){
+            HealthRecord healthRecord = getHealthRecord(healthData);
+            createComposition(healthData, healthRecord);
+        }
+    }
+
+    private void createComposition(HealthData data, HealthRecord record) throws RestServerException
+    {
+        GrowthChartComposition composition = GrowthChartComposition.fromHealthData(data);
+        ehrServer.createComposition(record, composition, GrowthChartComposition.class);
+    }
+
+
+
+    @When("^the user searches for observations belonging to patient \"(.*)\"$")
+    public void observationSearch(String patient) throws RestServerException
+    {
+        Person person = getPersonByName(patient);
+        observations = fhirServer.searchObservation(person.getPersonId(), "http://loinc.org|3141-9");
     }
 
     @Then("^the user should receive a list of (\\d) observations$")
     public void assertObservationList(int observationsCount)
     {
-        //Assert.assertEquals(observationsCount, observations.size());
+        Assert.assertEquals(observationsCount, observations.size());
     }
 }
