@@ -11,21 +11,19 @@
 package org.ucl.fhirwork.network.fhir.servlet;
 
 import ca.uhn.fhir.model.dstu2.resource.Observation;
-import ca.uhn.fhir.rest.annotation.OptionalParam;
-import ca.uhn.fhir.rest.annotation.RequiredParam;
-import ca.uhn.fhir.rest.annotation.Search;
+import ca.uhn.fhir.rest.annotation.*;
+import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.param.ReferenceParam;
 import ca.uhn.fhir.rest.param.TokenOrListParam;
 import ca.uhn.fhir.rest.server.IResourceProvider;
-import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.ucl.fhirwork.mapping.ExecutorService;
+import org.ucl.fhirwork.network.fhir.data.MethodOutcomes;
+import org.ucl.fhirwork.network.fhir.operations.observation.CreateObservationOperation;
 import org.ucl.fhirwork.network.fhir.operations.observation.ReadObservationOperation;
 
 import javax.inject.Inject;
 import java.util.List;
-
-import static org.ucl.fhirwork.network.fhir.data.ExceptionUtils.getFrameworkException;
 
 /**
  * Instances of this class provide implement functions defined in the FHIR
@@ -47,6 +45,19 @@ public class ObservationResourceProvider implements IResourceProvider
     @Override
     public Class<? extends IBaseResource> getResourceType() {
         return Observation.class;
+    }
+
+    @Create
+    public MethodOutcome create(@ResourceParam Observation observation)
+    {
+        try {
+            CreateObservationOperation operation = new CreateObservationOperation(observation);
+            Observation result = (Observation)executorService.execute(operation);
+            return MethodOutcomes.identifier(result);
+        }
+        catch (Throwable throwable) {
+            throw MethodOutcomes.error(throwable);
+        }
     }
 
     @Search
@@ -72,8 +83,8 @@ public class ObservationResourceProvider implements IResourceProvider
             ReadObservationOperation operation = new ReadObservationOperation(codes, subject);
             return (List<Observation>)executorService.execute(operation);
         }
-        catch (Throwable error) {
-            throw getFrameworkException(error);
+        catch (Throwable throwable) {
+            throw MethodOutcomes.error(throwable);
         }
     }
 }

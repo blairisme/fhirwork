@@ -67,7 +67,7 @@ public class PatientFactory
 
     private void setId(Patient patient, Person person)
     {
-        patient.setId(new IdDt(person.getPersonId()));
+        patient.setId(new IdDt("Patient", person.getPersonId(), "1"));
     }
 
     private void setIdentifiers(Patient patient, Person person)

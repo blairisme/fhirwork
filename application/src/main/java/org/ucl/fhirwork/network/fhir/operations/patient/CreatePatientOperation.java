@@ -30,11 +30,6 @@ public class CreatePatientOperation extends ConditionalOperation
         this.patient = patient;
     }
 
-    public CreatePatientOperation(Patient patient, Map<SearchParameter, Object> searchParameters){
-        super(searchParameters);
-        this.patient = patient;
-    }
-
     public Patient getPatient() {
         return patient;
     }

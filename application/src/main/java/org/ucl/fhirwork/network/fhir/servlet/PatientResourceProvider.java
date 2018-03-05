@@ -21,6 +21,7 @@ import ca.uhn.fhir.rest.server.IResourceProvider;
 import ca.uhn.fhir.rest.server.exceptions.NotImplementedOperationException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.ucl.fhirwork.mapping.ExecutorService;
+import org.ucl.fhirwork.network.fhir.data.MethodOutcomes;
 import org.ucl.fhirwork.network.fhir.data.SearchParameter;
 import org.ucl.fhirwork.network.fhir.data.SearchParameterBuilder;
 import org.ucl.fhirwork.network.fhir.operations.patient.*;
@@ -29,8 +30,6 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 
-import static org.ucl.fhirwork.network.fhir.data.ExceptionUtils.getFrameworkException;
-import static org.ucl.fhirwork.network.fhir.data.MethodOutcomeUtils.patientResult;
 import static org.ucl.fhirwork.network.fhir.data.SearchParameter.*;
 
 /**
@@ -63,10 +62,10 @@ public class PatientResourceProvider implements IResourceProvider
         try {
             CreatePatientOperation operation = new CreatePatientOperation(patient);
             Patient result = (Patient)executorService.execute(operation);
-            return patientResult(result);
+            return MethodOutcomes.identifier(result);
         }
-        catch (Throwable error) {
-            throw getFrameworkException(error);
+        catch (Throwable throwable) {
+            throw MethodOutcomes.error(throwable);
         }
     }
 
@@ -91,8 +90,8 @@ public class PatientResourceProvider implements IResourceProvider
             DeletePatientOperation operation = operationBuilder.build();
             executorService.execute(operation);
         }
-        catch (Throwable error) {
-            throw getFrameworkException(error);
+        catch (Throwable throwable) {
+            throw MethodOutcomes.error(throwable);
         }
     }
 
@@ -103,8 +102,8 @@ public class PatientResourceProvider implements IResourceProvider
             ReadPatientOperation operation = new ReadPatientOperation(patientId);
             return (Patient)executorService.execute(operation);
         }
-        catch (Throwable error) {
-            throw getFrameworkException(error);
+        catch (Throwable throwable) {
+            throw MethodOutcomes.error(throwable);
         }
     }
 
@@ -128,8 +127,8 @@ public class PatientResourceProvider implements IResourceProvider
             ReadPatientOperation operation = new ReadPatientOperation(parameterBuilder.build());
             return (List<Patient>)executorService.execute(operation);
         }
-        catch (Throwable error) {
-            throw getFrameworkException(error);
+        catch (Throwable throwable) {
+            throw MethodOutcomes.error(throwable);
         }
     }
 
@@ -139,13 +138,13 @@ public class PatientResourceProvider implements IResourceProvider
         try {
             UpdatePatientOperation operation = new UpdatePatientOperation(patientId, patient);
             Patient result = (Patient)executorService.execute(operation);
-            return patientResult(result);
+            return MethodOutcomes.identifier(result);
         }
-        catch (Throwable error) {
-            throw getFrameworkException(error);
+        catch (Throwable throwable) {
+            throw MethodOutcomes.error(throwable);
         }
     }
-
+    
     @Update
     public MethodOutcome updateConditional(
             @ResourceParam Patient patient,
@@ -155,12 +154,11 @@ public class PatientResourceProvider implements IResourceProvider
         try {
             UpdatePatientOperation operation = new UpdatePatientOperation(patient, getSearchParameters(condition));
             Patient result = (Patient)executorService.execute(operation);
-            return patientResult(result);
+            return MethodOutcomes.identifier(result);
         }
-        catch (Throwable error) {
-            throw getFrameworkException(error);
+        catch (Throwable throwable) {
+            throw MethodOutcomes.error(throwable);
         }
-
     }
 
     private Map<SearchParameter, Object> getSearchParameters(String condition)
