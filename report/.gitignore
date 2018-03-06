@@ -1,0 +1,11 @@
+#exclude generated files
+*.aux
+*.log
+*.synctex.gz
+sample-sigconf.bbl
+sample-sigconf.blg
+sample-sigconf.out
+sample-sigconf.pdf
+report.blg
+report.out
+report.bbl
