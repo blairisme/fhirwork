@@ -146,18 +146,20 @@ public class PatientSteps extends IntegrationSteps
         fhirServer.deletePatientByGivenName(givenName);
     }
 
-    @When("^the user updates a patient to the following data:$")
-    public void updatePatient(List<Profile> profiles) throws RestServerException
+    @When("^the user changes the (first name|last name) of \"(.*)\" to \"(.*)\"$")
+    public void updatePatient(String property, String name, String value) throws RestServerException
     {
-        for (Profile profile: profiles){
-            Person person = getPersonByName(profile.getFirst());
-            String personId = person.getPersonId();
+        Person person = getPersonByName(name);
+        String personId = person.getPersonId();
 
-            Patient patient = Patient.fromProfile(profile);
-            patient.setId(personId);
-
-            fhirServer.updatePatient(personId, patient);
+        Patient patient = fhirServer.readPatient(personId);
+        if (property.equalsIgnoreCase("first name")){
+            patient.setFirstName(value);
         }
+        if (property.equalsIgnoreCase("last name")){
+            patient.setLastName(value);
+        }
+        fhirServer.updatePatient(personId, patient);
     }
 
     @Then("^the user should receive a list of (\\d) patients$")
