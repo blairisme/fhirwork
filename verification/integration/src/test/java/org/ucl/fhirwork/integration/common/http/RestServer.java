@@ -18,6 +18,7 @@ import com.mashape.unirest.request.body.RequestBodyEntity;
 import org.ucl.fhirwork.integration.common.lang.StringCovertable;
 import org.ucl.fhirwork.integration.common.serialization.Serializer;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -171,15 +172,16 @@ public class RestServer
     }
 
     public <T> String put(RestEndpoint endPoint, T value, Class<T> type) throws RestServerException {
-        return put(endPoint.getPath(), value, type);
+        return put(endPoint.getPath(), value, type, Collections.emptyMap());
     }
 
-    public <T> String put(String path, T value, Class<T> type) throws RestServerException
+    public <T> String put(String path, T value, Class<T> type, Map<Object, Object> parameters) throws RestServerException
     {
         try {
             String body = serializer.serialize(value, type);
             RequestBodyEntity request = Unirest.put(server + path)
                     .headers(headers)
+                    .queryString(convertParameters(parameters))
                     .body(body);
             HttpResponse<String> response = request.asString();
 

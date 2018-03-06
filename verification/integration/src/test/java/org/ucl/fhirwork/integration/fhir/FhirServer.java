@@ -56,7 +56,7 @@ public class FhirServer
 
     public void updatePatient(String patientId, Patient patient) throws RestServerException
     {
-        server.put(Patient.getPath() + "/" + patientId, patient, Patient.class);
+        server.put(Patient.getPath() + "/" + patientId, patient, Patient.class, ImmutableMap.of("_format", "json"));
     }
 
     public List<Patient> searchPatients() throws RestServerException
@@ -97,8 +97,7 @@ public class FhirServer
 
     public List<Observation> searchPatientObservations(String patient) throws RestServerException
     {
-        ObservationBundle bundle = server.get(FhirEndpoint.Observation, ObservationBundle.class,
-                ImmutableMap.of(FhirParameter.Patient, patient, "_format", "json"));
+        ObservationBundle bundle = server.get(FhirEndpoint.Observation, ObservationBundle.class, ImmutableMap.of(FhirParameter.Patient, patient, "_format", "json"));
         return getObservations(bundle);
     }
 
