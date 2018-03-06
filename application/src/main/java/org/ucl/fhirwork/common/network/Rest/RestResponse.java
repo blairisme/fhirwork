@@ -10,8 +10,13 @@
 
 package org.ucl.fhirwork.common.network.Rest;
 
+import ca.uhn.fhir.util.CollectionUtil;
 import com.mashape.unirest.http.HttpResponse;
+import org.springframework.util.CollectionUtils;
 import org.ucl.fhirwork.common.serialization.Serializer;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * Instances of this class represent a response from a REST service call.
@@ -25,30 +30,33 @@ public class RestResponse
     private Serializer serializer;
     private HttpResponse<String> response;
 
-    RestResponse(HttpResponse<String> response, Serializer serializer)
-    {
+    RestResponse(HttpResponse<String> response, Serializer serializer) {
         this.response = response;
         this.serializer = serializer;
     }
 
-    public int getStatusCode()
-    {
+    public int getStatusCode() {
         return response.getStatus();
     }
 
-    public boolean isEmpty()
-    {
+    public boolean hasStatusCode(Integer ... codes) {
+        return hasStatusCode(Arrays.asList(codes));
+    }
+
+    public boolean hasStatusCode(Collection<Integer> codes) {
+        return codes.contains(getStatusCode());
+    }
+
+    public boolean isEmpty() {
         String body = response.getBody();
         return body == null || body.isEmpty();
     }
 
-    public String asString()
-    {
+    public String asString() {
         return response.getBody();
     }
 
-    public <T> T asType(Class<T> type)
-    {
+    public <T> T asType(Class<T> type) {
         return serializer.deserialize(response.getBody(), type);
     }
 }

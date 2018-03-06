@@ -34,7 +34,7 @@ public class EmpiServerTest
     {
         request  = mock(RestRequest.class);
         response  = mock(RestResponse.class);
-        restServer = mock(RestServer.class);
+        restServer = mock(AuthenticatedRestServer.class);
         empiServer = new BasicEmpiServer(new MockProvider(restServer));
 
         when(restServer.put(any(RestResource.class))).thenReturn(request);

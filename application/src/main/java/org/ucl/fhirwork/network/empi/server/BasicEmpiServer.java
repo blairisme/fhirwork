@@ -12,10 +12,10 @@ package org.ucl.fhirwork.network.empi.server;
 
 import com.google.common.collect.ImmutableMap;
 import org.ucl.fhirwork.common.network.Rest.*;
-import org.ucl.fhirwork.common.network.exception.*;
-import org.ucl.fhirwork.common.serialization.Serializer;
+import org.ucl.fhirwork.common.network.exception.AmbiguousResultException;
+import org.ucl.fhirwork.common.network.exception.ResourceExistsException;
+import org.ucl.fhirwork.common.network.exception.ResourceMissingException;
 import org.ucl.fhirwork.common.serialization.XmlSerializer;
-import org.ucl.fhirwork.network.empi.data.AuthenticationRequest;
 import org.ucl.fhirwork.network.empi.data.InternalIdentifier;
 import org.ucl.fhirwork.network.empi.data.People;
 import org.ucl.fhirwork.network.empi.data.Person;
@@ -24,13 +24,11 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import static org.ucl.fhirwork.common.network.Rest.RestStatusHandlers.throwOnFailedStatus;
 import static org.ucl.fhirwork.common.network.Rest.RestStatusHandlers.throwOnFailureExcept;
 import static org.ucl.fhirwork.common.network.http.HttpHeader.ContentType;
 import static org.ucl.fhirwork.common.network.http.MimeType.Xml;
-import static org.ucl.fhirwork.network.empi.server.EmpiHeader.SessionKey;
 import static org.ucl.fhirwork.network.empi.server.EmpiParameter.*;
 import static org.ucl.fhirwork.network.empi.server.EmpiResource.*;
 
@@ -42,14 +40,14 @@ import static org.ucl.fhirwork.network.empi.server.EmpiResource.*;
  */
 public class BasicEmpiServer implements EmpiServer
 {
-    private Provider<RestServer> serverFactory;
-    private RestServer server;
+    private Provider<AuthenticatedRestServer> serverFactory;
+    private AuthenticatedRestServer server;
     private String username;
     private String password;
     private String address;
 
     @Inject
-    BasicEmpiServer(Provider<RestServer> serverFactory){
+    BasicEmpiServer(Provider<AuthenticatedRestServer> serverFactory){
         this.serverFactory = serverFactory;
     }
 
@@ -79,10 +77,10 @@ public class BasicEmpiServer implements EmpiServer
     {
         List<Person> people = findPersons(template);
 
-        if (people.isEmpty()){
+        if (people.isEmpty()) {
             throw new ResourceMissingException("Person", template.toString());
         }
-        if (people.size() > 1){
+        if (people.size() > 1) {
             throw new AmbiguousResultException("Person", template.toString());
         }
         return people.get(0);
@@ -140,42 +138,21 @@ public class BasicEmpiServer implements EmpiServer
         request.setBody(person, Person.class);
 
         RestResponse response = request.make(throwOnFailureExcept(304));
-        if (response.getStatusCode() == 304){
+        if (response.getStatusCode() == 304) {
             return person;
         }
         return response.asType(Person.class);
     }
 
-    private synchronized RestServer getServer() throws RestException
+    private synchronized RestServer getServer()
     {
         if (server == null) {
-            String token = getSessionToken();
-            server = newServer(address, new XmlSerializer(), ImmutableMap.of(ContentType, Xml, SessionKey, token));
+            server = serverFactory.get();
+            server.setAddress(address);
+            server.setSerializer(new XmlSerializer());
+            server.setHeaders(ImmutableMap.of(ContentType, Xml));
+            server.setAuthenticationStrategy(new EmpiAuthenticator(username, password));
         }
         return server;
-    }
-
-    private String getSessionToken() throws RestException
-    {
-        AuthenticationRequest authentication = new AuthenticationRequest(username, password);
-        RestServer server = newServer(address, new XmlSerializer(), ImmutableMap.of(ContentType, Xml));
-
-        RestRequest request = server.put(Authenticate);
-        request.setBody(authentication, AuthenticationRequest.class);
-        RestResponse response = request.make(throwOnFailureExcept(401));
-
-        if (response.getStatusCode() == 401) {
-            throw new AuthenticationException(address, username);
-        }
-        return response.asString();
-    }
-
-    private RestServer newServer(String address, Serializer serializer, Map<Object, Object> headers)
-    {
-        RestServer result = serverFactory.get();
-        result.setAddress(address);
-        result.setSerializer(serializer);
-        result.setHeaders(headers);
-        return result;
     }
 }

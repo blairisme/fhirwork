@@ -28,8 +28,8 @@ import java.util.Map;
  */
 public class RestRequest
 {
-    private Serializer serializer;
-    private HttpRequest request;
+    protected Serializer serializer;
+    protected HttpRequest request;
 
     RestRequest(HttpRequest request, Serializer serializer)
     {
@@ -37,15 +37,19 @@ public class RestRequest
         this.serializer = serializer;
     }
 
-    public RestRequest setParameters(Map<Object, Object> parameters)
-    {
+    public RestRequest setHeader(Object key, Object value) {
+        request.header(convert(key), convert(value));
+        return this;
+    }
+
+    public RestRequest setParameters(Map<Object, Object> parameters) {
         request.queryString(convert(parameters));
         return this;
     }
 
     public <T> RestRequest setBody(T value, Class<T> type)
     {
-        if (request instanceof HttpRequestWithBody){
+        if (request instanceof HttpRequestWithBody) {
             HttpRequestWithBody requestWithBody = (HttpRequestWithBody)request;
             requestWithBody.body(serializer.serialize(value, type));
             return this;
@@ -53,14 +57,12 @@ public class RestRequest
         throw new IllegalArgumentException();
     }
 
-    public RestResponse make(RestStatusHandler statusHandler) throws RestException
-    {
-        try
-        {
+    public RestResponse make(RestStatusHandler statusHandler) throws RestException {
+        try {
             HttpResponse<String> response = request.asString();
             RestResponse result = new RestResponse(response, serializer);
 
-            if (! statusHandler.test(result)){
+            if (! statusHandler.test(result)) {
                 throw new RestException(result.getStatusCode());
             }
             return result;
@@ -70,8 +72,7 @@ public class RestRequest
         }
     }
 
-    private Map<String, Object> convert(Map<Object, Object> values)
-    {
+    private Map<String, Object> convert(Map<Object, Object> values) {
         Map<String, Object> result = new HashMap<>();
         for (Map.Entry<Object, Object> entry: values.entrySet()){
             result.put(convert(entry.getKey()), convert(entry.getValue()));
@@ -79,8 +80,7 @@ public class RestRequest
         return result;
     }
 
-    private String convert(Object object)
-    {
-        return object.toString();
+    protected String convert(Object object) {
+        return object != null ? object.toString() : null;
     }
 }

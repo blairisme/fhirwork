@@ -35,7 +35,7 @@ public class EhrServerTest {
     public void setUp() throws RestException {
         request  = mock(RestRequest.class);
         response  = mock(RestResponse.class);
-        restServer = mock(RestServer.class);
+        restServer = mock(AuthenticatedRestServer.class);
         ehrServer = new BasicEhrServer(new MockProvider(restServer));
         ehrServer.setConnectionDetails("testAddress", "testUserName", "testPassword");
         sessionToken = mock(SessionToken.class);

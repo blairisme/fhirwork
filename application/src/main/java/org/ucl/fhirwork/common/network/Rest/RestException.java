@@ -19,13 +19,18 @@ package org.ucl.fhirwork.common.network.Rest;
  */
 public class RestException extends Exception
 {
-    public RestException(Exception cause)
-    {
+    private int statusCode;
+
+    public RestException(Exception cause) {
         super(cause);
     }
 
-    public RestException(int httpCode)
-    {
-        super("REST server error: status code " + httpCode);
+    public RestException(int statusCode) {
+        super("REST server error: status code " + statusCode);
+        this.statusCode = statusCode;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
     }
 }
