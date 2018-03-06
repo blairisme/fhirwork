@@ -1,4 +1,4 @@
-Feature: Observation Reading
+Feature: Read Observation
     This feature allows users to get data on observations made about patients.
 
 Background:

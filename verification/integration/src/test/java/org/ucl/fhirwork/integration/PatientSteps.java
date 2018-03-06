@@ -159,7 +159,12 @@ public class PatientSteps extends IntegrationSteps
         if (property.equalsIgnoreCase("last name")){
             patient.setLastName(value);
         }
-        fhirServer.updatePatient(personId, patient);
+        try {
+            fhirServer.updatePatient(personId, patient);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Then("^the user should receive a list of (\\d) patients$")

@@ -8,7 +8,12 @@ Background:
     | 2         | SSN       | hermione  | granger   | female    | 1980-01-01T00:00:00Z  |
     | 3         | SSN       | ron       | weasley   | male      | 1980-01-01T00:00:00Z  |
 
-Scenario: Update patient information
+Scenario: Update patient
     When the user changes the last name of "harry" to "houdini"
     And the user searches for patients with last name "houdini"
     Then the user should receive a list of 1 patients
+
+#Scenario: Update patient by last name
+#    When the user changes the last name of "harry" to "houdini"
+#    And the user searches for patients with last name "houdini"
+#    Then the user should receive a list of 1 patients

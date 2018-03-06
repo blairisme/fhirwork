@@ -56,7 +56,7 @@ public class FhirServer
 
     public void updatePatient(String patientId, Patient patient) throws RestServerException
     {
-        server.put(Patient.getPath() + "/" + patientId, patient, Patient.class, ImmutableMap.of("_format", "application/json"));
+        server.put(Patient.getPath() + "/" + patientId, patient, Patient.class, Collections.emptyMap());
     }
 
     public List<Patient> searchPatients() throws RestServerException

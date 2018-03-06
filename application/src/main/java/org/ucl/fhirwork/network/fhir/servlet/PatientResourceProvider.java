@@ -18,7 +18,6 @@ import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.param.DateParam;
 import ca.uhn.fhir.rest.param.TokenParam;
 import ca.uhn.fhir.rest.server.IResourceProvider;
-import ca.uhn.fhir.rest.server.exceptions.NotImplementedOperationException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.ucl.fhirwork.mapping.ExecutorService;
 import org.ucl.fhirwork.network.fhir.data.MethodOutcomes;
@@ -28,7 +27,6 @@ import org.ucl.fhirwork.network.fhir.operations.patient.*;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Map;
 
 import static org.ucl.fhirwork.network.fhir.data.SearchParameter.*;
 
@@ -122,7 +120,7 @@ public class PatientResourceProvider implements IResourceProvider
             parameterBuilder.append(GivenName, givenName);
             parameterBuilder.append(FamilyName, familyName);
             parameterBuilder.append(Gender, gender);
-            parameterBuilder.append(SearchParameter.BirthDate, birthDate);
+            parameterBuilder.append(BirthDate, birthDate);
 
             ReadPatientOperation operation = new ReadPatientOperation(parameterBuilder.build());
             return (List<Patient>)executorService.execute(operation);
@@ -133,43 +131,31 @@ public class PatientResourceProvider implements IResourceProvider
     }
 
     @Update
-    public MethodOutcome update(@IdParam IdDt patientId, @ResourceParam Patient patient)
+    public MethodOutcome update(
+        @IdParam IdDt patientId,
+        @ResourceParam Patient patient,
+        @OptionalParam(name = Patient.SP_IDENTIFIER) TokenParam identifier,
+        @OptionalParam(name = Patient.SP_GIVEN) StringDt givenName,
+        @OptionalParam(name = Patient.SP_FAMILY) StringDt familyName,
+        @OptionalParam(name = Patient.SP_GENDER) StringDt gender,
+        @OptionalParam(name = Patient.SP_BIRTHDATE) DateParam birthDate)
     {
         try {
-            UpdatePatientOperation operation = new UpdatePatientOperation(patientId, patient);
+            UpdatePatientOperationBuilder operationBuilder = new UpdatePatientOperationBuilder();
+            operationBuilder.append(patientId);
+            operationBuilder.append(patient);
+            operationBuilder.append(Identifier, identifier);
+            operationBuilder.append(GivenName, givenName);
+            operationBuilder.append(FamilyName, familyName);
+            operationBuilder.append(Gender, gender);
+            operationBuilder.append(BirthDate, birthDate);
+
+            UpdatePatientOperation operation = operationBuilder.build();
             Patient result = (Patient)executorService.execute(operation);
             return MethodOutcomes.identifier(result);
         }
         catch (Throwable throwable) {
             throw MethodOutcomes.error(throwable);
-        }
-    }
-
-    @Update
-    public MethodOutcome updateConditional(
-            @ResourceParam Patient patient,
-            @IdParam IdDt id,
-            @ConditionalUrlParam String condition)
-    {
-        try {
-            UpdatePatientOperation operation = new UpdatePatientOperation(patient, getSearchParameters(condition));
-            Patient result = (Patient)executorService.execute(operation);
-            return MethodOutcomes.identifier(result);
-        }
-        catch (Throwable throwable) {
-            throw MethodOutcomes.error(throwable);
-        }
-    }
-
-    private Map<SearchParameter, Object> getSearchParameters(String condition)
-    {
-        try {
-            SearchParameterBuilder parameterBuilder = new SearchParameterBuilder();
-            parameterBuilder.append(condition);
-            return parameterBuilder.build();
-        }
-        catch (IllegalArgumentException error) {
-            throw new NotImplementedOperationException("Unsupported search parameter in service call: " + condition);
         }
     }
 }
