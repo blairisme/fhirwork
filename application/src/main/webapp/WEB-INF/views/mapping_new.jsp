@@ -41,12 +41,12 @@
 
                 <div class="tab-panels">
                     <section id="Basic" class="tab-panel">
-                    <form action="new/basic" method="POST">
+                    <form action="new/basic" method="POST" id="basicForm">
                         <table>
                             <tbody>
                                 <tr class="property">
                                     <th><label for="text" class="label">Code</label></th>
-                                    <td><input type="text" id="code" name="code" value="" class="textbox"/></td>
+                                    <td><input type="text" id="code_basicForm" name="code" value="" class="textbox"/></td>
                                 </tr>
                                 <tr class="property">
                                     <th><label for="text" class="label">Text</label></th>
@@ -70,14 +70,14 @@
                                 </tr>
                             </tbody>
                         </table>
-                            <input type="submit" value="Submit" class="button"/>
+                        	<input type="button" onclick="checkSubmit('basicForm')" value="Submit" class="button">
                     </form>
                     </section>
 
                     <section id="Advanced" class="tab-panel">
                     <form id="scriptForm" class="script_form" action="new/scripted" method="POST">
                         <label for="code" class="label">Code</label>
-                        <input type="text" id="code" name="code" value="" class="textbox"/>
+                        <input type="text" id="code_scriptForm" name="code" value="" class="textbox"/>
 
                         <label for="script" class="label">Script</label>
                         <textarea id="script" name="script" class="script" form="scriptForm" rows="50" cols="100">
@@ -123,12 +123,27 @@ function getQuantity(queryResult)
     //Todo
 }
                         </textarea>
-                        <input type="submit" value="Submit" class="button"/>
+                        <input type="button" onclick="checkSubmit('scriptForm')" value="Submit" class="button">
                     </form>
                     </section>
                 </div>
             </div>
         </div>
     </div>
+    
+    <script>
+    	function checkSubmit(form){
+    	   if(document.getElementById('code_' + form).value == ""){
+     		   alert("The loinc code for the new mapping has not been defined");
+     	   }
+     	   else{
+     		   if(confirm("Add this mapping?")){
+    		       document.getElementById(form).submit();
+    		       alert("The new mapping has been submitted.");
+    		   }
+     	   }
+    	}
+    </script>
+    
 </body>
 </html>
