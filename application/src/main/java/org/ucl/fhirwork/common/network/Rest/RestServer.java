@@ -55,10 +55,6 @@ public class RestServer
         return this.headers.get(convert(key));
     }
 
-    public Map<String, String> getHeaders() {
-        return headers;
-    }
-
     public void setSerializer(Serializer serializer) {
         this.serializer = serializer;
     }

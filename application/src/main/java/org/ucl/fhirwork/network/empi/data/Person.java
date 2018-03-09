@@ -10,6 +10,9 @@
 
 package org.ucl.fhirwork.network.empi.data;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -135,5 +138,37 @@ public class Person
 
     public void setDateChanged(String dateChanged) {
         this.dateChanged = dateChanged;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+
+        if (object instanceof Person) {
+            Person other = (Person)object;
+            return new EqualsBuilder()
+                .append(this.personId, other.personId)
+                .append(this.personIdentifiers, other.personIdentifiers)
+                .append(this.givenName, other.givenName)
+                .append(this.familyName, other.familyName)
+                .append(this.gender, other.gender)
+                .append(this.dateOfBirth, other.dateOfBirth)
+                .append(this.dateChanged, other.dateChanged)
+                .isEquals();
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+            .append(personId)
+            .append(personIdentifiers)
+            .append(givenName)
+            .append(familyName)
+            .append(gender)
+            .append(dateOfBirth)
+            .append(dateChanged)
+            .toHashCode();
     }
 }

@@ -10,6 +10,9 @@
 
 package org.ucl.fhirwork.network.empi.data;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -63,5 +66,29 @@ public class Identifier
 
     public void setIdentifierDomain(IdentifierDomain identifierDomain) {
         this.identifierDomain = identifierDomain;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+
+        if (object instanceof Identifier) {
+            Identifier other = (Identifier)object;
+            return new EqualsBuilder()
+                .append(this.identifier, other.identifier)
+                .append(this.dateCreated, other.dateCreated)
+                .append(this.identifierDomain, other.identifierDomain)
+                .isEquals();
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(identifier)
+                .append(dateCreated)
+                .append(identifierDomain)
+                .toHashCode();
     }
 }

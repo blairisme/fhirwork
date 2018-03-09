@@ -10,6 +10,9 @@
 
 package org.ucl.fhirwork.network.empi.data;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -78,5 +81,31 @@ public class Gender
 
     public void setGenderDescription(String genderDescription) {
         this.genderDescription = genderDescription;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+
+        if (object instanceof Gender) {
+            Gender other = (Gender)object;
+            return new EqualsBuilder()
+                .append(this.genderCd, other.genderCd)
+                .append(this.genderCode, other.genderCode)
+                .append(this.genderName, other.genderName)
+                .append(this.genderDescription, other.genderDescription)
+                .isEquals();
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+            .append(genderCd)
+            .append(genderCode)
+            .append(genderName)
+            .append(genderDescription)
+            .toHashCode();
     }
 }
