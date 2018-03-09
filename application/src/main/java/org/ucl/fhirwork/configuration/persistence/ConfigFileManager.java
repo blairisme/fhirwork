@@ -51,7 +51,7 @@ public class ConfigFileManager {
     {
 	    try {
             String configPath = getConfig().get(type);
-            File configFile = Resources.getResourceInDisk(configPath);
+            File configFile = Resources.getResource(configPath);
             return new FileReader(configFile);
         }
         catch (FileNotFoundException error){
@@ -63,7 +63,7 @@ public class ConfigFileManager {
     {
         try {
             String configPath = getConfig().get(type);
-            File configFile = Resources.getResourceInDisk(configPath);
+            File configFile = Resources.getResource(configPath);
             return new FileWriter(configFile);
         }
         catch (IOException error){
