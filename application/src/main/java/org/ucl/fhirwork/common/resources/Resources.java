@@ -26,4 +26,8 @@ public class Resources
         URL templateUrl = Thread.currentThread().getContextClassLoader().getResource(resource);
         return new File(templateUrl.getPath());
     }
+    
+    public static File getResourceInDisk(String resource) {
+    	return new File(System.getProperty("user.dir") + "/src/main/resources/" + resource);
+    }
 }

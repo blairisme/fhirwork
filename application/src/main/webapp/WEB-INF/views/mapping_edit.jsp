@@ -30,7 +30,7 @@
             <h1 class="title">${mapping.code} Settings</h1>
 
             <c:if test="${type == 'basic'}">
-            <form action="edit/basic" method="POST">
+            <form action="edit/basic" method="POST" id="basic_form">
                 <table>
                     <tbody>
                         <tr class="property">
@@ -56,22 +56,31 @@
                     </tbody>
                 </table>
                 <input type="text" id="code" name="code" value="${mapping.code}" style="visibility:hidden;"/>
-                <input type="submit" value="Submit" class="button"/>
+                <input type="button" onclick="confirmSubmit('basic_form')" value="Submit" class="button">
             </form>
             </c:if>
 
             <c:if test="${type == 'scripted'}">
-            <form class="script_form" action="edit/scripted" method="POST">
+            <form class="script_form" action="edit/scripted" method="POST" id="script_form">
                 <label for="code" class="label">Code</label>
                 <input type="text" id="code" name="code" value="${mapping.code}" class="textbox"/>
 
                 <label for="script" class="label">Script</label>
                 <textarea id="script" class="script" rows="50" cols="100">${mapping.script}</textarea>
-                <input type="submit" value="Submit" class="button"/>
+                <input type="button" onclick="confirmSubmit('script_form')" value="Submit" class="button">
             </form>
             </c:if>
 
         </div>
     </div>
+    
+    <script>
+    	function confirmSubmit(form){
+ 		   if(confirm("Are you sure you want to make this modification?")){
+		       document.getElementById(form).submit();
+		       alert("The modification has been submitted.");
+		   }
+    	}
+    </script>
 </body>
 </html>
