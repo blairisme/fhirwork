@@ -11,6 +11,7 @@
 package org.ucl.fhirwork.common.resources;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 
 /**
@@ -21,13 +22,12 @@ import java.net.URL;
  */
 public class Resources
 {
-    public static File getResource(String resource)
-    {
+    public static File getResource(String resource){
         URL templateUrl = Thread.currentThread().getContextClassLoader().getResource(resource);
-        return new File(templateUrl.getPath());
-    }
-    
-    public static File getResourceInDisk(String resource) {
-    	return new File(System.getProperty("user.dir") + "/src/main/resources/" + resource);
+        if(templateUrl.getPath().contains("/bin/test"))
+        	return new File(templateUrl.getPath());
+        else {
+        	return new File(System.getProperty("user.dir") + "/src/main/resources/" + resource);
+        }
     }
 }
