@@ -12,6 +12,7 @@ package org.ucl.fhirwork.common.serialization;
 
 import com.google.gson.Gson;
 
+import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -36,25 +37,44 @@ public class JsonSerializer implements Serializer
     @Override
     public <T> String serialize(T value, Class<T> type) throws SerializationException
     {
-        return gson.toJson(value, type);
+        try {
+            return gson.toJson(value, type);
+        }
+        catch (Throwable error) {
+            throw new SerializationException(error);
+        }
     }
 
     @Override
     public <T> void serialize(T value, Class<T> type, Writer writer) throws SerializationException
     {
-        gson.toJson(value, type, writer);
+        try {
+            gson.toJson(value, type, writer);
+        }
+        catch (Throwable error) {
+            throw new SerializationException(error);
+        }
     }
 
     @Override
     public <T> T deserialize(String value, Class<T> type) throws SerializationException
     {
-        return gson.fromJson(value, type);
+        try {
+            return gson.fromJson(value, type);
+        }
+        catch (Throwable error) {
+            throw new SerializationException(error);
+        }
     }
 
     @Override
     public <T> T deserialize(Reader reader, Class<T> type) throws SerializationException
     {
-        return gson.fromJson(reader, type);
+        try {
+            return gson.fromJson(reader, type);
+        }
+        catch (Throwable error) {
+            throw new SerializationException(error);
+        }
     }
-
 }

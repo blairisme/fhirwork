@@ -22,10 +22,7 @@ public class TypeUtils
         try {
             return clazz.newInstance();
         }
-        catch (InstantiationException e) {
-            throw new ReflectionException(e);
-        }
-        catch (IllegalAccessException e) {
+        catch (ReflectiveOperationException e) {
             throw new ReflectionException(e);
         }
     }

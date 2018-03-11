@@ -16,15 +16,14 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.ucl.fhirwork.common.resources.FilePaths;
-import org.ucl.fhirwork.common.resources.Resources;
+import org.ucl.fhirwork.common.paths.FilePaths;
+import org.ucl.fhirwork.common.resources.ResourceUtils;
 import org.ucl.fhirwork.common.serialization.JsonSerializer;
 import org.ucl.fhirwork.common.serialization.Serializer;
 import org.ucl.fhirwork.configuration.data.ConfigType;
 import org.ucl.fhirwork.configuration.data.NetworkConfig;
 import org.ucl.fhirwork.configuration.data.NetworkConfigData;
 import org.ucl.fhirwork.configuration.exception.ConfigIoException;
-import org.ucl.fhirwork.configuration.persistence.ConfigFileManager;
 
 import java.io.*;
 
@@ -61,7 +60,7 @@ public class ConfigFileManagerTest
     @Test
     public void customConfigurationTest() throws Exception
     {
-        configFileManager.setConfigManifest(Resources.getResource("configuration/manifest.json"));
+        configFileManager.setConfigManifest(ResourceUtils.getResource("configuration/manifest.json"));
         try (Reader reader = configFileManager.getConfigReader(ConfigType.Mapping)){
             Assert.assertNotNull(reader);
         }
@@ -82,7 +81,7 @@ public class ConfigFileManagerTest
     @Test
     public void getConfigWriterTest() throws Exception
     {
-        configFileManager.setConfigManifest(Resources.getResource("configuration/manifest_overwrite.json"));
+        configFileManager.setConfigManifest(ResourceUtils.getResource("configuration/manifest_overwrite.json"));
 
         try (Writer writer = configFileManager.getConfigWriter(ConfigType.Network)) {
 

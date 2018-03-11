@@ -8,7 +8,7 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.common.resources;
+package org.ucl.fhirwork.common.paths;
 
 import java.io.File;
 

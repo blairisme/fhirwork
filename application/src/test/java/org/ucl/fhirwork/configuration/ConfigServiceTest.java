@@ -15,8 +15,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.ucl.fhirwork.common.resources.FilePaths;
-import org.ucl.fhirwork.common.resources.Resources;
+import org.ucl.fhirwork.common.paths.FilePaths;
+import org.ucl.fhirwork.common.resources.ResourceUtils;
 import org.ucl.fhirwork.configuration.data.*;
 import org.ucl.fhirwork.configuration.exception.ConfigIoException;
 import org.ucl.fhirwork.configuration.persistence.ConfigFileManager;
@@ -43,7 +43,7 @@ public class ConfigServiceTest
     @Test
     public void getNetworkConfigTest()
     {
-        configFileManager.setConfigManifest(Resources.getResource("configuration/manifest.json"));
+        configFileManager.setConfigManifest(ResourceUtils.getResource("configuration/manifest.json"));
 
         ConfigService configService = new ConfigService(configFileManager);
         NetworkConfig networkConfig = configService.getConfig(ConfigType.Network);
@@ -55,7 +55,7 @@ public class ConfigServiceTest
     @Test
     public void getMappingConfigTest()
     {
-        configFileManager.setConfigManifest(Resources.getResource("configuration/manifest.json"));
+        configFileManager.setConfigManifest(ResourceUtils.getResource("configuration/manifest.json"));
 
         ConfigService configService = new ConfigService(configFileManager);
         MappingConfig mappingConfig = configService.getConfig(ConfigType.Mapping);
@@ -77,7 +77,7 @@ public class ConfigServiceTest
     @Test
     public void setNetworkConfigTest()
     {
-        configFileManager.setConfigManifest(Resources.getResource("configuration/manifest_overwrite.json"));
+        configFileManager.setConfigManifest(ResourceUtils.getResource("configuration/manifest_overwrite.json"));
 
         ConfigService configService = new ConfigService(configFileManager);
         NetworkConfig expected = new NetworkConfig(

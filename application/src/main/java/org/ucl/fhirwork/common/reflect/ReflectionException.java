@@ -11,7 +11,7 @@
 package org.ucl.fhirwork.common.reflect;
 
 /**
- * Instances of this class are thrown if an error occurs while preforming
+ * Instances of this exception are thrown if an error occurs while preforming
  * reflection.
  *
  * @author Blair Butterworth

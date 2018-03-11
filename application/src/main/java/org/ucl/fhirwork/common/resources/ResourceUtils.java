@@ -11,6 +11,7 @@
 package org.ucl.fhirwork.common.resources;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 
@@ -20,10 +21,13 @@ import java.net.URL;
  *
  * @author Blair Butterworth
  */
-public class Resources
+public class ResourceUtils
 {
     public static File getResource(String resource) {
         URL templateUrl = Thread.currentThread().getContextClassLoader().getResource(resource);
+        if (templateUrl == null) {
+            throw new ResourceNotFoundException(resource);
+        }
         return new File(templateUrl.getPath());
     }
 }

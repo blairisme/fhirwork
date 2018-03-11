@@ -11,13 +11,11 @@
 package org.ucl.fhirwork.configuration.persistence;
 
 import java.io.*;
-import java.net.URL;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.ucl.fhirwork.common.resources.FilePaths;
-import org.ucl.fhirwork.common.resources.Resources;
+import org.ucl.fhirwork.common.paths.FilePaths;
+import org.ucl.fhirwork.common.resources.ResourceUtils;
 import org.ucl.fhirwork.common.serialization.JsonSerializer;
 import org.ucl.fhirwork.common.serialization.Serializer;
 import org.ucl.fhirwork.configuration.exception.ConfigIoException;
@@ -44,7 +42,7 @@ public class ConfigFileManager {
 	@Inject
 	public ConfigFileManager() {
         setEnvironment(Environment.Production);
-        setConfigManifest(Resources.getResource(DEFAULT_MANIFEST_NAME));
+        setConfigManifest(ResourceUtils.getResource(DEFAULT_MANIFEST_NAME));
         setConfigDirectory(FilePaths.getUserDir(DEFAULT_CONFIG_DIR));
     }
 
@@ -112,7 +110,7 @@ public class ConfigFileManager {
     private File getResource(String resource) throws IOException {
 	    File resourcePath = new File(directory, resource);
 	    if (! resourcePath.exists()) {
-            File defaultPath = Resources.getResource(resource);
+            File defaultPath = ResourceUtils.getResource(resource);
             FileUtils.copyFile(defaultPath, resourcePath);
         }
 	    return resourcePath;
