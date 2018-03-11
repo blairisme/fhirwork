@@ -61,11 +61,11 @@ public class ScriptedMapping implements MappingProvider
         ScriptQuery queryDetails = getScriptQuery(ehrId);
 
         QueryBuilder queryBuilder = new QueryBuilder();
-        queryBuilder.appendSelectStatement("skeletal_age", "data[at0001]/origin/value", "date");
-        queryBuilder.appendSelectStatement("skeletal_age", queryDetails.getSelectors().iterator().next());
+        queryBuilder.appendSelectStatement("o", "data[at0001]/origin/value", "date");
+        queryBuilder.appendSelectStatement("o", queryDetails.getSelectors().iterator().next());
         queryBuilder.appendFromStatement("EHR", "ehr_id/value='" + ehrId + "'");
         queryBuilder.appendContainsStatement("COMPOSITION", "c");
-        queryBuilder.appendContainsStatement("OBSERVATION", "skeletal_age", queryDetails.getArchetype());
+        queryBuilder.appendContainsStatement("OBSERVATION", "o", queryDetails.getArchetype());
 
         return queryBuilder.build();
     }
