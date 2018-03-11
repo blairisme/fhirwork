@@ -24,10 +24,6 @@ public class Resources
 {
     public static File getResource(String resource){
         URL templateUrl = Thread.currentThread().getContextClassLoader().getResource(resource);
-        if(templateUrl.getPath().contains("/bin/test"))
-        	return new File(templateUrl.getPath());
-        else {
-        	return new File(System.getProperty("user.dir") + "/src/main/resources/" + resource);
-        }
+        return new File(templateUrl.getPath());
     }
 }

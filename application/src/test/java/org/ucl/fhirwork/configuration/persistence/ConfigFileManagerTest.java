@@ -77,8 +77,8 @@ public class ConfigFileManagerTest
 
         try (Writer writer = configFileManager.getConfigWriter(ConfigType.Network)){
 
-            NetworkConfigData ehrConfig = new NetworkConfigData("network://ehr.com", "user", "pass");
-            NetworkConfigData empiConfig = new NetworkConfigData("network://empi.com", "user", "pass");
+            NetworkConfigData ehrConfig = new NetworkConfigData("http://ehr.com", "user", "pass");
+            NetworkConfigData empiConfig = new NetworkConfigData("http://empi.com", "user", "pass");
             NetworkConfig networkConfig = new NetworkConfig(empiConfig, ehrConfig);
 
             Serializer serializer = new JsonSerializer();
@@ -90,8 +90,8 @@ public class ConfigFileManagerTest
             Serializer serializer = new JsonSerializer();
             NetworkConfig networkConfig = serializer.deserialize(reader, NetworkConfig.class);
 
-            Assert.assertEquals("network://ehr.com", networkConfig.getEhr().getAddress());
-            Assert.assertEquals("network://empi.com", networkConfig.getEmpi().getAddress());
+            Assert.assertEquals("http://ehr.com", networkConfig.getEhr().getAddress());
+            Assert.assertEquals("http://empi.com", networkConfig.getEmpi().getAddress());
         }
     }
 }

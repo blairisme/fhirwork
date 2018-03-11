@@ -11,6 +11,7 @@
 package org.ucl.fhirwork.configuration.persistence;
 
 import java.io.*;
+import java.net.URL;
 import java.util.Map;
 
 import org.ucl.fhirwork.common.resources.Resources;
@@ -27,7 +28,6 @@ import javax.inject.Inject;
  * @author Chenghui Fan
  * @author Blair Butterworth
  */
-//TODO: Make thread safe
 public class ConfigFileManager {
 
 	public static final String DEFAULT_PATH_FILE_LOCATION = "configFilePath.json";
@@ -47,7 +47,7 @@ public class ConfigFileManager {
     {
 	    try {
             String configPath = getConfig().get(type);
-            File configFile = Resources.getResource(configPath);
+            File configFile = getResource(configPath);
             return new FileReader(configFile);
         }
         catch (FileNotFoundException error){
@@ -59,7 +59,7 @@ public class ConfigFileManager {
     {
         try {
             String configPath = getConfig().get(type);
-            File configFile = Resources.getResource(configPath);
+            File configFile = getResource(configPath);
             return new FileWriter(configFile);
         }
         catch (IOException error){
@@ -103,4 +103,11 @@ public class ConfigFileManager {
             throw new ConfigIoException(error);
         }
 	}
+
+    private File getResource(String resource){
+        //if(resource.contains("configuration/")) {
+            return Resources.getResource(resource);
+        //}
+        //return new File(System.getProperty("user.dir") + "/src/main/resources/" + resource);
+    }
 }
