@@ -81,57 +81,52 @@ router.post('/patients/addpatient', function(req,res){
   console.log(req.body.id);
   var data = {
   "resourceType": "Patient",
-  "Patient": {
-    "-xmlns": "http://hl7.org/fhir",
-    "text": {
-      "status": { "-value": "generated" },
-      "div": {
-        "-xmlns": "http://www.w3.org/1999/xhtml",
-        "#text": "Test, Johnny. SNN:444111234"
-      }
+  "name": [
+    {
+      "use": "usual",
+      "given": [
+        req.body.given
+      ],
+      "family":[ req.body.family],
+      "prefix": [
+        "Miss"
+      ]
     },
-    "identifier": {
-      "label": { "-value": "SSN" },
-      "system": { "-value": "http://hl7.org/fhir/sid/us-ssn" },
-      "value": { "-value": req.body.ssn }
-    },
-    "name": {
-      "use": { "-value": "official" },
-      "family": { "-value": req.body.family },
-      "given": { "-value": req.body.given }
-    },
-    "telecom": {
-      "system": { "-value": "phone" },
-      "value": { "-value": req.body.phone },
-      "use": { "-value": "work" }
-    },
-    "gender": {
-      "coding": {
-        "system": { "-value": "http://hl7.org/fhir/v3/AdministrativeGender" },
-        "code": { "-value": req.body.gender }
-      }
-    },
-    "address": {
-      "use": { "-value": "home" },
-      "line": { "-value": req.body.address }
-    },
-    "managingOrganization": {
-      "reference": { "-value": "Organization/hl7" }
-    },
-    "active": { "-value": "true" }
-  }
+    {
+      "use": " ",
+      "family": [" "]
+    }
+  ],
+  "identifier": [
+    {
+      "system": "uk.nhs.nhs_number",
+      "value": req.body.nhs
+    }
+  ],
+  "gender": req.body.gender,
+  "address": [
+    {
+      "text": req.body.address,
+      "line": [
+        " ",
+        " "
+      ],
+      "city": " ",
+      "state": " ",
+      "postalCode": " ",
+      "country": " "
+    }
+  ],
 };
 const options = {
-hostname: 'https://sb-fhir-stu3.smarthealthit.org',
-path: '/smartstu3/open/Patient',
 method: 'POST',
 headers: {
-  'Content-Type': 'text/plain; charset=UTF-8',
+  'Content-Type': 'application/json',
   'Content-Length': Buffer.byteLength(JSON.stringify(data))
 }
 };
 console.log(data);
-rest.postJson("https://sb-fhir-stu3.smarthealthit.org/smartstu3/open/Patient", data).on('complete', function(result){
+rest.postJson("http://localhost:8090/fhir/Patient", data, options).on('complete', function(result){
 
     console.log("?do we get here");
     console.log(result);

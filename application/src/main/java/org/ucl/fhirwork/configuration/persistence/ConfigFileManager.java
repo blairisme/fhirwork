@@ -22,11 +22,7 @@ import org.ucl.fhirwork.configuration.data.ConfigType;
 import javax.inject.Inject;
 
 /**
- * This class is used for managing the location of the configuration files in the file system,
- * The location of the configuration files is stored in a JSON file at the location defined by
- * the PATH_FILE_LOCATION static variable, the structure of that file is similar to a map in the
- * following format: Map<Environment, Map<ConfigType, String>>, where the possible value of the
- * Environment and ConfigType can be found in the enum classes Environment and ConfigType 
+ * This class is responsible for providing readers and writers of the configuration files
  *
  * @author Chenghui Fan
  * @author Blair Butterworth
