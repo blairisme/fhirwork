@@ -14,6 +14,9 @@ import java.io.*;
 import java.net.URL;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.ucl.fhirwork.common.resources.FilePaths;
 import org.ucl.fhirwork.common.resources.Resources;
 import org.ucl.fhirwork.common.serialization.JsonSerializer;
 import org.ucl.fhirwork.common.serialization.Serializer;
@@ -30,33 +33,33 @@ import javax.inject.Inject;
  */
 public class ConfigFileManager {
 
-	public static final String DEFAULT_PATH_FILE_LOCATION = "configFilePath.json";
+	private static final String DEFAULT_MANIFEST_NAME = "configFilePath.json";
+    private static final String DEFAULT_CONFIG_DIR = ".fhirwork";
 
-	private File listLocation;
+	private File manifest;
+	private File directory;
     private Environment environment;
     private ConfigFileList configFileList;
 
 	@Inject
-	public ConfigFileManager()
-    {
+	public ConfigFileManager() {
         setEnvironment(Environment.Production);
-        setConfigListPath(Resources.getResource(DEFAULT_PATH_FILE_LOCATION));
+        setConfigManifest(Resources.getResource(DEFAULT_MANIFEST_NAME));
+        setConfigDirectory(FilePaths.getUserDir(DEFAULT_CONFIG_DIR));
     }
 
-    public Reader getConfigReader(ConfigType type) throws ConfigIoException
-    {
+    public Reader getConfigReader(ConfigType type) throws ConfigIoException {
 	    try {
             String configPath = getConfig().get(type);
             File configFile = getResource(configPath);
             return new FileReader(configFile);
         }
-        catch (FileNotFoundException error){
+        catch (IOException error){
 	        throw new ConfigIoException(error);
         }
     }
 
-    public Writer getConfigWriter(ConfigType type) throws ConfigIoException
-    {
+    public Writer getConfigWriter(ConfigType type) throws ConfigIoException {
         try {
             String configPath = getConfig().get(type);
             File configFile = getResource(configPath);
@@ -67,8 +70,12 @@ public class ConfigFileManager {
         }
     }
 
-    public void setConfigListPath(File listLocation) {
-        this.listLocation = listLocation;
+    public void setConfigDirectory(File directory) {
+        this.directory = directory;
+    }
+
+    public void setConfigManifest(File manifest) {
+        this.manifest = manifest;
         resetConfig();
     }
 
@@ -82,20 +89,18 @@ public class ConfigFileManager {
         return configFileList.get(environment);
     }
 
-    private void resetConfig(){
+    private void resetConfig() {
         configFileList = null;
     }
 
-    private void initializeConfig() throws ConfigIoException
-    {
+    private void initializeConfig() throws ConfigIoException {
         if (configFileList == null){
             configFileList = loadConfig();
         }
     }
 
-    private ConfigFileList loadConfig() throws ConfigIoException
-    {
-        try (Reader listReader = new FileReader(listLocation)){
+    private ConfigFileList loadConfig() throws ConfigIoException {
+        try (Reader listReader = new FileReader(manifest)){
             Serializer serializer = new JsonSerializer();
             return serializer.deserialize(listReader, ConfigFileList.class);
         }
@@ -104,10 +109,12 @@ public class ConfigFileManager {
         }
 	}
 
-    private File getResource(String resource){
-        //if(resource.contains("configuration/")) {
-            return Resources.getResource(resource);
-        //}
-        //return new File(System.getProperty("user.dir") + "/src/main/resources/" + resource);
+    private File getResource(String resource) throws IOException {
+	    File resourcePath = new File(directory, resource);
+	    if (! resourcePath.exists()) {
+            File defaultPath = Resources.getResource(resource);
+            FileUtils.copyFile(defaultPath, resourcePath);
+        }
+	    return resourcePath;
     }
 }

@@ -10,23 +10,40 @@
 
 package org.ucl.fhirwork.configuration;
 
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.ucl.fhirwork.common.resources.FilePaths;
 import org.ucl.fhirwork.common.resources.Resources;
 import org.ucl.fhirwork.configuration.data.*;
 import org.ucl.fhirwork.configuration.exception.ConfigIoException;
 import org.ucl.fhirwork.configuration.persistence.ConfigFileManager;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 public class ConfigServiceTest
 {
+    private ConfigFileManager configFileManager;
+
+    @Before
+    public void setup() {
+        configFileManager = new ConfigFileManager();
+        configFileManager.setConfigDirectory(FilePaths.getTempDir("fhirwork"));
+    }
+
+    @After
+    public void tearDown() throws IOException {
+        FileUtils.deleteDirectory(FilePaths.getTempDir("fhirwork"));
+    }
+
     @Test
     public void getNetworkConfigTest()
     {
-        ConfigFileManager configFileManager = new ConfigFileManager();
-        configFileManager.setConfigListPath(Resources.getResource("configuration/manifest.json"));
+        configFileManager.setConfigManifest(Resources.getResource("configuration/manifest.json"));
 
         ConfigService configService = new ConfigService(configFileManager);
         NetworkConfig networkConfig = configService.getConfig(ConfigType.Network);
@@ -38,8 +55,7 @@ public class ConfigServiceTest
     @Test
     public void getMappingConfigTest()
     {
-        ConfigFileManager configFileManager = new ConfigFileManager();
-        configFileManager.setConfigListPath(Resources.getResource("configuration/manifest.json"));
+        configFileManager.setConfigManifest(Resources.getResource("configuration/manifest.json"));
 
         ConfigService configService = new ConfigService(configFileManager);
         MappingConfig mappingConfig = configService.getConfig(ConfigType.Mapping);
@@ -52,8 +68,7 @@ public class ConfigServiceTest
     @Test (expected = ConfigIoException.class)
     public void missingConfigTest()
     {
-        ConfigFileManager configFileManager = new ConfigFileManager();
-        configFileManager.setConfigListPath(new File("/doesnt/exist/foo.json"));
+        configFileManager.setConfigManifest(new File("/doesnt/exist/foo.json"));
 
         ConfigService configService = new ConfigService(configFileManager);
         configService.getConfig(ConfigType.Mapping);
@@ -62,8 +77,7 @@ public class ConfigServiceTest
     @Test
     public void setNetworkConfigTest()
     {
-        ConfigFileManager configFileManager = new ConfigFileManager();
-        configFileManager.setConfigListPath(Resources.getResource("configuration/manifest_overwrite.json"));
+        configFileManager.setConfigManifest(Resources.getResource("configuration/manifest_overwrite.json"));
 
         ConfigService configService = new ConfigService(configFileManager);
         NetworkConfig expected = new NetworkConfig(
@@ -72,7 +86,6 @@ public class ConfigServiceTest
 
         configService.setConfig(ConfigType.Network, expected);
         NetworkConfig actual = configService.getConfig(ConfigType.Network);
-
 
         Assert.assertEquals(expected, actual);
     }

@@ -22,7 +22,7 @@ import java.net.URL;
  */
 public class Resources
 {
-    public static File getResource(String resource){
+    public static File getResource(String resource) {
         URL templateUrl = Thread.currentThread().getContextClassLoader().getResource(resource);
         return new File(templateUrl.getPath());
     }
