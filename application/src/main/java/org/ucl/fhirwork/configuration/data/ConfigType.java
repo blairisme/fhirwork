@@ -21,6 +21,9 @@ import com.google.gson.annotations.SerializedName;
  */
 public enum ConfigType
 {
+    @SerializedName("cache")
+    Cache,
+
     @SerializedName("general")
     General,
 

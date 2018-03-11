@@ -15,6 +15,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.ucl.fhirwork.configuration.ConfigService;
+import org.ucl.fhirwork.configuration.data.CacheConfig;
+import org.ucl.fhirwork.configuration.data.ConfigType;
 import org.ucl.fhirwork.network.empi.data.InternalIdentifier;
 import org.ucl.fhirwork.network.empi.data.Person;
 
@@ -27,11 +30,16 @@ public class CachedEmpiServerTest
 {
     private BasicEmpiServer basicServer;
     private CachedEmpiServer cachedServer;
+    private ConfigService configService;
 
     @Before
     public void setup() {
         basicServer = Mockito.mock(BasicEmpiServer.class);
-        cachedServer = new CachedEmpiServer(basicServer);
+        configService = Mockito.mock(ConfigService.class);
+        cachedServer = new CachedEmpiServer(basicServer, configService);
+
+        CacheConfig config = new CacheConfig(10, 10, true);
+        Mockito.when(configService.getConfig(ConfigType.Cache)).thenReturn(config);
     }
 
     @Test

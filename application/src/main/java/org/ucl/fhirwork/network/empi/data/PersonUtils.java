@@ -24,12 +24,27 @@ public class PersonUtils
 {
     public static Identifier getIdentifier(Person person, String domain)
     {
+        Identifier result = findIdentifier(person, domain);
+        if (result == null) {
+            throw new IdentifierMissingException(person, domain);
+        }
+        return result;
+    }
+
+    public static boolean hasIdentifier(Person person, String domain)
+    {
+        Identifier result = findIdentifier(person, domain);
+        return result != null;
+    }
+
+    private static Identifier findIdentifier(Person person, String domain)
+    {
         Identifier[] identifiers = person.getPersonIdentifiers();
         for (Identifier identifier: identifiers){
             if (Objects.equals(identifier.getIdentifierDomain().getIdentifierDomainName(), domain)){
                 return identifier;
             }
         }
-        throw new IdentifierMissingException(person, domain);
+        return null;
     }
 }

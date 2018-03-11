@@ -205,18 +205,22 @@ public class ServletController
         configuration.setConfig(ConfigType.Mapping, mappingConfig);
         return "redirect:/configuration/mapping/list";
     }
+
     @RequestMapping(value = "/cache", method = RequestMethod.GET)
     public String cache(ModelMap model)
     {
+        CacheConfig cacheConfig = configuration.getConfig(ConfigType.Cache);
+        model.addAttribute("config", cacheConfig);
+        model.addAttribute("checked", Boolean.toString(cacheConfig.isEmpiCacheEnabled()));
         return "cache";
     }
+
     @RequestMapping(value = "/cache", method = RequestMethod.POST)
     public String cacheChecked(@ModelAttribute CacheConfig cache, ModelMap model)
     {
-	
-	  if(cache.getEnable()) {
-	      model.addAttribute("checked", "true");
-	  }
+        configuration.setConfig(ConfigType.Cache, cache);
+        model.addAttribute("config", cache);
+        model.addAttribute("checked", Boolean.toString(cache.isEmpiCacheEnabled()));
         return "cache";
     }
 }

@@ -8,28 +8,27 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.configuration.persistence;
+package org.ucl.fhirwork.configuration.data;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.ucl.fhirwork.common.serialization.JsonSerializer;
 import org.ucl.fhirwork.common.serialization.Serializer;
-import org.ucl.fhirwork.configuration.persistence.ConfigFileList;
 import org.ucl.fhirwork.test.TestResourceUtils;
 
 import java.io.IOException;
 
-public class ConfigFileListTest
+public class CacheConfigTest
 {
     @Test
     public void serializationTest() throws IOException
     {
         Serializer serializer = new JsonSerializer();
-        String manifest = TestResourceUtils.readResource("configuration/manifest.json");
+        String general = TestResourceUtils.readResource("configuration/cache.json");
 
-        ConfigFileList deserialized = serializer.deserialize(manifest, ConfigFileList.class);
-        Assert.assertEquals(4, deserialized.getTestingConfig().size());
-        Assert.assertEquals(4, deserialized.getDevelopmentConfig().size());
-        Assert.assertEquals(4, deserialized.getProductionConfig().size());
+        CacheConfig deserialized = serializer.deserialize(general, CacheConfig.class);
+        Assert.assertEquals(true, deserialized.isEmpiCacheEnabled());
+        Assert.assertEquals(10000, deserialized.getEmpiCacheSize());
+        Assert.assertEquals(1440, deserialized.getEmpiCacheExpiry());
     }
 }

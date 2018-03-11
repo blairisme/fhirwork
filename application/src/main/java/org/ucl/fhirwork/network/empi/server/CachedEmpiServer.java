@@ -15,6 +15,9 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import org.ucl.fhirwork.common.network.Rest.RestException;
 import org.ucl.fhirwork.common.network.exception.AmbiguousResultException;
 import org.ucl.fhirwork.common.network.exception.ResourceMissingException;
+import org.ucl.fhirwork.configuration.ConfigService;
+import org.ucl.fhirwork.configuration.data.CacheConfig;
+import org.ucl.fhirwork.configuration.data.ConfigType;
 import org.ucl.fhirwork.network.empi.data.InternalIdentifier;
 import org.ucl.fhirwork.network.empi.data.Person;
 
@@ -34,20 +37,36 @@ import java.util.concurrent.TimeUnit;
 public class CachedEmpiServer implements EmpiServer
 {
     private EmpiServer delegate;
+    private ConfigService configService;
     private Cache<InternalIdentifier, Person> recentCache;
     private Cache<Person, Collection<Person>> searchCache;
 
     @Inject
-    public CachedEmpiServer(BasicEmpiServer delegate) {
+    public CachedEmpiServer(BasicEmpiServer delegate, ConfigService configService) {
         this.delegate = delegate;
-        this.recentCache = Caffeine.newBuilder()
-            .expireAfterWrite(24, TimeUnit.HOURS)
-            .maximumSize(10000)
-            .build();
-        this.searchCache = Caffeine.newBuilder()
-            .expireAfterWrite(24, TimeUnit.HOURS)
-            .maximumSize(100)
-            .build();
+        this.configService = configService;
+        this.configService.addObserver(this::resetCache);
+    }
+
+    private void initializeCache() {
+        if (recentCache == null || searchCache == null) {
+            CacheConfig cacheConfig = configService.getConfig(ConfigType.Cache);
+            recentCache = Caffeine.newBuilder()
+                .expireAfterWrite(cacheConfig.getEmpiCacheExpiry(), TimeUnit.MINUTES)
+                .maximumSize(cacheConfig.getEmpiCacheSize())
+                .build();
+            searchCache = Caffeine.newBuilder()
+                .expireAfterWrite(cacheConfig.getEmpiCacheExpiry(), TimeUnit.MINUTES)
+                .maximumSize(100)
+                .build();
+        }
+    }
+
+    private void resetCache() {
+        recentCache.invalidateAll();
+        searchCache.invalidateAll();
+        recentCache = null;
+        searchCache = null;
     }
 
     @Override
@@ -57,6 +76,7 @@ public class CachedEmpiServer implements EmpiServer
 
     @Override
     public Person addPerson(Person person) throws RestException {
+        initializeCache();
         Person result = delegate.addPerson(person);
         recentCache.put(result.getInternalIdentifier(), result);
         searchCache.invalidateAll();
@@ -70,6 +90,7 @@ public class CachedEmpiServer implements EmpiServer
 
     @Override
     public Collection<Person> findPersons(Person template) throws RestException {
+        initializeCache();
         Collection<Person> result = searchCache.getIfPresent(template);
         if (result == null){
             result = delegate.findPersons(template);
@@ -80,6 +101,7 @@ public class CachedEmpiServer implements EmpiServer
 
     @Override
     public Person loadPerson(InternalIdentifier identifier) throws RestException, ResourceMissingException {
+        initializeCache();
         Person result = recentCache.getIfPresent(identifier);
         if (result == null){
             result = delegate.loadPerson(identifier);
@@ -95,6 +117,7 @@ public class CachedEmpiServer implements EmpiServer
 
     @Override
     public void removePerson(InternalIdentifier identifier) throws RestException {
+        initializeCache();
         delegate.removePerson(identifier);
         recentCache.invalidate(identifier);
         searchCache.invalidateAll();
@@ -102,6 +125,7 @@ public class CachedEmpiServer implements EmpiServer
 
     @Override
     public Person updatePerson(Person person) throws RestException, ResourceMissingException {
+        initializeCache();
         Person result = delegate.updatePerson(person);
         recentCache.put(result.getInternalIdentifier(), result);
         searchCache.invalidateAll();

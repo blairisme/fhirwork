@@ -1,0 +1,5 @@
+{
+  "empiCacheEnabled": true,
+  "empiCacheSize": 10000,
+  "empiCacheExpiry": 1440
+}
