@@ -22,6 +22,9 @@ import java.util.*;
  */
 public class PersonUtils
 {
+    private PersonUtils(){
+    }
+
     public static Identifier getIdentifier(Person person, String domain)
     {
         Identifier result = findIdentifier(person, domain);

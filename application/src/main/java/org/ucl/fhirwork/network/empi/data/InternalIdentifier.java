@@ -10,9 +10,17 @@
 
 package org.ucl.fhirwork.network.empi.data;
 
+import javax.annotation.concurrent.Immutable;
 import java.util.Objects;
 
-public class InternalIdentifier
+/**
+ * Instances of this class represent the internal identifier used to identify
+ * individual Person entries in the EMPI system.
+ *
+ * @author Blair Butterworth
+ */
+@Immutable
+public final class InternalIdentifier
 {
     private String value;
 

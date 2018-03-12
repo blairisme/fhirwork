@@ -13,6 +13,7 @@ package org.ucl.fhirwork.network.empi.data;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import javax.annotation.concurrent.Immutable;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -55,9 +56,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Blair Butterworth
  */
+@Immutable
 @XmlRootElement(name = "person")
 @SuppressWarnings("unused")
-public class Person
+public final class Person
 {
     private String personId;
     private Identifier[] personIdentifiers;

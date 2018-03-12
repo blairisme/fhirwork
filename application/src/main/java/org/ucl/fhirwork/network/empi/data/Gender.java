@@ -13,6 +13,7 @@ package org.ucl.fhirwork.network.empi.data;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import javax.annotation.concurrent.Immutable;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -31,9 +32,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Blair Butterworth
  */
-@XmlRootElement(name = "identifier")
+@Immutable
+@XmlRootElement(name = "gender")
 @SuppressWarnings("unused")
-public class Gender
+public final class Gender
 {
     private String genderCd;
     private String genderCode;
@@ -44,7 +46,12 @@ public class Gender
     {
     }
 
-    public Gender(String genderCd, String genderCode, String genderName, String genderDescription) {
+    public Gender(
+        String genderCd,
+        String genderCode,
+        String genderName,
+        String genderDescription)
+    {
         this.genderCd = genderCd;
         this.genderCode = genderCode;
         this.genderName = genderName;

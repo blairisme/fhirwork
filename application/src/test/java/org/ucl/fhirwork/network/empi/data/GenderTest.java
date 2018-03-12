@@ -16,11 +16,11 @@ import org.ucl.fhirwork.test.TestResourceUtils;
 
 import java.io.IOException;
 
-public class PersonTest extends EmpiDataTest<Person>
+public class GenderTest extends EmpiDataTest<Gender>
 {
     @Override
-    protected Class<Person> getObjectType() {
-        return Person.class;
+    protected Class<Gender> getObjectType() {
+        return Gender.class;
     }
 
     @Override
@@ -30,11 +30,11 @@ public class PersonTest extends EmpiDataTest<Person>
 
     @Override
     protected String getSerialized() throws IOException {
-        return TestResourceUtils.readResource("empi/PersonExample.xml");
+        return TestResourceUtils.readResource("empi/GenderExample.xml");
     }
 
     @Override
-    protected Person getDeserialized() {
-        return PersonDataFactory.newPerson("123", "Kathrin", "Williams");
+    protected Gender getDeserialized() {
+        return new Gender("1", "F", "Female", "Female");
     }
 }

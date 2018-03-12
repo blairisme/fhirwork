@@ -45,7 +45,7 @@ public class BasicEmpiServerTest
     @Test
     public void addPersonTest() throws RestException
     {
-        Person person = mock(Person.class);
+        Person person = new Person();
         Person result = empiServer.addPerson(person);
 
         assertNotEquals(person, result);
@@ -59,7 +59,7 @@ public class BasicEmpiServerTest
     {
         when(response.getStatusCode()).thenReturn(204);
 
-        Person person = mock(Person.class);
+        Person person = new Person();
         Person result = empiServer.addPerson(person);
 
         assertEquals(person, result);
@@ -72,6 +72,6 @@ public class BasicEmpiServerTest
     public void addPersonConnectionExceptionTest() throws RestException
     {
         when(request.make(any(RestStatusHandler.class))).thenThrow(RestException.class);
-        empiServer.addPerson(mock(Person.class));
+        empiServer.addPerson(new Person());
     }
 }
