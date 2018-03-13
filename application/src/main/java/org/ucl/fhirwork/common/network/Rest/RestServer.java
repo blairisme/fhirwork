@@ -44,7 +44,7 @@ public class RestServer
     }
 
     public void setAddress(String address) {
-        this.address = address.endsWith("/") ? address : address + "/"; // TODO: (blair) Use URL/URI class instead.
+        this.address = address;
     }
 
     public String getAddress() {
@@ -72,7 +72,8 @@ public class RestServer
     }
 
     public RestRequest get(String path) {
-        GetRequest request = Unirest.get(address + path).headers(headers);
+        String url = combine(address, path);
+        GetRequest request = Unirest.get(url).headers(headers);
         return newRestRequest(request, serializer);
     }
 
@@ -81,7 +82,8 @@ public class RestServer
     }
 
     public RestRequest post(String path) {
-        HttpRequestWithBody request = Unirest.post(address + path).headers(headers);
+        String url = combine(address, path);
+        HttpRequestWithBody request = Unirest.post(url).headers(headers);
         return newRestRequest(request, serializer);
     }
 
@@ -90,7 +92,8 @@ public class RestServer
     }
 
     public RestRequest put(String path) {
-        HttpRequestWithBody request = Unirest.put(address + path).headers(headers);
+        String url = combine(address, path);
+        HttpRequestWithBody request = Unirest.put(url).headers(headers);
         return newRestRequest(request, serializer);
     }
 
@@ -99,7 +102,8 @@ public class RestServer
     }
 
     public RestRequest delete(String path) {
-        HttpRequest request = Unirest.delete(address + path).headers(headers);
+        String url = combine(address, path);
+        HttpRequest request = Unirest.delete(url).headers(headers);
         return newRestRequest(request, serializer);
     }
 
@@ -117,5 +121,17 @@ public class RestServer
 
     protected RestRequest newRestRequest(HttpRequest request, Serializer serializer) {
         return new RestRequest(request, serializer);
+    }
+
+    private String combine(String root, String path) {
+
+        StringBuilder result = new StringBuilder();
+        result.append(root);
+
+        if (!root.endsWith("/") && !path.startsWith("/")){
+            result.append("/");
+        }
+        result.append(path);
+        return result.toString();
     }
 }

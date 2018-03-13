@@ -12,5 +12,11 @@ package org.ucl.fhirwork.common.network.Rest;
 
 import java.util.function.Predicate;
 
+/**
+ * Implementors of this interface provide a strategy for handling responses
+ * from a REST service.
+ *
+ * @author Blair Butterworth
+ */
 public interface RestStatusHandler extends Predicate<RestResponse> {
 }
