@@ -37,9 +37,14 @@ public class IntegrationSteps
                 System.getProperty("network.fhir.address", "http://localhost:8090"));
 
         if (! serversPinged) {
-            StepUtils.wait(120, TimeUnit.SECONDS, () -> ehrServer.ping());
-            StepUtils.wait(120, TimeUnit.SECONDS, () -> empiServer.ping());
-            StepUtils.wait(120, TimeUnit.SECONDS, () -> fhirServer.ping());
+//            System.out.println("Integration test starting...");
+//            System.out.println(" - EHR: " + ehrServer.getAddress());
+//            System.out.println(" - EMPI: " + empiServer.getAddress());
+//            System.out.println(" - FHIR: " + fhirServer.getAddress());
+
+            StepUtils.wait(120, TimeUnit.SECONDS, () -> ehrServer.ping(), ehrServer.getAddress());
+            StepUtils.wait(120, TimeUnit.SECONDS, () -> empiServer.ping(), empiServer.getAddress());
+            StepUtils.wait(120, TimeUnit.SECONDS, () -> fhirServer.ping(), fhirServer.getAddress());
             serversPinged = true;
         }
     }

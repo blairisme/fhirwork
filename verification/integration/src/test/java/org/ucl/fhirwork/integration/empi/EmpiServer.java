@@ -40,6 +40,10 @@ public class EmpiServer
         this.password = password;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
     public void addPerson(Person person) throws RestServerException
     {
         RestServer server = getServer();

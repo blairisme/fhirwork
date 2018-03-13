@@ -27,11 +27,17 @@ import java.util.List;
 
 public class FhirServer
 {
+    private String address;
     private RestServer server;
 
     public FhirServer(String address)
     {
+        this.address = address;
         this.server = new RestServer(address, new JsonSerializer(), ImmutableMap.of(Accept, Json, ContentType, Json));
+    }
+
+    public String getAddress() {
+        return address;
     }
 
     public void addPatient(Patient patient) throws RestServerException

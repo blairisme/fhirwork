@@ -34,6 +34,10 @@ public class EhrServer
         this.password = password;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
     public void addTemplate(TemplateReference template) throws IOException, RestServerException
     {
         RestServer server = createServer(ImmutableMap.of(ContentType, Xml), new XmlSerializer());
