@@ -30,7 +30,7 @@ idea {
 subprojects {
   ext {
     testMode = getProperty('test.mode')
-    testOutput = getProperty('test.output.enabled').toBoolean()
+    testOutput = getProperty('test.output').toBoolean()
 
     localTestMode = testMode.equals('local')
     remoteTestMode = testMode.equals('remote')
