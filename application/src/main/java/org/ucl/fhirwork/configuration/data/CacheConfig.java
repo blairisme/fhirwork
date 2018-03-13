@@ -21,7 +21,7 @@ public class CacheConfig {
     private int empiCacheSize;
     private int empiCacheExpiry;
     private boolean empiCacheEnabled;
-
+   
     public CacheConfig(int empiCacheSize, int empiCacheExpiry, boolean empiCacheEnabled) {
         this.empiCacheSize = empiCacheSize;
         this.empiCacheExpiry = empiCacheExpiry;
