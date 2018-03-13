@@ -8,7 +8,7 @@
  *      https://opensource.org/licenses/MIT
  */
 
-package org.ucl.fhirwork.network.empi.exception;
+package org.ucl.fhirwork.common.network.exception;
 
 /**
  * Instances of this error are thrown when performing an operation where the
@@ -17,7 +17,7 @@ package org.ucl.fhirwork.network.empi.exception;
  *
  * @author Blair Butterworth
  */
-public class IdentifierMissingException extends RuntimeException
+public class IdentifierMissingException extends NetworkException
 {
     public IdentifierMissingException(String type, String id, String domain)
     {
