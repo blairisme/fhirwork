@@ -38,12 +38,12 @@ gretty {
 
     // Overwrite application configuration with Gradle properties
     jvmArgs = [
-      '-Dnetwork.ehr.address=' + project.getProperty('network.ehr.address'),
-      '-Dnetwork.ehr.username=' + project.getProperty('network.ehr.username'),
-      '-Dnetwork.ehr.password=' + project.getProperty('network.ehr.password'),
-      '-Dnetwork.empi.address=' + project.getProperty('network.empi.address'),
-      '-Dnetwork.empi.username=' + project.getProperty('network.empi.username'),
-      '-Dnetwork.empi.password=' + project.getProperty('network.empi.password')]
+      '-Dnetwork.ehr.address=' + ehrAddress,
+      '-Dnetwork.ehr.username=' + ehrUsername,
+      '-Dnetwork.ehr.password=' + ehrPassword,
+      '-Dnetwork.empi.address=' + empiAddress,
+      '-Dnetwork.empi.username=' + empiUsername,
+      '-Dnetwork.empi.password=' + empiPassword]
 
     //disables hot deployment to prevent bug when config writing causes servlet reload
     scanInterval = 0

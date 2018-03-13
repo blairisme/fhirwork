@@ -17,3 +17,6 @@ out/
 *.project
 .settings/
 bin/
+
+### Misc Exclusions ###
+**/.fhirwork

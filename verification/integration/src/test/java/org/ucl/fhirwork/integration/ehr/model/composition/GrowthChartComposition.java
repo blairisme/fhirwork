@@ -1,4 +1,4 @@
-package org.ucl.fhirwork.integration.ehr.model;
+package org.ucl.fhirwork.integration.ehr.model.composition;
 
 import com.google.gson.annotations.SerializedName;
 import org.ucl.fhirwork.integration.cucumber.HealthData;

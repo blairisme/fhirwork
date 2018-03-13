@@ -7,6 +7,7 @@ import org.ucl.fhirwork.integration.ehr.EhrServer;
 import org.ucl.fhirwork.integration.empi.EmpiServer;
 import org.ucl.fhirwork.integration.empi.model.Person;
 import org.ucl.fhirwork.integration.fhir.FhirServer;
+import org.ucl.fhirwork.integration.fhir.FhirworkServer;
 
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -14,15 +15,14 @@ import java.util.concurrent.TimeUnit;
 public class IntegrationSteps
 {
     private static boolean serversPinged = false;
-    protected FhirServer fhirServer;
-    protected EmpiServer empiServer;
     protected EhrServer ehrServer;
+    protected EmpiServer empiServer;
+    protected FhirServer fhirServer;
+    protected FhirworkServer fhirworkServer;
 
     @Before
     public void setup() throws Exception
     {
-        fhirServer = new FhirServer(
-                System.getProperty("network.fhir.address", "http://localhost:8090"));
         empiServer = new EmpiServer(
                 System.getProperty("network.empi.address", "http://localhost:8080"),
                 System.getProperty("network.empi.username", "admin"),
@@ -31,6 +31,10 @@ public class IntegrationSteps
                 System.getProperty("network.ehr.address", "http://localhost:8888/rest/v1"),
                 System.getProperty("network.ehr.username", "guest"),
                 System.getProperty("network.ehr.password", "guest"));
+        fhirServer = new FhirServer(
+                System.getProperty("network.fhir.address", "http://localhost:8090"));
+        fhirworkServer = new FhirworkServer(
+                System.getProperty("network.fhir.address", "http://localhost:8090"));
 
         if (! serversPinged) {
             StepUtils.wait(60, TimeUnit.SECONDS, () -> ehrServer.ping());

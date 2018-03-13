@@ -11,7 +11,8 @@ services:
   - docker
 
 script:
-  - gradle clean assemble check report
+  - gradle clean assemble envStart check envStop -Ptest.mode=local
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+

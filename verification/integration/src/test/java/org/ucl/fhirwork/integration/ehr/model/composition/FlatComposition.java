@@ -1,6 +1,5 @@
-package org.ucl.fhirwork.integration.ehr.model;
+package org.ucl.fhirwork.integration.ehr.model.composition;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public abstract class FlatComposition
@@ -18,12 +17,12 @@ public abstract class FlatComposition
     {
         this.language = "en";
         this.territory = "GB";
-        this.composer = "Dummy";
-        this.time = time;
-        this.idNamespace = "Hospital";
-        this.idScheme = "HOSPITAL-NS";
-        this.facilityName = "Marandia DGH";
-        this.facilityId = "9095";
+        this.composer = "Dr Tony Shannon";
+        this.time = "2016-01-24T00:11:02.518+02:00";// time;
+        this.idNamespace = "NHS-UK";
+        this.idScheme = "2.16.840.1.113883.2.1.4.3";
+        this.facilityName = "Home";
+        this.facilityId = "999999-345";
     }
 
     public abstract String getCompositionId();

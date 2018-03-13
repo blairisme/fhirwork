@@ -14,6 +14,7 @@ import org.ucl.fhirwork.integration.common.serialization.JsonSerializer;
 import org.ucl.fhirwork.integration.common.serialization.Serializer;
 import org.ucl.fhirwork.integration.common.serialization.XmlSerializer;
 import org.ucl.fhirwork.integration.ehr.model.*;
+import org.ucl.fhirwork.integration.ehr.model.composition.FlatComposition;
 
 import java.io.IOException;
 import java.util.*;
@@ -68,6 +69,12 @@ public class EhrServer
         return server.get(Ehr, HealthRecord.class, ImmutableMap.of(SubjectId, id, SubjectNamespace, namespace));
     }
 
+    public void removeEhr(String ehrId) throws RestServerException
+    {
+        RestServer server = getServer();
+        server.delete("ehr/" + ehrId, ImmutableMap.of(EhrId, ehrId));
+    }
+
     public boolean ehrExists(String id, String namespace) throws RestServerException
     {
         RestServer server = getServer();
@@ -91,10 +98,15 @@ public class EhrServer
     public List<Composition> getCompositions(String ehrId) throws RestServerException
     {
         List<Composition> compositions = new ArrayList<>();
-        QueryBundle bundle = query("select a from EHR [ehr_id/value='" + ehrId + "'] contains COMPOSITION a");
+        try {
+            QueryBundle bundle = query("select a from EHR e contains COMPOSITION a");
 
-        for (QueryResult queryResult: bundle.getResultSet()) {
-            compositions.add(queryResult.getComposition());
+            for (QueryResult queryResult : bundle.getResultSet()) {
+                compositions.add(queryResult.getComposition());
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
         return compositions;
     }

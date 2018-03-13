@@ -85,6 +85,28 @@ public class RestServer
         }
     }
 
+    public void get(RestEndpoint endPoint, Map<Object, Object> parameters) throws RestServerException
+    {
+        get(endPoint.getPath(), parameters);
+    }
+
+    public void get(String path, Map<Object, Object> parameters) throws RestServerException
+    {
+        try {
+            HttpRequest request = Unirest.get(server + path)
+                    .headers(headers)
+                    .queryString(convertParameters(parameters));
+            HttpResponse<String> response = request.asString();
+
+            if (! isSuccessful(response.getStatus())) {
+                throw new RestServerException(response.getStatus());
+            }
+        }
+        catch (UnirestException exception){
+            throw new RestServerException(exception);
+        }
+    }
+
     public boolean testGet(RestEndpoint endPoint, Map<Object, Object> parameters, int status) throws RestServerException
     {
         try {
