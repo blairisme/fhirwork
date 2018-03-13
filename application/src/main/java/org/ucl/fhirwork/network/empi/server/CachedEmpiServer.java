@@ -63,10 +63,14 @@ public class CachedEmpiServer implements EmpiServer
     }
 
     private void resetCache() {
-        recentCache.invalidateAll();
-        searchCache.invalidateAll();
-        recentCache = null;
-        searchCache = null;
+        if (recentCache != null) {
+            recentCache.invalidateAll();
+            recentCache = null;
+        }
+        if (searchCache != null) {
+            searchCache.invalidateAll();
+            searchCache = null;
+        }
     }
 
     @Override
