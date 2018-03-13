@@ -37,9 +37,9 @@ public class IntegrationSteps
                 System.getProperty("network.fhir.address", "http://localhost:8090"));
 
         if (! serversPinged) {
-            StepUtils.wait(60, TimeUnit.SECONDS, () -> ehrServer.ping());
-            StepUtils.wait(60, TimeUnit.SECONDS, () -> empiServer.ping());
-            StepUtils.wait(60, TimeUnit.SECONDS, () -> fhirServer.ping());
+            StepUtils.wait(120, TimeUnit.SECONDS, () -> ehrServer.ping());
+            StepUtils.wait(120, TimeUnit.SECONDS, () -> empiServer.ping());
+            StepUtils.wait(120, TimeUnit.SECONDS, () -> fhirServer.ping());
             serversPinged = true;
         }
     }

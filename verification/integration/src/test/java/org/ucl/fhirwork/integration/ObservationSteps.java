@@ -22,6 +22,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class ObservationSteps extends IntegrationSteps
 {
+    private boolean destroyHealthRecords;
     private List<Observation> observations;
 
     @Before
@@ -29,6 +30,7 @@ public class ObservationSteps extends IntegrationSteps
     {
         super.setup();
         observations = new ArrayList<>();
+        destroyHealthRecords = Boolean.valueOf(System.getProperty("data.ehr.destroy", "false"));
     }
 
     @Given("^the system has the following health data:$")
@@ -38,7 +40,7 @@ public class ObservationSteps extends IntegrationSteps
         createTemplates();
         removeHealthRecords(healthData);
         createHealthRecords(healthData);
-        //removeCompositions(healthData);
+        removeCompositions(healthData);
         createCompositions(healthData);
     }
 
@@ -66,8 +68,10 @@ public class ObservationSteps extends IntegrationSteps
 
     private void removeHealthRecords(List<HealthData> dataList) throws RestServerException
     {
-        for (HealthData data: dataList){
-            removeHealthRecord(data);
+        if (destroyHealthRecords) {
+            for (HealthData data : dataList) {
+                removeHealthRecord(data);
+            }
         }
     }
 
@@ -108,9 +112,11 @@ public class ObservationSteps extends IntegrationSteps
 
     private void removeCompositions(List<HealthData> dataList) throws RestServerException
     {
-        for (HealthData healthData: dataList){
-            HealthRecord healthRecord = getHealthRecord(healthData);
-            removeCompositions(healthRecord);
+        if (! destroyHealthRecords) {
+            for (HealthData healthData : dataList) {
+                HealthRecord healthRecord = getHealthRecord(healthData);
+                removeCompositions(healthRecord);
+            }
         }
     }
 
