@@ -38,7 +38,7 @@ public class BasicEmpiServerTest
         empiServer = new BasicEmpiServer(new MockProvider(restServer));
 
         when(restServer.put(any(RestResource.class))).thenReturn(request);
-        when(request.make(any(RestStatusHandler.class))).thenReturn(response);
+        when(request.make()).thenReturn(response);
         when(response.asString()).thenReturn("session");
     }
 
@@ -71,7 +71,7 @@ public class BasicEmpiServerTest
     @Test (expected = RestException.class)
     public void addPersonConnectionExceptionTest() throws RestException
     {
-        when(request.make(any(RestStatusHandler.class))).thenThrow(RestException.class);
+        when(request.make()).thenThrow(RestException.class);
         empiServer.addPerson(new Person());
     }
 }

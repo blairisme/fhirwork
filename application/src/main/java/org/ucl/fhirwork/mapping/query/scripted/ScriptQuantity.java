@@ -12,6 +12,12 @@ package org.ucl.fhirwork.mapping.query.scripted;
 
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 
+/**
+ * Instances of this class represent an observation quantity returned from a
+ * user provided mapping script.
+ *
+ * @author Blair Butterworth
+ */
 public class ScriptQuantity
 {
     private ScriptObjectMirror objectMirror;

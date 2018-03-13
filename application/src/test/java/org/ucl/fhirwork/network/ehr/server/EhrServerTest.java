@@ -43,7 +43,7 @@ public class EhrServerTest {
         when(restServer.post(any(RestResource.class))).thenReturn(request);
         when(restServer.get(any(EhrResource.class))).thenReturn(request);
         when(request.setParameters(any(ImmutableMap.class))).thenReturn(request);
-        when(request.make(any(RestStatusHandler.class))).thenReturn(response);
+        when(request.make()).thenReturn(response);
         when(response.asType((SessionToken.class))).thenReturn(sessionToken);
         when(sessionToken.getSessionId()).thenReturn("session");
     }

@@ -16,10 +16,19 @@ import ca.uhn.fhir.rest.param.DateParam;
 import ca.uhn.fhir.rest.param.TokenParam;
 import org.ucl.fhirwork.network.fhir.data.SearchParameter;
 import org.ucl.fhirwork.network.fhir.data.SearchParameterBuilder;
-
+import org.ucl.fhirwork.common.framework.Operation;
 import java.util.Map;
 
-public abstract class OperationBuilder <T>
+/**
+ * Instances of this class represent the base class for those classes that
+ * create {@link Operation} instances, usually given either an identifier or a
+ * collection of search parameters.
+ *
+ * @param <T>   the type of {@link Operation} being constructed.
+ *
+ * @author Blair Butterworth
+ */
+public abstract class OperationBuilder <T extends Operation>
 {
     private IdDt identifier;
     private SearchParameterBuilder parameterBuilder;

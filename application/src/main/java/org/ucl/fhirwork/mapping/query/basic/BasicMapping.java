@@ -24,6 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Instances of this class convert observations to OpenEHR AQL queries using a
+ * simple rigid format.
+ *
+ * @author Blair Butterworth
+ */
 public class BasicMapping implements MappingProvider
 {
     private BasicMappingConfig configuration;

@@ -10,6 +10,12 @@
 
 package org.ucl.fhirwork.common.network.exception;
 
+/**
+ * Instances of this error are thrown when authentication to a remote service
+ * fails.
+ *
+ * @author Blair Butterworth
+ */
 public class AuthenticationException extends NetworkException
 {
     private String address;

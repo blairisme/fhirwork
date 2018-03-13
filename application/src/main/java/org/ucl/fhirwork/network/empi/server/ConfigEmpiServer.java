@@ -23,6 +23,13 @@ import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Instances of this class act as a proxy to either an {@link BasicEmpiServer}
+ * or an {@link CachedEmpiServer}, depending on whether the user has enabled
+ * EMPI caching.
+ *
+ * @author Blair Butterworth
+ */
 public class ConfigEmpiServer implements EmpiServer
 {
     private EmpiServer delegate;

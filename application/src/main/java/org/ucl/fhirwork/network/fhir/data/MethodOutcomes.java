@@ -19,8 +19,17 @@ import org.ucl.fhirwork.common.network.exception.AuthenticationException;
 import org.ucl.fhirwork.common.network.exception.ResourceExistsException;
 import org.ucl.fhirwork.common.network.exception.ResourceMissingException;
 
+/**
+ * Instances of this class contain utility functions for creating objects
+ * used in HAPI FHIR method implementations.
+ *
+ * @author Blair Butterworth
+ */
 public class MethodOutcomes
 {
+    private MethodOutcomes() {
+    }
+
     public static MethodOutcome identifier(BaseResource resource)
     {
         MethodOutcome result = new MethodOutcome();

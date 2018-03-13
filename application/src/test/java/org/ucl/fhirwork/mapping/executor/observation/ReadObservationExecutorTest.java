@@ -27,12 +27,11 @@ import org.ucl.fhirwork.mapping.query.MappingService;
 import org.ucl.fhirwork.network.NetworkService;
 import org.ucl.fhirwork.network.ehr.data.HealthRecord;
 import org.ucl.fhirwork.network.ehr.data.ObservationBundle;
-import org.ucl.fhirwork.network.ehr.exception.MissingRecordException;
 import org.ucl.fhirwork.network.ehr.server.EhrServer;
 import org.ucl.fhirwork.network.empi.data.Identifier;
 import org.ucl.fhirwork.network.empi.data.IdentifierDomain;
 import org.ucl.fhirwork.network.empi.data.Person;
-import org.ucl.fhirwork.network.empi.exception.IdentifierMissingException;
+import org.ucl.fhirwork.common.network.exception.IdentifierMissingException;
 import org.ucl.fhirwork.network.empi.server.EmpiServer;
 import org.ucl.fhirwork.network.fhir.operations.observation.ReadObservationOperation;
 import org.ucl.fhirwork.network.fhir.operations.patient.UpdatePatientOperation;
@@ -143,12 +142,12 @@ public class ReadObservationExecutorTest
         }
     }
 
-    @Test (expected = MissingRecordException.class)
+    @Test (expected = ResourceMissingException.class)
     public void invokeHealthRecordMissing() throws Throwable
     {
         try {
             EhrServer ehrServer = networkService.getEhrServer();
-            when(ehrServer.getHealthRecord(anyString(), anyString())).thenThrow(new MissingRecordException());
+            when(ehrServer.getHealthRecord(anyString(), anyString())).thenThrow(new ResourceMissingException("EHR", "1"));
 
             executor.setOperation(mockOperation());
             executor.invoke();

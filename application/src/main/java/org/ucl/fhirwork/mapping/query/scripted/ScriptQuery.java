@@ -13,6 +13,12 @@ package org.ucl.fhirwork.mapping.query.scripted;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import java.util.Collection;
 
+/**
+ * Instances of this class represent an OpenEHR AQL query returned from a user
+ * provided mapping script.
+ *
+ * @author Blair Butterworth
+ */
 public class ScriptQuery
 {
     private ScriptObjectMirror objectMirror;
@@ -29,6 +35,6 @@ public class ScriptQuery
     public Collection<String> getSelectors() {
         ScriptObjectMirror selectors = (ScriptObjectMirror)objectMirror.getMember("selectors");
         Collection<Object> values = selectors.values();
-        return (Collection)values; //TODO add type check before unchecked cast
+        return (Collection)values;
     }
 }

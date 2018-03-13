@@ -10,20 +10,24 @@
 
 package org.ucl.fhirwork.network.ehr.server;
 
+/**
+ * Options in this enumeration specify different HTTP headers accepted by an
+ * OpenEHR REST web service.
+ *
+ * @author Blair Butterworth
+ */
 public enum EhrHeader
 {
     SessionId ("Ehr-Session");
 
     private String value;
 
-    private EhrHeader(String value)
-    {
+    private EhrHeader(String value) {
         this.value = value;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return value;
     }
 }

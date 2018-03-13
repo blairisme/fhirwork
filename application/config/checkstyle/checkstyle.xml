@@ -18,8 +18,14 @@
     <module name="FileLength">
         <property name="max" value="300"/>
     </module>
-
     <module name="TreeWalker">
+        <!--<module name="TodoComment">-->
+            <!--<property name="format" value="(TODO)|(Todo)|(todo)"/>-->
+        <!--</module>-->
+        <module name="JavadocType">
+            <property name="scope" value="public"/>
+            <!--<property name="authorFormat" value="\S"/>-->
+        </module>
         <module name="OneTopLevelClass"/>
         <module name="OneStatementPerLine"/>
         <module name="EqualsHashCode"/>

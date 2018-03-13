@@ -16,7 +16,7 @@ import org.ucl.fhirwork.network.ehr.data.SessionToken;
 import org.ucl.fhirwork.network.empi.data.AuthenticationRequest;
 
 import static com.google.common.collect.ImmutableMap.of;
-import static org.ucl.fhirwork.common.network.Rest.RestStatusHandlers.throwOnFailureExcept;
+import static org.ucl.fhirwork.common.network.Rest.RestStatusStrategies.throwOnFailureExcept;
 import static org.ucl.fhirwork.network.ehr.server.EhrHeader.SessionId;
 import static org.ucl.fhirwork.network.ehr.server.EhrParameter.Password;
 import static org.ucl.fhirwork.network.ehr.server.EhrParameter.Username;
@@ -58,8 +58,9 @@ public class EhrAuthenticator implements AuthenticationStrategy
         RestRequest request = server.post(Session);
         request.setParameters(of(Username, username, Password, password));
         request.setBody(new AuthenticationRequest(username, password), AuthenticationRequest.class);
+        request.setStatusStrategy(throwOnFailureExcept(401));
 
-        RestResponse response = request.make(throwOnFailureExcept(401));
+        RestResponse response = request.make();
         if (response.getStatusCode() == 401) {
             throw new AuthenticationException(server.getAddress(), username);
         }

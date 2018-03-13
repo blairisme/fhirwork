@@ -10,12 +10,14 @@
 
 package org.ucl.fhirwork.common.network.exception;
 
+/**
+ * Instances of this error are throw when an issue occurs communicating with a
+ * remote service.
+ *
+ * @author Blair Butterworth
+ */
 public class NetworkException extends RuntimeException
 {
-    public NetworkException(Throwable cause) {
-        super(cause);
-    }
-
     public NetworkException(String message) {
         super(message);
     }

@@ -16,6 +16,12 @@ import org.ucl.fhirwork.network.ehr.data.ObservationResult;
 
 import java.util.List;
 
+/**
+ * Implementors of this interface convert data between observations and OpenEHR
+ * AQL queries.
+ *
+ * @author Blair Butterworth
+ */
 public interface MappingProvider
 {
     String getQuery(String ehrId);

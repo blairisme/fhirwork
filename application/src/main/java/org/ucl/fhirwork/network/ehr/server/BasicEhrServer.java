@@ -12,18 +12,18 @@ package org.ucl.fhirwork.network.ehr.server;
 
 import com.google.common.collect.ImmutableMap;
 import org.ucl.fhirwork.common.network.Rest.*;
+import org.ucl.fhirwork.common.network.exception.ResourceMissingException;
 import org.ucl.fhirwork.common.reflect.TypeUtils;
 import org.ucl.fhirwork.common.serialization.JsonSerializer;
 import org.ucl.fhirwork.network.ehr.data.HealthRecord;
 import org.ucl.fhirwork.network.ehr.data.QueryBundle;
-import org.ucl.fhirwork.network.ehr.exception.MissingRecordException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
 import static com.google.common.collect.ImmutableMap.of;
-import static org.ucl.fhirwork.common.network.Rest.RestStatusHandlers.throwOnFailedStatus;
-import static org.ucl.fhirwork.common.network.Rest.RestStatusHandlers.throwOnFailureExcept;
+import static org.ucl.fhirwork.common.network.Rest.RestStatusStrategies.throwOnFailure;
+import static org.ucl.fhirwork.common.network.Rest.RestStatusStrategies.throwOnFailureExcept;
 import static org.ucl.fhirwork.common.network.http.HttpHeader.Accept;
 import static org.ucl.fhirwork.common.network.http.HttpHeader.ContentType;
 import static org.ucl.fhirwork.common.network.http.MimeType.Json;
@@ -63,12 +63,16 @@ public class BasicEhrServer implements EhrServer
     }
 
     @Override
-    public HealthRecord getHealthRecord(String id, String namespace) throws RestException, MissingRecordException
+    public HealthRecord getHealthRecord(String id, String namespace) throws RestException
     {
         RestRequest request = getServer().get(Ehr);
         request.setParameters(ImmutableMap.of(SubjectId, id, SubjectNamespace, namespace));
+        request.setStatusStrategy(throwOnFailureExcept(404));
+        RestResponse response = request.make();
 
-        RestResponse response = request.make(throwOnFailedStatus());
+        if (response.hasStatusCode(404)){
+            throw new ResourceMissingException("EHR", id);
+        }
         return response.asType(HealthRecord.class);
     }
 
@@ -77,8 +81,9 @@ public class BasicEhrServer implements EhrServer
     {
         RestRequest request = getServer().get(Query);
         request.setParameters(of(Aql, query));
+        request.setStatusStrategy(throwOnFailure());
 
-        RestResponse response = request.make(throwOnFailedStatus());
+        RestResponse response = request.make();
         return response.getStatusCode() != 204 ? response.asType(type) : TypeUtils.newInstance(type);
     }
 

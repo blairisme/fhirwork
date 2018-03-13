@@ -10,10 +10,8 @@
 
 package org.ucl.fhirwork.network.fhir.data;
 
-import ca.uhn.fhir.model.dstu2.composite.IdentifierDt;
 import ca.uhn.fhir.model.primitive.StringDt;
 import ca.uhn.fhir.rest.param.DateParam;
-import ca.uhn.fhir.rest.param.ReferenceParam;
 import ca.uhn.fhir.rest.param.TokenParam;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -99,7 +97,7 @@ public class SearchParameterBuilder
 
     private TokenParam newToken(String value)
     {
-        return TokenParamUtils.fromText(value);
+        return TokenParamFactory.fromText(value);
     }
 
     private DateParam newDate(String value)

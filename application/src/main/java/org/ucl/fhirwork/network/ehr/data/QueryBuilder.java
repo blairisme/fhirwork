@@ -1,9 +1,24 @@
+/*
+ * FHIRWork (c) 2018 - Blair Butterworth, Abdul-Qadir Ali, Xialong Chen,
+ * Chenghui Fan, Alperen Karaoglu, Jiaming Zhou
+ *
+ * This work is licensed under the MIT License. To view a copy of this
+ * license, visit
+ *
+ *      https://opensource.org/licenses/MIT
+ */
+
 package org.ucl.fhirwork.network.ehr.data;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Instances of this class construct OpenEHR AQL queries.
+ *
+ * @author Blair Butterworth
+ */
 public class QueryBuilder
 {
     private List<String> selectStatements;

@@ -10,10 +10,15 @@
 
 package org.ucl.fhirwork.common.network.exception;
 
+/**
+ * Instances of this error are thrown when a performing a network action that
+ * could not complete because a preexisting resource already exists.
+ *
+ * @author Blair Butterworth
+ */
 public class ResourceExistsException extends NetworkException
 {
-    public ResourceExistsException(String type, String id)
-    {
+    public ResourceExistsException(String type, String id) {
         super(type + " already exists: " + id);
     }
 }

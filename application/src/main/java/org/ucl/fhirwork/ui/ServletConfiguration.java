@@ -18,6 +18,13 @@ import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+/**
+ * Instances of this class configure the Spring MVC servlet engine, setting the
+ * location of the JSP files and resources used by the configuration user
+ * interface.
+ *
+ * @author Blair Butterworth
+ */
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = {"org.ucl.fhirwork.ui"})

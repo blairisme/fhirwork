@@ -10,6 +10,12 @@
 
 package org.ucl.fhirwork.configuration.data;
 
+/**
+ * Instances of this class contain miscellaneous configuration, required for
+ * general system function.
+ *
+ * @author Blair Butterworth
+ */
 public class GeneralConfig
 {
     private String ehrIdSystem;

@@ -30,6 +30,7 @@ public class RestRequest
 {
     protected Serializer serializer;
     protected HttpRequest request;
+    protected RestStatusStrategy statusHandler;
 
     RestRequest(HttpRequest request, Serializer serializer)
     {
@@ -57,7 +58,11 @@ public class RestRequest
         throw new IllegalArgumentException();
     }
 
-    public RestResponse make(RestStatusHandler statusHandler) throws RestException {
+    public void setStatusStrategy(RestStatusStrategy statusStrategy) {
+        this.statusHandler = statusStrategy;
+    }
+
+    public RestResponse make() throws RestException {
         try {
             HttpResponse<String> response = request.asString();
             RestResponse result = new RestResponse(response, serializer);

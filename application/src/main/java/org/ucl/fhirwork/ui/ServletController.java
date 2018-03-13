@@ -25,6 +25,14 @@ import org.ucl.fhirwork.configuration.*;
 import org.ucl.fhirwork.configuration.data.*;
 import org.ucl.fhirwork.mapping.query.scripted.ScriptedMapping;
 
+/**
+ * Instances of this class declare web pages used by the FhirWork configuration
+ * user interface, and provide the business logic that allows them to operate.
+ *
+ * @author Blair Butterworth
+ * @author Chenghui Fan
+ * @author Xiaolong Chen
+ */
 @Controller
 @Scope("session")
 @RequestMapping("/")

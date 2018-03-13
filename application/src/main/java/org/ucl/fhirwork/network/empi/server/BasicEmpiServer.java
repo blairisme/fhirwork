@@ -25,8 +25,8 @@ import javax.inject.Provider;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.ucl.fhirwork.common.network.Rest.RestStatusHandlers.throwOnFailedStatus;
-import static org.ucl.fhirwork.common.network.Rest.RestStatusHandlers.throwOnFailureExcept;
+import static org.ucl.fhirwork.common.network.Rest.RestStatusStrategies.throwOnFailure;
+import static org.ucl.fhirwork.common.network.Rest.RestStatusStrategies.throwOnFailureExcept;
 import static org.ucl.fhirwork.common.network.http.HttpHeader.ContentType;
 import static org.ucl.fhirwork.common.network.http.MimeType.Xml;
 import static org.ucl.fhirwork.network.empi.server.EmpiParameter.*;
@@ -64,8 +64,9 @@ public class BasicEmpiServer implements EmpiServer
     {
         RestRequest request = getServer().put(AddPerson);
         request.setBody(person, Person.class);
+        request.setStatusStrategy(throwOnFailure());
 
-        RestResponse response = request.make(throwOnFailedStatus());
+        RestResponse response = request.make();
         if (response.getStatusCode() == 204 || response.isEmpty()) {
             throw new ResourceExistsException("Person", person.getPersonId());
         }
@@ -91,8 +92,9 @@ public class BasicEmpiServer implements EmpiServer
     {
         RestRequest request = getServer().post(FindPersons);
         request.setBody(template, Person.class);
+        request.setStatusStrategy(throwOnFailure());
 
-        RestResponse response = request.make(throwOnFailedStatus());
+        RestResponse response = request.make();
         People people = response.asType(People.class);
 
         return Arrays.asList(people.getPerson());
@@ -103,8 +105,9 @@ public class BasicEmpiServer implements EmpiServer
     {
         RestRequest request = getServer().get(LoadPerson);
         request.setParameters(ImmutableMap.of(PersonId, identifier.getValue()));
+        request.setStatusStrategy(throwOnFailure());
 
-        RestResponse response = request.make(throwOnFailedStatus());
+        RestResponse response = request.make();
         if (response.getStatusCode() == 204 || response.isEmpty()) {
             throw new ResourceMissingException("Person", identifier.getValue());
         }
@@ -116,8 +119,9 @@ public class BasicEmpiServer implements EmpiServer
     {
         RestRequest request = getServer().get(LoadAllPersons);
         request.setParameters(ImmutableMap.of(FirstRecord, index, MaxRecords, count));
+        request.setStatusStrategy(throwOnFailure());
 
-        RestResponse response = request.make(throwOnFailedStatus());
+        RestResponse response = request.make();
         People people = response.asType(People.class);
 
         return Arrays.asList(people.getPerson());
@@ -128,7 +132,8 @@ public class BasicEmpiServer implements EmpiServer
     {
         RestRequest request = getServer().post(RemovePerson);
         request.setParameters(ImmutableMap.of(PersonId, identifier.getValue()));
-        request.make(throwOnFailedStatus());
+        request.setStatusStrategy(throwOnFailure());
+        request.make();
     }
 
     @Override
@@ -136,8 +141,9 @@ public class BasicEmpiServer implements EmpiServer
     {
         RestRequest request = getServer().put(UpdatePerson);
         request.setBody(person, Person.class);
+        request.setStatusStrategy(throwOnFailureExcept(304));
 
-        RestResponse response = request.make(throwOnFailureExcept(304));
+        RestResponse response = request.make();
         if (response.getStatusCode() == 304) {
             return person;
         }

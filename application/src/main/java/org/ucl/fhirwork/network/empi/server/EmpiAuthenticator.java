@@ -14,7 +14,7 @@ import org.ucl.fhirwork.common.network.Rest.*;
 import org.ucl.fhirwork.common.network.exception.AuthenticationException;
 import org.ucl.fhirwork.network.empi.data.AuthenticationRequest;
 
-import static org.ucl.fhirwork.common.network.Rest.RestStatusHandlers.throwOnFailureExcept;
+import static org.ucl.fhirwork.common.network.Rest.RestStatusStrategies.throwOnFailureExcept;
 import static org.ucl.fhirwork.network.empi.server.EmpiHeader.SessionKey;
 import static org.ucl.fhirwork.network.empi.server.EmpiResource.Authenticate;
 
@@ -53,8 +53,9 @@ public class EmpiAuthenticator implements AuthenticationStrategy
     private String getSessionKey(RestServer server) throws RestException {
         RestRequest request = server.put(Authenticate);
         request.setBody(new AuthenticationRequest(username, password), AuthenticationRequest.class);
+        request.setStatusStrategy(throwOnFailureExcept(401));
 
-        RestResponse response = request.make(throwOnFailureExcept(401));
+        RestResponse response = request.make();
         if (response.getStatusCode() == 401) {
             throw new AuthenticationException(server.getAddress(), username);
         }

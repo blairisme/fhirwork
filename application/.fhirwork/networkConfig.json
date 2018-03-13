@@ -1,12 +1,1 @@
-{
-  "empi": {
-    "address": "http://localhost:8080",
-    "username": "admin",
-    "password": "admin"
-  },
-  "ehr": {
-    "address": "http://localhost:8888/rest/v1",
-    "username": "guest",
-    "password": "guest"
-  }
-}
+{"empi":{"address":"http://localhost:8080","username":"admin","password":"admin"},"ehr":{"address":"http://localhost:8888/rest/v1","username":"guest","password":"guest"}}

@@ -38,16 +38,16 @@ public class AuthenticatedRestRequest extends RestRequest
     }
 
     @Override
-    public RestResponse make(RestStatusHandler statusHandler) throws RestException
+    public RestResponse make() throws RestException
     {
         try {
             strategy.authenticate(server, this);
-            return super.make(statusHandler);
+            return super.make();
         }
         catch (RestException exception) {
             if (exception.getStatusCode() == 403) {
                 strategy.reauthenticate(server, this);
-                return super.make(statusHandler);
+                return super.make();
             }
             throw exception;
         }

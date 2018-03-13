@@ -14,16 +14,18 @@ import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.param.ReferenceParam;
 import org.ucl.fhirwork.network.empi.data.InternalIdentifier;
 
+/**
+ * Instances of this class create {@link InternalIdentifier InternalIdentifers}
+ * from the identifier contained in {@link ReferenceParam} objects.
+ *
+ * @author Blair Butterworth
+ */
 public class InternalIdentifierFactory
 {
     public InternalIdentifier fromId(IdDt identifier){
         return new InternalIdentifier(identifier.getIdPart());
     }
 
-    /**
-     * Patient/23
-     * Patient=23
-     */
     public InternalIdentifier fromReference(ReferenceParam identifier){
         String value = identifier.getValue();
 

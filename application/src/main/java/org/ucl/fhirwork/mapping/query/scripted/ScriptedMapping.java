@@ -31,6 +31,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Instances of this class convert observations to OpenEHR AQL queries using a
+ * user provided Javascript script.
+ *
+ * @author Blair Butterworth
+ */
 public class ScriptedMapping implements MappingProvider
 {
     private Invocable engine;

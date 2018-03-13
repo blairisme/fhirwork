@@ -6,6 +6,12 @@ import org.ucl.fhirwork.network.fhir.operations.common.OperationBuilder;
 
 import java.util.Map;
 
+/**
+ * Instances of this class construct {@link DeletePatientOperation} instances,
+ * given either a patient identifier or a collection of search parameters.
+ *
+ * @author Blair Butterworth
+ */
 public class DeletePatientOperationBuilder extends OperationBuilder<DeletePatientOperation>
 {
     @Override

@@ -14,7 +14,6 @@ import org.ucl.fhirwork.common.network.Rest.RestException;
 import org.ucl.fhirwork.common.network.exception.ResourceMissingException;
 import org.ucl.fhirwork.network.ehr.data.HealthRecord;
 import org.ucl.fhirwork.network.ehr.data.QueryBundle;
-import org.ucl.fhirwork.network.ehr.exception.MissingRecordException;
 
 /**
  * Instances of this class represent an EHR server. Methods exists to create,
@@ -48,7 +47,7 @@ public interface EhrServer
      * @throws ResourceMissingException thrown if a matching {@code HealthRecord}
      *                                  isn't found.
      */
-    HealthRecord getHealthRecord(String id, String namespace) throws RestException, MissingRecordException;
+    HealthRecord getHealthRecord(String id, String namespace) throws RestException, ResourceMissingException;
 
     /**
      * Executes the given AQL query and returns the results serialized into

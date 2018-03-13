@@ -10,7 +10,7 @@
 
 package org.ucl.fhirwork.network.empi.data;
 
-import org.ucl.fhirwork.network.empi.exception.IdentifierMissingException;
+import org.ucl.fhirwork.common.network.exception.IdentifierMissingException;
 
 import java.util.*;
 
@@ -29,7 +29,7 @@ public class PersonUtils
     {
         Identifier result = findIdentifier(person, domain);
         if (result == null) {
-            throw new IdentifierMissingException(person, domain);
+            throw new IdentifierMissingException("Person", person.getPersonId(), domain);
         }
         return result;
     }

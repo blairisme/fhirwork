@@ -10,6 +10,12 @@
 
 package org.ucl.fhirwork.common.network.exception;
 
+/**
+ * Instances of this error are thrown when a multiple search results are found
+ * when a single search result is required.
+ *
+ * @author Blair Butterworth
+ */
 public class AmbiguousResultException extends NetworkException
 {
     public AmbiguousResultException(String message)

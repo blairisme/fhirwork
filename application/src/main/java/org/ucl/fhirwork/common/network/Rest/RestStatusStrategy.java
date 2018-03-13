@@ -18,5 +18,5 @@ import java.util.function.Predicate;
  *
  * @author Blair Butterworth
  */
-public interface RestStatusHandler extends Predicate<RestResponse> {
+public interface RestStatusStrategy extends Predicate<RestResponse> {
 }

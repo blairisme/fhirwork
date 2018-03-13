@@ -22,7 +22,6 @@ import java.util.Map;
  */
 public class ObservationBundle extends QueryBundle
 {
-    //private List<ObservationResult> resultSet;
     private List<Map<String, String>> resultSet;
 
     public ObservationBundle() {

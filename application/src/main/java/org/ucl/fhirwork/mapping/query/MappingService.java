@@ -25,6 +25,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Instances of this class provide {@link MappingProvider MappingProviders}
+ * that convert observations to OpenEHR AQL queries and back again.
+ *
+ * @author Blair Butterworth
+ */
 public class MappingService
 {
     private ConfigService configuration;

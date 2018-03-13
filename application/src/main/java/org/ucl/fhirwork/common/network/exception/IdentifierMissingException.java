@@ -10,12 +10,17 @@
 
 package org.ucl.fhirwork.network.empi.exception;
 
-import org.ucl.fhirwork.network.empi.data.Person;
-
+/**
+ * Instances of this error are thrown when performing an operation where the
+ * presence of a global identifier (as opposed to an internal identifier) is
+ * mandatory.
+ *
+ * @author Blair Butterworth
+ */
 public class IdentifierMissingException extends RuntimeException
 {
-    public IdentifierMissingException(Person person, String domain)
+    public IdentifierMissingException(String type, String id, String domain)
     {
-        super("Person " + person.getPersonId() + " has no identifier belonging to " + domain);
+        super(type + " with internal id " + id + " has no external identifier belonging to " + domain);
     }
 }
