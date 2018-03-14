@@ -11,46 +11,53 @@ import org.ucl.fhirwork.integration.fhir.FhirworkServer;
 
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class IntegrationSteps
 {
-    private static boolean serversPinged = false;
-    protected EhrServer ehrServer;
-    protected EmpiServer empiServer;
-    protected FhirServer fhirServer;
-    protected FhirworkServer fhirworkServer;
+    protected static EhrServer ehrServer;
+    protected static EmpiServer empiServer;
+    protected static FhirServer fhirServer;
+    protected static FhirworkServer fhirworkServer;
 
     @Before
-    public void setup() throws Exception
-    {
-        empiServer = new EmpiServer(
+    public void setup() throws TimeoutException {
+        initializeEmpiServer();
+        initializeEhrServer();
+        initializeFhirServer();
+    }
+
+    private void initializeEmpiServer() throws TimeoutException {
+        if (empiServer == null) {
+            empiServer = new EmpiServer(
                 System.getProperty("network.empi.address", "http://localhost:8080"),
                 System.getProperty("network.empi.username", "admin"),
                 System.getProperty("network.empi.password", "admin"));
-        ehrServer = new EhrServer(
-                System.getProperty("network.ehr.address", "http://localhost:8888/rest/v1"),
-                System.getProperty("network.ehr.username", "guest"),
-                System.getProperty("network.ehr.password", "guest"));
-        fhirServer = new FhirServer(
-                System.getProperty("network.fhir.address", "http://localhost:8090"));
-        fhirworkServer = new FhirworkServer(
-                System.getProperty("network.fhir.address", "http://localhost:8090"));
-
-        if (! serversPinged) {
-//            System.out.println("Integration test starting...");
-//            System.out.println(" - EHR: " + ehrServer.getAddress());
-//            System.out.println(" - EMPI: " + empiServer.getAddress());
-//            System.out.println(" - FHIR: " + fhirServer.getAddress());
-
-            StepUtils.wait(120, TimeUnit.SECONDS, () -> ehrServer.ping(), ehrServer.getAddress());
             StepUtils.wait(120, TimeUnit.SECONDS, () -> empiServer.ping(), empiServer.getAddress());
-            StepUtils.wait(120, TimeUnit.SECONDS, () -> fhirServer.ping(), fhirServer.getAddress());
-            serversPinged = true;
         }
     }
 
-    protected Person getPersonByName(String name) throws RestServerException
-    {
+    private void initializeEhrServer() throws TimeoutException {
+        if (ehrServer == null) {
+            ehrServer = new EhrServer(
+                System.getProperty("network.ehr.address", "http://localhost:8888/rest/v1"),
+                System.getProperty("network.ehr.username", "guest"),
+                System.getProperty("network.ehr.password", "guest"));
+            StepUtils.wait(120, TimeUnit.SECONDS, () -> ehrServer.ping(), ehrServer.getAddress());
+        }
+    }
+
+    private void initializeFhirServer() throws TimeoutException {
+        if (fhirServer == null) {
+            fhirServer = new FhirServer(
+                System.getProperty("network.fhir.address", "http://localhost:8090"));
+            fhirworkServer = new FhirworkServer(
+                System.getProperty("network.fhir.address", "http://localhost:8090"));
+            StepUtils.wait(120, TimeUnit.SECONDS, () -> fhirServer.ping(), fhirServer.getAddress());
+        }
+    }
+
+    protected Person getPersonByName(String name) throws RestServerException {
         for (Person person: empiServer.getPeople()){
             if (Objects.equals(person.getGivenName(), name)){
                 return person;

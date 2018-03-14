@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Predicate;
 
 /**
@@ -43,7 +44,7 @@ public class PatientSteps extends IntegrationSteps
     private List<Patient> patients;
 
     @Before
-    public void setup() throws Exception
+    public void setup() throws TimeoutException
     {
         super.setup();
         patients = new ArrayList<>();

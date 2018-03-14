@@ -17,6 +17,7 @@ import org.ucl.fhirwork.integration.fhir.model.Observation;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 @StepDefAnnotation
 @SuppressWarnings("unused")
@@ -26,7 +27,7 @@ public class ObservationSteps extends IntegrationSteps
     private List<Observation> observations;
 
     @Before
-    public void setup() throws Exception
+    public void setup() throws TimeoutException
     {
         super.setup();
         observations = new ArrayList<>();
