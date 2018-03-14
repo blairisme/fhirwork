@@ -27,17 +27,17 @@
         </div>
         <div class="content">
             <h1 class="title">Cache Settings</h1>
-            <form action="cache" method="POST">
+            <form action="cache" method="POST" id="cache_form">
                 <table>
                     <tbody>
                         <tr class="property">
                             <th><label for="empiCacheEnabled" class="label">Enabled</label></th>
                             <c:choose>
                                 <c:when test="${config.empiCacheEnabled}">
-                                    <td><input type="checkbox" name="empiCacheEnabled" checked="checked" class="checkbox"/></td>
+                                    <td><input type="checkbox" id="empiCacheEnabled" checked="checked" class="checkbox"/></td>
                                 </c:when>
                                 <c:otherwise>
-                                    <td><input type="checkbox" name="empiCacheEnabled" class="checkbox"/></td>
+                                    <td><input type="checkbox" id="empiCacheEnabled" class="checkbox"/></td>
                                 </c:otherwise>
                             </c:choose>
                         </tr>
@@ -51,9 +51,23 @@
                         </tr>
                     </tbody>
                 </table>
-               <input type="submit" value="Submit" class="button"/>
+               <input type="button" onclick="confirmSubmit('cache_form')" value="Submit" class="button"/>
+               <input id="empiCache" name="empiCacheEnabled" value="${config.empiCacheEnabled}" style="visibility:hidden;"> 
             </form>
         </div>
     </div>
+    <script>
+		function confirmSubmit(form){
+			   if(confirm("Are you sure you want to make this modification?")){
+			   	if(document.getElementById("empiCacheEnabled").checked){
+  	  	         	document.getElementById('empiCache').value="true"; 
+					}else{
+						document.getElementById('empiCache').value="false";
+					}
+					document.getElementById(form).submit();
+		      	alert("The modification has been submitted.");
+			   	}
+	 	}
+    </script>
 </body>
 </html>

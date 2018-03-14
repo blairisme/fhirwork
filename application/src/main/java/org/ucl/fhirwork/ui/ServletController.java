@@ -49,23 +49,6 @@ public class ServletController
         this.configuration = applicationService.get(ConfigService.class);
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/mapping/content", method = RequestMethod.GET)
-    public ArrayList<String> mappingConfigContent(@RequestParam("loinc") String loinc, ModelMap model)
-    {
-    	MappingConfig mappingConfig = configuration.getConfig(ConfigType.Mapping);
-        Map<String, BasicMappingConfig> simpleMapping = mappingConfig.getBasic();
-        BasicMappingConfig mappingConfigData = simpleMapping.get(loinc);
-
-    	ArrayList<String> data = new ArrayList<String>();
-    	data.add(mappingConfigData.getText());
-    	data.add(mappingConfigData.getArchetype());
-    	data.add(mappingConfigData.getDate());
-    	data.add(mappingConfigData.getMagnitude());
-    	data.add(mappingConfigData.getUnit());
-    	return data;
-    }
-
     @RequestMapping(value = "/network", method = RequestMethod.GET)
     public String network(ModelMap model)
     {
