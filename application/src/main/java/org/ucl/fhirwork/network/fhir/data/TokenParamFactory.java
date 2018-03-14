@@ -18,6 +18,8 @@ import org.apache.commons.lang3.Validate;
 /**
  * Instances of this class create {@link TokenParam} instances, given their
  * textual representation.
+ *
+ * @author Blair Butterworth
  */
 public class TokenParamFactory
 {
