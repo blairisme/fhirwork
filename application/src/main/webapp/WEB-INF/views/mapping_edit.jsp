@@ -66,7 +66,8 @@
                 <input type="text" id="code" name="code" value="${mapping.code}" class="textbox"/>
 
                 <label for="script" class="label">Script</label>
-                <textarea id="script" class="script" rows="50" cols="100">${mapping.script}</textarea>
+                <textarea id="script" name="script" class="script" rows="50" cols="100">${mapping.script}</textarea>
+
                 <input type="button" onclick="confirmSubmit('script_form')" value="Submit" class="button">
             </form>
             </c:if>
