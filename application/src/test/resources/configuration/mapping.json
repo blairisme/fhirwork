@@ -1,6 +1,7 @@
 {
   "basic": {
     "3141-9": {
+      "code": "3141-9",
       "text": "body_weight",
       "archetype": "openEHR-EHR-OBSERVATION.body_weight.v1",
       "date": "data[at0002]/origin/value",
@@ -8,6 +9,7 @@
       "unit": "data[at0002]/events[at0003]/data[at0001]/items[at0004]/value/units"
     },
     "8302-2": {
+      "code": "8302-2",
       "text": "height",
       "archetype": "openEHR-EHR-OBSERVATION.height.v1",
       "date": "data[at0001]/origin/value",
@@ -15,25 +17,26 @@
       "unit": "data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/units"
     },
     "39156-5": {
+      "code": "39156-5",
       "text": "body_mass_index",
       "archetype": "openEHR-EHR-OBSERVATION.body_mass_index.v1",
       "date": "data[at0001]/origin/value",
-      "precision": "data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/precision",
       "magnitude": "data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/magnitude",
       "unit": "data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/units"
     },
     "8287-5": {
+      "code": "8287-5",
       "text": "head_circumference",
       "archetype": "openEHR-EHR-OBSERVATION.head_circumference.v0",
       "date": "data[at0001]/origin/value",
-      "precision": "data[at0001]/events[at0010]/data[at0003]/items[at0004]/value/precision",
       "magnitude": "data[at0001]/events[at0010]/data[at0003]/items[at0004]/value/magnitude",
       "unit": "data[at0001]/events[at0010]/data[at0003]/items[at0004]/value/units"
     }
   },
   "scripted": {
     "37362-1": {
-      "script" : "function Query(selectors, archetype){    this.selectors = selectors;    this.archetype = archetype;}function Quantity(value, unit){    this.value = value;    this.unit = unit;}function getQuery(ehrId){    var archetype = \"openEHR-EHR-OBSERVATION.skeletal_age.v0\";    var selectors = [\"data[at0001]/events[at0002]/data[at0003]/items[at0005]/value/value as value\"];    return new Query(selectors, archetype);}function getQuantity(queryResult){    load('https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js');    var age = queryResult.get(\"value\");    var duration = moment.duration(age);    var value = duration.asMonths();    var unit = \"Months\";    return new Quantity(value, unit);}"
+      "code": "37362-1",
+      "script": "/*\r\n * FHIRWork (c) 2018 - Blair Butterworth\r\n *\r\n * This work is licensed under the MIT License. To view a copy of this\r\n * license, visit\r\n *\r\n *      https://opensource.org/licenses/MIT\r\n */\r\n\r\n/*\r\n * Provides an AQL query that when made will return all skeletal age\r\n * observations contained in a given heath record.\r\n *\r\n * @return  an AQL query.\r\n */\r\nfunction getQuery(ehrId)\r\n{\r\n    return \"select \" +\r\n                \"skeletal_age/data[at0001]/origin/value as date, \" +\r\n                \"skeletal_age/data[at0001]/events[at0002]/data[at0003]/items[at0005]/value/value as value \" +\r\n            \"from EHR [ehr_id/value='\" + ehrId + \"'] \" +\r\n            \"contains COMPOSITION c \" +\r\n            \"contains OBSERVATION skeletal_age[openEHR-EHR-OBSERVATION.skeletal_age.v0] \";\r\n}\r\n\r\n/*\r\n * Instances of this prototype represent a FHIR observation.\r\n *\r\n * @param date          a string containing the time the observation was created.\r\n * @param value         a floating point number containing the quantities value.\r\n * @param unit          a string containing a unit of measurement. E.g., kg.\r\n * @param unitSystem    a string containing an identification system that the\r\n *                      unit belongs to.\r\n */\r\nfunction Observation(date, value, unit, unitSystem)\r\n{\r\n    this.date = date;\r\n    this.value = value;\r\n    this.unit = unit;\r\n    this.unitSystem = unitSystem;\r\n}\r\n\r\nfunction getObservations(queryResults)\r\n{\r\n    load('https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js');\r\n\r\n    var observations = [2];\r\n    for (var index = 0; index < 2; index++) {\r\n        var observation = getObservation(queryResults[index]);\r\n        observations.push(observation);\r\n    }\r\n    return observations;\r\n}\r\n\r\nfunction getObservation(queryResult)\r\n{\r\n    var date = queryResult.get(\"date\");\r\n    var value = getMonths(queryResult.get(\"value\"));\r\n    var unit = \"Months\";\r\n    var system = \"http://unitsofmeasure.org\";\r\n    return new Observation(date, value, unit, system);\r\n}\r\n\r\nfunction getMonths(time)\r\n{\r\n    var duration = moment.duration(time);\r\n    return duration.asMonths();\r\n}"
     }
   }
 }
