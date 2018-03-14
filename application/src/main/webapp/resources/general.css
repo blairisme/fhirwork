@@ -72,13 +72,18 @@
     mask-image: url(icon.svg);
 }
 
-
-/*** Settings Styles ***/
-
 .title {
     color: #23282d;
     font-size: 23px;
     font-family: Verdana, Geneva, sans-serif;
+    margin-bottom: 20px;
+}
+
+.subheading {
+    color: #23282d;
+    font-size: 18px;
+    font-family: Verdana, Geneva, sans-serif;
+    margin-top: 20px;
     margin-bottom: 20px;
 }
 
@@ -87,8 +92,6 @@
     font-size: 14px;
     font-family: Verdana, Geneva, sans-serif;
 }
-
-
 
 .textbox {
     border: 1px solid #ddd;
@@ -112,7 +115,7 @@
 .button {
     line-height: 26px;
     height: 28px;
-    margin: 0;
+    margin: 10px 0px 0px 0px;
     padding: 0 10px 1px;
 
     background: #0085ba;
@@ -154,4 +157,10 @@
 
     background-repeat: no-repeat;
     background-image: url('./delete.svg');
+}
+
+.hiddenInput
+{
+    visibility: hidden;
+    display: none;
 }

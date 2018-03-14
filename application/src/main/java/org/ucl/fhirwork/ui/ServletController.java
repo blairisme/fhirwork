@@ -173,7 +173,6 @@ public class ServletController
     {
         CacheConfig cacheConfig = configuration.getConfig(ConfigType.Cache);
         model.addAttribute("config", cacheConfig);
-        model.addAttribute("checked", Boolean.toString(cacheConfig.isEmpiCacheEnabled()));
         return "cache";
     }
 
@@ -182,7 +181,6 @@ public class ServletController
     {
         configuration.setConfig(ConfigType.Cache, cache);
         model.addAttribute("config", cache);
-        model.addAttribute("checked", Boolean.toString(cache.isEmpiCacheEnabled()));
         return "cache";
     }
 }

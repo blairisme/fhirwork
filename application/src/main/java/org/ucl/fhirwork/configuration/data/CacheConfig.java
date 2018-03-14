@@ -21,11 +21,25 @@ public class CacheConfig {
     private int empiCacheSize;
     private int empiCacheExpiry;
     private boolean empiCacheEnabled;
-   
-    public CacheConfig(int empiCacheSize, int empiCacheExpiry, boolean empiCacheEnabled) {
+
+    private int ehrCacheSize;
+    private int ehrCacheExpiry;
+    private boolean ehrCacheEnabled;
+
+    public CacheConfig(
+        int empiCacheSize,
+        int empiCacheExpiry,
+        boolean empiCacheEnabled,
+        int ehrCacheSize,
+        int ehrCacheExpiry,
+        boolean ehrCacheEnabled)
+    {
         this.empiCacheSize = empiCacheSize;
         this.empiCacheExpiry = empiCacheExpiry;
         this.empiCacheEnabled = empiCacheEnabled;
+        this.ehrCacheSize = ehrCacheSize;
+        this.ehrCacheExpiry = ehrCacheExpiry;
+        this.ehrCacheEnabled = ehrCacheEnabled;
     }
 
     public int getEmpiCacheSize() {
@@ -38,5 +52,17 @@ public class CacheConfig {
 
     public boolean isEmpiCacheEnabled() {
         return empiCacheEnabled;
+    }
+
+    public int getEhrCacheSize() {
+        return ehrCacheSize;
+    }
+
+    public int getEhrCacheExpiry() {
+        return ehrCacheExpiry;
+    }
+
+    public boolean isEhrCacheEnabled() {
+        return ehrCacheEnabled;
     }
 }

@@ -1,0 +1,9 @@
+.property th {
+    width: 200px;
+    text-align: left;
+}
+
+.property td {
+  padding-bottom: 12px;
+}
+

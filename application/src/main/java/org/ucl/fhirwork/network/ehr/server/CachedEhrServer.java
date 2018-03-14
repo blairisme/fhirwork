@@ -82,20 +82,20 @@ public class CachedEhrServer implements EhrServer
 
     private void initializeQueryCache() {
         if (queryCache == null) {
-            //CacheConfig cacheConfig = configService.getConfig(ConfigType.Cache);
+            CacheConfig cacheConfig = configService.getConfig(ConfigType.Cache);
             queryCache = Caffeine.newBuilder()
-                .expireAfterWrite(1440, TimeUnit.MINUTES)
-                .maximumSize(100)
+                .expireAfterWrite(cacheConfig.getEhrCacheExpiry(), TimeUnit.MINUTES)
+                .maximumSize(cacheConfig.getEhrCacheSize())
                 .build();
         }
     }
 
     private void initializeRecordCache() {
         if (recordCache == null) {
-            //CacheConfig cacheConfig = configService.getConfig(ConfigType.Cache);
+            CacheConfig cacheConfig = configService.getConfig(ConfigType.Cache);
             recordCache = Caffeine.newBuilder()
-                .expireAfterWrite(1440, TimeUnit.MINUTES)
-                .maximumSize(100)
+                .expireAfterWrite(cacheConfig.getEhrCacheExpiry(), TimeUnit.MINUTES)
+                .maximumSize(cacheConfig.getEhrCacheSize())
                 .build();
         }
     }

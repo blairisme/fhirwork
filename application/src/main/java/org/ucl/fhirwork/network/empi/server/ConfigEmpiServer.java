@@ -45,18 +45,6 @@ public class ConfigEmpiServer implements EmpiServer
         this.configService.addObserver(this::setDelegate);
     }
 
-    private EmpiServer getDelegate() {
-        if (delegate == null) {
-            setDelegate();
-        }
-        return delegate;
-    }
-
-    private void setDelegate() {
-        CacheConfig cacheConfig = configService.getConfig(ConfigType.Cache);
-        delegate = cacheConfig.isEmpiCacheEnabled() ? cacheServer : basicServer;
-    }
-
     @Override
     public void setConnectionDetails(String address, String username, String password) {
         basicServer.setConnectionDetails(address, username, password);
@@ -96,5 +84,17 @@ public class ConfigEmpiServer implements EmpiServer
     @Override
     public Person updatePerson(Person person) throws RestException, ResourceMissingException {
         return getDelegate().updatePerson(person);
+    }
+
+    private EmpiServer getDelegate() {
+        if (delegate == null) {
+            setDelegate();
+        }
+        return delegate;
+    }
+
+    private void setDelegate() {
+        CacheConfig cacheConfig = configService.getConfig(ConfigType.Cache);
+        delegate = cacheConfig.isEmpiCacheEnabled() ? cacheServer : basicServer;
     }
 }

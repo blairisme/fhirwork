@@ -68,7 +68,7 @@ public class ScriptedMapping implements MappingProvider
 
         QueryBuilder queryBuilder = new QueryBuilder();
         queryBuilder.appendSelectStatement("o", "data[at0001]/origin/value", "date");
-        queryBuilder.appendSelectStatement("o", queryDetails.getSelectors().iterator().next());
+        queryBuilder.appendSelectStatement("o", queryDetails.getSelectors().iterator().next()); //todo
         queryBuilder.appendFromStatement("EHR", "ehr_id/value='" + ehrId + "'");
         queryBuilder.appendContainsStatement("COMPOSITION", "c");
         queryBuilder.appendContainsStatement("OBSERVATION", "o", queryDetails.getArchetype());
@@ -126,7 +126,7 @@ public class ScriptedMapping implements MappingProvider
         quantity.setValue(scriptInfo.getValue());
         quantity.setUnit(scriptInfo.getUnit());
         quantity.setCode(quantity.getUnit());
-        quantity.setSystem("network://unitsofmeasure.org");
+        quantity.setSystem("http://unitsofmeasure.org");
 
         return quantity;
     }

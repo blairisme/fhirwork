@@ -19,4 +19,4 @@ out/
 bin/
 
 ### Misc Exclusions ###
-**/.fhirwork
+**/.fhirwork/

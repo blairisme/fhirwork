@@ -48,31 +48,6 @@ public class CachedEmpiServer implements EmpiServer
         this.configService.addObserver(this::resetCache);
     }
 
-    private void initializeCache() {
-        if (recentCache == null || searchCache == null) {
-            CacheConfig cacheConfig = configService.getConfig(ConfigType.Cache);
-            recentCache = Caffeine.newBuilder()
-                .expireAfterWrite(cacheConfig.getEmpiCacheExpiry(), TimeUnit.MINUTES)
-                .maximumSize(cacheConfig.getEmpiCacheSize())
-                .build();
-            searchCache = Caffeine.newBuilder()
-                .expireAfterWrite(cacheConfig.getEmpiCacheExpiry(), TimeUnit.MINUTES)
-                .maximumSize(100)
-                .build();
-        }
-    }
-
-    private void resetCache() {
-        if (recentCache != null) {
-            recentCache.invalidateAll();
-            recentCache = null;
-        }
-        if (searchCache != null) {
-            searchCache.invalidateAll();
-            searchCache = null;
-        }
-    }
-
     @Override
     public void setConnectionDetails(String address, String username, String password) {
         delegate.setConnectionDetails(address, username, password);
@@ -134,5 +109,49 @@ public class CachedEmpiServer implements EmpiServer
         recentCache.put(result.getInternalIdentifier(), result);
         searchCache.invalidateAll();
         return result;
+    }
+
+    private void initializeCache() {
+        initializeRecentCache();
+        initializeSearchCache();
+    }
+
+    private void initializeRecentCache() {
+        if (recentCache == null) {
+            CacheConfig cacheConfig = configService.getConfig(ConfigType.Cache);
+            recentCache = Caffeine.newBuilder()
+                .expireAfterWrite(cacheConfig.getEmpiCacheExpiry(), TimeUnit.MINUTES)
+                .maximumSize(cacheConfig.getEmpiCacheSize())
+                .build();
+        }
+    }
+
+    private void initializeSearchCache() {
+        if (searchCache == null) {
+            CacheConfig cacheConfig = configService.getConfig(ConfigType.Cache);
+            searchCache = Caffeine.newBuilder()
+                    .expireAfterWrite(cacheConfig.getEmpiCacheExpiry(), TimeUnit.MINUTES)
+                    .maximumSize(100)
+                    .build();
+        }
+    }
+
+    private void resetCache() {
+        resetRecentCache();
+        resetSearchCache();
+    }
+
+    private void resetRecentCache() {
+        if (recentCache != null) {
+            recentCache.invalidateAll();
+            recentCache = null;
+        }
+    }
+
+    private void resetSearchCache() {
+        if (searchCache != null) {
+            searchCache.invalidateAll();
+            searchCache = null;
+        }
     }
 }

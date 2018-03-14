@@ -38,7 +38,7 @@ public class CachedEmpiServerTest
         configService = Mockito.mock(ConfigService.class);
         cachedServer = new CachedEmpiServer(basicServer, configService);
 
-        CacheConfig config = new CacheConfig(10, 10, true);
+        CacheConfig config = new CacheConfig(10, 10, true, 20, 20, true);
         Mockito.when(configService.getConfig(ConfigType.Cache)).thenReturn(config);
     }
 

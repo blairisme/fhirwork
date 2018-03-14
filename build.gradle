@@ -59,6 +59,7 @@ subprojects {
         excludeDirs += file('bin')
         excludeDirs += file('.gradle')
         excludeDirs += file('.settings')
+        excludeDirs += file('.fhirwork')
       }
     }
 
