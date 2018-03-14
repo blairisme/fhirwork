@@ -12,6 +12,7 @@ package org.ucl.fhirwork;
 
 import com.google.inject.AbstractModule;
 import org.ucl.fhirwork.network.ehr.server.BasicEhrServer;
+import org.ucl.fhirwork.network.ehr.server.CachedEhrServer;
 import org.ucl.fhirwork.network.ehr.server.EhrServer;
 import org.ucl.fhirwork.network.empi.server.BasicEmpiServer;
 import org.ucl.fhirwork.network.empi.server.CachedEmpiServer;
@@ -29,7 +30,7 @@ public class ApplicationModule extends AbstractModule
     @Override
     protected void configure()
     {
-        bind(EhrServer.class).to(BasicEhrServer.class);
+        bind(EhrServer.class).to(CachedEhrServer.class);
         bind(EmpiServer.class).to(ConfigEmpiServer.class);
     }
 }
