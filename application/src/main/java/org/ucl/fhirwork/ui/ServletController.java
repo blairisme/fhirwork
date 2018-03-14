@@ -10,8 +10,6 @@
 
 package org.ucl.fhirwork.ui;
 
-import java.util.*;
-
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -19,11 +17,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.ucl.fhirwork.ApplicationService;
-import org.ucl.fhirwork.configuration.*;
+import org.ucl.fhirwork.configuration.ConfigService;
 import org.ucl.fhirwork.configuration.data.*;
-import org.ucl.fhirwork.mapping.query.scripted.ScriptedMapping;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * Instances of this class declare web pages used by the FhirWork configuration

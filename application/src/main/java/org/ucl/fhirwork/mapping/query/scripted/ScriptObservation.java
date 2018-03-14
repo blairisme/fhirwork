@@ -13,24 +13,32 @@ package org.ucl.fhirwork.mapping.query.scripted;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 
 /**
- * Instances of this class represent an observation quantity returned from a
- * user provided mapping script.
+ * Instances of this class represent an observation, returned from a user
+ * provided mapping script.
  *
  * @author Blair Butterworth
  */
-public class ScriptQuantity
+public class ScriptObservation
 {
     private ScriptObjectMirror objectMirror;
 
-    public ScriptQuantity(ScriptObjectMirror objectMirror) {
+    public ScriptObservation(ScriptObjectMirror objectMirror) {
         this.objectMirror = objectMirror;
     }
 
-    public Double getValue(){
-        return (Double)objectMirror.getMember("value");
+    public String getDate(){
+        return (String)objectMirror.getMember("date");
     }
 
     public String getUnit(){
         return (String)objectMirror.getMember("unit");
+    }
+
+    public String getUnitSystem() {
+        return (String)objectMirror.getMember("unitSystem");
+    }
+
+    public Double getValue(){
+        return (Double)objectMirror.getMember("value");
     }
 }

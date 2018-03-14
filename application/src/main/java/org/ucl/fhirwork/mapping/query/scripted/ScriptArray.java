@@ -11,30 +11,36 @@
 package org.ucl.fhirwork.mapping.query.scripted;
 
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
-import java.util.Collection;
+
+import java.util.Iterator;
 
 /**
- * Instances of this class represent an OpenEHR AQL query returned from a user
+ * Instances of this class represent an Javascript Array, returned from a user
  * provided mapping script.
+ *
+ * @param <T> the type of elements in this array.
  *
  * @author Blair Butterworth
  */
-public class ScriptQuery
+public class ScriptArray<T> implements Iterable<T>
 {
     private ScriptObjectMirror objectMirror;
 
-    public ScriptQuery(ScriptObjectMirror objectMirror) {
+    public ScriptArray(ScriptObjectMirror objectMirror) {
         this.objectMirror = objectMirror;
     }
 
-    public String getArchetype(){
-        return (String)objectMirror.getMember("archetype");
+    public int length() {
+        return (int)objectMirror.getMember("0");
     }
 
     @SuppressWarnings("unchecked")
-    public Collection<String> getSelectors() {
-        ScriptObjectMirror selectors = (ScriptObjectMirror)objectMirror.getMember("selectors");
-        Collection<Object> values = selectors.values();
-        return (Collection)values;
+    public T get(int index) {
+        return (T)objectMirror.getMember(Integer.toString(index + 1));
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new ScriptArrayIterator<>(this);
     }
 }

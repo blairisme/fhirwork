@@ -8,54 +8,61 @@
  */
 
 /*
- * Instances of this prototype represent the constituent parts of an EHR query.
- * These will be used to generate a full AQL when combined with query
- * statements required by the FHIRWork engine.
- */
-function Query(selectors, archetype)
-{
-    this.selectors = selectors;
-    this.archetype = archetype;
-}
-
-/*
- * Instances of this prototype represent a FHIR observation quantity.
- *
- * @param value a floating point number containing the quantities value.
- * @param unit  a unit of measurement. E.g., kg for kilograms.
- */
-function Quantity(value, unit)
-{
-    this.value = value;
-    this.unit = unit;
-}
-
-/*
  * Provides an AQL query that when made will return all skeletal age
  * observations contained in a given heath record.
  *
- * @return  a Query instance.
+ * @return  an AQL query.
  */
 function getQuery(ehrId)
 {
-    var archetype = "openEHR-EHR-OBSERVATION.skeletal_age.v0";
-    var selectors = ["data[at0001]/events[at0002]/data[at0003]/items[at0005]/value/value as value"];
-    return new Query(selectors, archetype);
+    return "select " +
+                "skeletal_age/data[at0001]/origin/value as date, " +
+                "skeletal_age/data[at0001]/events[at0002]/data[at0003]/items[at0005]/value/value as value " +
+            "from EHR [ehr_id/value='" + ehrId + "'] " +
+            "contains COMPOSITION c " +
+            "contains OBSERVATION skeletal_age[openEHR-EHR-OBSERVATION.skeletal_age.v0] ";
 }
 
 /*
- * Provides a Quantity instance, containing a value for the given query result.
+ * Instances of this prototype represent a FHIR observation.
  *
- * @return  a Quantity instance.
+ * @param date          a string containing the time the observation was created.
+ * @param value         a floating point number containing the quantities value.
+ * @param unit          a string containing a unit of measurement. E.g., kg.
+ * @param unitSystem    a string containing an identification system that the
+ *                      unit belongs to.
  */
-function getQuantity(queryResult)
+function Observation(date, value, unit, unitSystem)
+{
+    this.date = date;
+    this.value = value;
+    this.unit = unit;
+    this.unitSystem = unitSystem;
+}
+
+function getObservations(queryResults)
 {
     load('https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js');
 
-    var value = queryResult.get("value");
-    var duration = moment.duration(value);
-    var months = duration.asMonths();
-    var unit = "Months";
+    var observations = [2];
+    for (var index = 0; index < 2; index++) {
+        var observation = getObservation(queryResults[index]);
+        observations.push(observation);
+    }
+    return observations;
+}
 
-    return new Quantity(months, unit);
+function getObservation(queryResult)
+{
+    var date = queryResult.get("date");
+    var value = getMonths(queryResult.get("value"));
+    var unit = "Months";
+    var system = "http://unitsofmeasure.org";
+    return new Observation(date, value, unit, system);
+}
+
+function getMonths(time)
+{
+    var duration = moment.duration(time);
+    return duration.asMonths();
 }

@@ -16,11 +16,11 @@ import ca.uhn.fhir.model.dstu2.composite.QuantityDt;
 import ca.uhn.fhir.model.dstu2.composite.ResourceReferenceDt;
 import ca.uhn.fhir.model.dstu2.resource.Observation;
 import ca.uhn.fhir.model.primitive.DateTimeDt;
-import org.ucl.fhirwork.network.ehr.data.ObservationBundle;
-import org.ucl.fhirwork.network.ehr.data.ObservationResult;
+import org.ucl.fhirwork.mapping.query.scripted.ScriptObservation;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -43,6 +43,17 @@ public class ObservationFactory
         observation.setValue(quantity);
         observation.setCode(newCode(code));
         observation.setEffective(effective);
+        return observation;
+    }
+
+    public Observation from(ScriptObservation scriptObservation, String patient, String code)
+     {
+        Observation observation = new Observation();
+        observation.setId(newId());
+        observation.setSubject(newSubject(patient));
+        observation.setValue(newQuantity(scriptObservation));
+        observation.setCode(newCode(code));
+        observation.setEffective(newEffective(scriptObservation));
         return observation;
     }
 
@@ -78,5 +89,20 @@ public class ObservationFactory
         ResourceReferenceDt subject = new ResourceReferenceDt();
         subject.setReference(patientId);
         return subject;
+    }
+
+    private QuantityDt newQuantity(ScriptObservation scriptObservation)
+    {
+        QuantityDt quantity = new QuantityDt();
+        quantity.setValue(scriptObservation.getValue());
+        quantity.setUnit(scriptObservation.getUnit());
+        quantity.setCode(scriptObservation.getUnit());
+        quantity.setSystem(scriptObservation.getUnitSystem());
+        return quantity;
+    }
+
+    private DateTimeDt newEffective(ScriptObservation scriptObservation)
+    {
+        return new DateTimeDt(scriptObservation.getDate());
     }
 }

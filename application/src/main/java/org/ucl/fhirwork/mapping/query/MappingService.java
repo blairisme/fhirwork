@@ -11,12 +11,12 @@
 package org.ucl.fhirwork.mapping.query;
 
 import org.ucl.fhirwork.configuration.ConfigService;
+import org.ucl.fhirwork.configuration.data.BasicMappingConfig;
 import org.ucl.fhirwork.configuration.data.ConfigType;
 import org.ucl.fhirwork.configuration.data.MappingConfig;
 import org.ucl.fhirwork.configuration.data.ScriptedMappingConfig;
-import org.ucl.fhirwork.configuration.data.BasicMappingConfig;
-import org.ucl.fhirwork.mapping.query.scripted.ScriptedMapping;
 import org.ucl.fhirwork.mapping.query.basic.BasicMapping;
+import org.ucl.fhirwork.mapping.query.scripted.ScriptMapping;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -35,13 +35,13 @@ public class MappingService
 {
     private ConfigService configuration;
     private Provider<BasicMapping> basicMappingProvider;
-    private Provider<ScriptedMapping> scriptedMappingProvider;
+    private Provider<ScriptMapping> scriptedMappingProvider;
 
     @Inject
     public MappingService(
         ConfigService configuration,
         Provider<BasicMapping> basicMappingProvider,
-        Provider<ScriptedMapping> scriptedMappingProvider)
+        Provider<ScriptMapping> scriptedMappingProvider)
     {
         this.configuration = configuration;
         this.basicMappingProvider = basicMappingProvider;
@@ -81,7 +81,7 @@ public class MappingService
             return basicMapping;
         }
         if (scriptedConfig.containsKey(code)){
-            ScriptedMapping scriptedMapping = scriptedMappingProvider.get();
+            ScriptMapping scriptedMapping = scriptedMappingProvider.get();
             scriptedMapping.setConfiguration(scriptedConfig.get(code));
             return scriptedMapping;
         }
