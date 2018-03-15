@@ -81,46 +81,55 @@
 
                         <label for="script" class="label">Script</label>
                         <textarea id="script" name="script" class="script" form="scriptForm" rows="50" cols="100">
+
 /*
-* Instances of this prototype represent the constituent parts of an EHR query.
-* These will be used to generate a full AQL when combined with query
-* statements required by the FHIRWork engine.
-*/
-function Query(selectors, archetype)
+ * Instances of this prototype represent a FHIR observation.
+ *
+ * @param date          a string containing the time the observation was created.
+ * @param value         a floating point number containing the quantities value.
+ * @param unit          a string containing a unit of measurement. E.g., kg.
+ * @param unitSystem    a string containing an identification system that the
+ *                      unit belongs to.
+ */
+function Observation(date, value, unit, unitSystem)
 {
-    this.selectors = selectors;
-    this.archetype = archetype;
-}
-/*
-* Instances of this prototype represent a FHIR observation quantity.
-*
-* @param value a floating point number containing the quantities value.
-* @param unit  a unit of measurement. E.g., kg for kilograms.
-*/
-function Quantity(value, unit)
-{
+    this.date = date;
     this.value = value;
     this.unit = unit;
-}
-/*
-* Provides an AQL query that when made will return all skeletal age
-* observations contained in a given heath record.
-*
-* @return  a Query instance.
-*/
-function getQuery(ehrId)
-{
-    //Todo
+    this.unitSystem = unitSystem;
 }
 
 /*
- * Provides a Quantity instance, containing a value for the given query result.
+ * Returns an AQL query. When executed, the results of the AQL query will be
+ * provided to the getObservations method as a series of Java Maps, one map
+ * for each row matching the AQL query. The names of the values in the
+ * resulting Map are defined using the 'as' operator.
  *
- * @return  a Quantity instance.
+ * @return  an AQL query.
  */
-function getQuantity(queryResult)
+function getQuery(ehrId)
 {
-    //Todo
+    return "select example/data/origin/value as value " +
+            "from EHR [ehr_id/value='" + ehrId + "'] " +
+            "contains COMPOSITION c " +
+            "contains OBSERVATION example[openEHR.example.v0] ";
+}
+
+/**
+ * Converts the given queryResults, obtained by executing the AQL query
+ * provided by the getQuery method, into Observation objects, as defined
+ * above.
+ *
+ * @param queryResults  a Java List containing a number of Java Maps. Each map
+ *                      contains the values selected in the AQL query produced
+ *                      by the getQuery method.
+ */
+function getObservations(queryResults)
+{
+    var example1 = new Observation("2010-04-10T00:00:00", 70.0, "kg", "http://unitsofmeasure.org");
+    var example2 = new Observation("2010-05-10T00:00:00", 72.0, "kg", "http://unitsofmeasure.org");
+    var exampleResult = {example1, example2};
+    return exampleResult;
 }
                         </textarea>
                         <input type="button" onclick="checkSubmit('scriptForm')" value="Submit" class="button">
