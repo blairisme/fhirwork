@@ -40,8 +40,16 @@ public class EhrServer
 
     public void addTemplate(TemplateReference template) throws IOException, RestServerException
     {
-        RestServer server = createServer(ImmutableMap.of(ContentType, Xml), new XmlSerializer());
-        server.post(EhrEndpoint.Template, template.getContent(), Collections.emptyMap());
+        RestServer server = getServer();
+        try {
+            server.setHeader(ContentType, Xml);
+            server.removeHeader(Accept);
+            server.post(EhrEndpoint.Template, template.getContent(), Collections.emptyMap());
+        }
+        finally {
+            server.setHeader(ContentType, Json);
+            server.setHeader(Accept, Json);
+        }
     }
 
     public List<Template> getTemplates() throws RestServerException
@@ -135,17 +143,12 @@ public class EhrServer
     private RestServer getServer() throws RestServerException
     {
         if (restServer == null){
-            restServer = createServer(ImmutableMap.of(ContentType, Json, Accept, Json), new JsonSerializer());
+            Map<Object, Object> headers = new HashMap<>();
+            headers.putAll(ImmutableMap.of(ContentType, Json, Accept, Json));
+            headers.put(SessionId, getSessionId());
+            restServer = new RestServer(address, new JsonSerializer(), headers);
         }
         return restServer;
-    }
-
-    private RestServer createServer(Map<Object, Object> headers, Serializer serializer) throws RestServerException
-    {
-        Map<Object, Object> authHeaders = new HashMap<>();
-        authHeaders.putAll(headers);
-        authHeaders.put(SessionId, getSessionId());
-        return new RestServer(address, serializer, authHeaders);
     }
 
     private String getSessionId() throws RestServerException

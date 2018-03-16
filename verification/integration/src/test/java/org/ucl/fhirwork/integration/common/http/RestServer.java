@@ -40,6 +40,11 @@ public class RestServer
         headers.put(convert(key), convert(value));
     }
 
+    public void removeHeader(Object key)
+    {
+        headers.remove(convert(key));
+    }
+
     public void delete(RestEndpoint endPoint, Map<Object, Object> parameters) throws RestServerException
     {
         delete(endPoint.getPath(), parameters);
