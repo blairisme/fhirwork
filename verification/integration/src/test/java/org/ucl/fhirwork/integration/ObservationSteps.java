@@ -47,9 +47,9 @@ public class ObservationSteps extends IntegrationSteps
 
     private void setConfiguration() throws RestServerException
     {
-        fhirworkServer.removeMapping("39156-5");
-        fhirworkServer.removeMapping("8287-5");
-        fhirworkServer.removeMapping("37362-1");
+        getFhirworkServer().removeMapping("39156-5");
+        getFhirworkServer().removeMapping("8287-5");
+        getFhirworkServer().removeMapping("37362-1");
     }
 
     private void createTemplates() throws IOException, RestServerException
@@ -61,9 +61,9 @@ public class ObservationSteps extends IntegrationSteps
 
     private void createTemplate(String id, String resource) throws IOException, RestServerException
     {
-        if (! ehrServer.templateExists(id)){
+        if (! getEhrServer().templateExists(id)){
             TemplateReference template = new TemplateReference(resource);
-            ehrServer.addTemplate(template);
+            getEhrServer().addTemplate(template);
         }
     }
 
@@ -81,9 +81,9 @@ public class ObservationSteps extends IntegrationSteps
         String subjectId = healthData.getSubject();
         String subjectNamespace = healthData.getNamespace();
 
-        if (ehrServer.ehrExists(subjectId, subjectNamespace)){
-            HealthRecord healthRecord = ehrServer.getEhr(subjectId, subjectNamespace);
-            ehrServer.removeEhr(healthRecord.getEhrId());
+        if (getEhrServer().ehrExists(subjectId, subjectNamespace)){
+            HealthRecord healthRecord = getEhrServer().getEhr(subjectId, subjectNamespace);
+            getEhrServer().removeEhr(healthRecord.getEhrId());
         }
     }
 
@@ -99,8 +99,8 @@ public class ObservationSteps extends IntegrationSteps
         String subjectId = healthData.getSubject();
         String subjectNamespace = healthData.getNamespace();
 
-        if (! ehrServer.ehrExists(subjectId, subjectNamespace)){
-            ehrServer.createEhr(subjectId, subjectNamespace);
+        if (! getEhrServer().ehrExists(subjectId, subjectNamespace)){
+            getEhrServer().createEhr(subjectId, subjectNamespace);
         }
     }
 
@@ -108,7 +108,7 @@ public class ObservationSteps extends IntegrationSteps
     {
         String subjectId = healthData.getSubject();
         String subjectNamespace = healthData.getNamespace();
-        return ehrServer.getEhr(subjectId, subjectNamespace);
+        return getEhrServer().getEhr(subjectId, subjectNamespace);
     }
 
     private void removeCompositions(List<HealthData> dataList) throws RestServerException
@@ -123,9 +123,9 @@ public class ObservationSteps extends IntegrationSteps
 
     private void removeCompositions(HealthRecord record) throws RestServerException
     {
-        List<Composition> compositions = ehrServer.getCompositions(record.getEhrId());
+        List<Composition> compositions = getEhrServer().getCompositions(record.getEhrId());
         for (Composition composition: compositions){
-            ehrServer.removeComposition(composition);
+            getEhrServer().removeComposition(composition);
         }
     }
 
@@ -140,17 +140,17 @@ public class ObservationSteps extends IntegrationSteps
     private void createComposition(HealthData data, HealthRecord record) throws RestServerException
     {
         //GrowthChartComposition composition = GrowthChartComposition.fromHealthData(data);
-        //ehrServer.createComposition(record, composition, GrowthChartComposition.class);
+        //getEhrServer().createComposition(record, composition, GrowthChartComposition.class);
 
         HeightWeightComposition composition = HeightWeightComposition.fromHealthData(data);
-        ehrServer.createComposition(record, composition, HeightWeightComposition.class);
+        getEhrServer().createComposition(record, composition, HeightWeightComposition.class);
     }
 
     @When("^the user searches for all observations belonging to patient \"(.*)\"$")
     public void readAllObservations(String patient) throws RestServerException
     {
         Person person = getPersonByName(patient);
-        observations = fhirServer.searchPatientObservations(person.getPersonId());
+        observations = getFhirServer().searchPatientObservations(person.getPersonId());
     }
 
     @When("^the user searches for observations belonging to patient \"(.*)\" with LOINC code \"(.*)\"$")
@@ -158,7 +158,7 @@ public class ObservationSteps extends IntegrationSteps
     {
         Person person = getPersonByName(name);
         String codes = getCodeParameter(code);
-        observations = fhirServer.searchPatientObservations(person.getPersonId(), codes);
+        observations = getFhirServer().searchPatientObservations(person.getPersonId(), codes);
     }
 
     @When("^the user searches for observations belonging to subject \"(.*)\" with LOINC code \"(.*)\"$")
@@ -166,7 +166,7 @@ public class ObservationSteps extends IntegrationSteps
     {
         Person person = getPersonByName(name);
         String codes = getCodeParameter(code);
-        observations = fhirServer.searchSubjectObservations(person.getPersonId(), codes);
+        observations = getFhirServer().searchSubjectObservations(person.getPersonId(), codes);
     }
 
     @Then("^the user should receive a list of (\\d*) observations$")

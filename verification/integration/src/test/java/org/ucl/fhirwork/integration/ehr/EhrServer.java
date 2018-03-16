@@ -140,7 +140,7 @@ public class EhrServer
         }
     }
 
-    private RestServer getServer() throws RestServerException
+    public RestServer getServer() throws RestServerException
     {
         if (restServer == null){
             Map<Object, Object> headers = new HashMap<>();

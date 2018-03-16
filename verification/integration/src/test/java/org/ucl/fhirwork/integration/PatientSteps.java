@@ -53,22 +53,22 @@ public class PatientSteps extends IntegrationSteps
     @After
     public void tearDown() throws Exception
     {
-        empiServer.removePeople();
+        getEmpiServer().removePeople();
     }
 
     @Given("^the system has no patients$")
     public void initializeEmpty() throws RestServerException
     {
-        empiServer.removePeople();
+        getEmpiServer().removePeople();
     }
 
     @Given("^the system has the following patients:$")
     public void initializePatients(List<Profile> profiles) throws RestServerException
     {
-        empiServer.removePeople();
+        getEmpiServer().removePeople();
         for (Profile profile: profiles) {
             Person person = Person.fromProfile(profile);
-            empiServer.addPerson(person);
+            getEmpiServer().addPerson(person);
         }
     }
 
@@ -77,13 +77,13 @@ public class PatientSteps extends IntegrationSteps
     {
         Profile profile = profiles.get(0);
         Patient patient = Patient.fromProfile(profile);
-        fhirServer.addPatient(patient);
+        getFhirServer().addPatient(patient);
     }
 
     @When("^the user searches for patients$")
     public void readAll() throws RestServerException
     {
-        patients = fhirServer.searchPatients();
+        patients = getFhirServer().searchPatients();
     }
 
     @When("^the user searches for patients by id for patient \"(.*)\"$")
@@ -92,7 +92,7 @@ public class PatientSteps extends IntegrationSteps
         Person person = getPersonByName(patientName);
         String personId = person.getPersonId();
 
-        Patient patient = fhirServer.readPatient(personId);
+        Patient patient = getFhirServer().readPatient(personId);
         patients = Arrays.asList(patient);
     }
 
@@ -100,7 +100,7 @@ public class PatientSteps extends IntegrationSteps
     public void readByInternalIdExplicit(String id) throws RestServerException
     {
         try {
-            Patient patient = fhirServer.readPatient(id);
+            Patient patient = getFhirServer().readPatient(id);
             patients = Arrays.asList(patient);
         }
         catch (RestServerException error){
@@ -113,38 +113,38 @@ public class PatientSteps extends IntegrationSteps
     @When("^the user searches for patients with identifier \"(.*)\" and namespace \"(.*)\"$")
     public void patientSearchByIdentifier(String identifier, String namespace) throws RestServerException
     {
-        patients = fhirServer.searchPatientsByIdentifier(namespace + "|" + identifier);
+        patients = getFhirServer().searchPatientsByIdentifier(namespace + "|" + identifier);
     }
 
     @When("^the user searches for patients with (male|female) gender$")
     public void patientSearchByGender(String gender) throws RestServerException
     {
-        patients = fhirServer.searchPatientsByGender(gender);
+        patients = getFhirServer().searchPatientsByGender(gender);
     }
 
     @When("^the user searches for patients with last name \"(.*)\"$")
     public void patientSearchBySurname(String surname) throws RestServerException
     {
-        patients = fhirServer.searchPatientsBySurname(surname);
+        patients = getFhirServer().searchPatientsBySurname(surname);
     }
 
     @When("^the user searches for patients with (male|female) gender and last name \"(.*)\"$")
     public void patientSearchByGenderAndSurname(String gender, String surname) throws RestServerException
     {
-        patients = fhirServer.searchPatientsByGenderAndSurname(gender, surname);
+        patients = getFhirServer().searchPatientsByGenderAndSurname(gender, surname);
     }
 
     @When("^the user deletes the patient named \"(.*)\" using their id$")
     public void deletePatientById(String patientName) throws RestServerException
     {
         Person person = getPersonByName(patientName);
-        fhirServer.deletePatientById(person.getPersonId());
+        getFhirServer().deletePatientById(person.getPersonId());
     }
 
     @When("^the user deletes the patient named \"(.*)\"$")
     public void deletePatientByName(String givenName) throws RestServerException
     {
-        fhirServer.deletePatientByGivenName(givenName);
+        getFhirServer().deletePatientByGivenName(givenName);
     }
 
     @When("^the user changes the (first name|last name) of \"(.*)\" to \"(.*)\"$")
@@ -153,7 +153,7 @@ public class PatientSteps extends IntegrationSteps
         Person person = getPersonByName(name);
         String personId = person.getPersonId();
 
-        Patient patient = fhirServer.readPatient(personId);
+        Patient patient = getFhirServer().readPatient(personId);
         if (property.equalsIgnoreCase("first name")){
             patient.setFirstName(value);
         }
@@ -161,7 +161,7 @@ public class PatientSteps extends IntegrationSteps
             patient.setLastName(value);
         }
         try {
-            fhirServer.updatePatient(personId, patient);
+            getFhirServer().updatePatient(personId, patient);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -192,7 +192,7 @@ public class PatientSteps extends IntegrationSteps
     @Then("^the system should contain (\\d) patients$")
     public void assertPatientCount(int count) throws RestServerException
     {
-        List<Person> people = empiServer.getPeople();
+        List<Person> people = getEmpiServer().getPeople();
         Assert.assertEquals(count, people.size());
     }
 }

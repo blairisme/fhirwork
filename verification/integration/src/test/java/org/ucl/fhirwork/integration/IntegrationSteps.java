@@ -15,16 +15,32 @@ import java.util.concurrent.TimeoutException;
 
 public class IntegrationSteps
 {
-    protected static EhrServer ehrServer;
-    protected static EmpiServer empiServer;
-    protected static FhirServer fhirServer;
-    protected static FhirworkServer fhirworkServer;
+    private static EhrServer ehrServer;
+    private static EmpiServer empiServer;
+    private static FhirServer fhirServer;
+    private static FhirworkServer fhirworkServer;
 
     @Before
     public void setup() throws TimeoutException {
         initializeEmpiServer();
         initializeEhrServer();
         initializeFhirServer();
+    }
+
+    protected synchronized EhrServer getEhrServer() {
+        return ehrServer;
+    }
+
+    protected synchronized EmpiServer getEmpiServer(){
+        return empiServer;
+    }
+
+    protected synchronized FhirServer getFhirServer() {
+        return fhirServer;
+    }
+
+    protected synchronized FhirworkServer getFhirworkServer() {
+        return fhirworkServer;
     }
 
     private void initializeEmpiServer() throws TimeoutException {
@@ -44,6 +60,11 @@ public class IntegrationSteps
                 System.getProperty("network.ehr.username", "guest"),
                 System.getProperty("network.ehr.password", "guest"));
             StepUtils.wait(120, TimeUnit.SECONDS, () -> ehrServer.ping(), ehrServer.getAddress());
+
+            try {
+                ehrServer.getServer();
+            }
+            catch (Exception e) {e.printStackTrace();}
         }
     }
 
