@@ -31,6 +31,7 @@ subprojects {
   ext {
     testMode = getProperty('test.mode')
     testOutput = getProperty('test.output').toBoolean()
+    testDestructive = getProperty('test.destructive')
 
     localTestMode = testMode.equals('local')
     remoteTestMode = testMode.equals('remote')
