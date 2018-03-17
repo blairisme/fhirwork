@@ -8,8 +8,9 @@ import cucumber.runtime.java.StepDefAnnotation;
 import org.junit.Assert;
 import org.ucl.fhirwork.integration.common.http.RestServerException;
 import org.ucl.fhirwork.integration.cucumber.HealthData;
-import org.ucl.fhirwork.integration.ehr.model.*;
-import org.ucl.fhirwork.integration.ehr.model.composition.GrowthChartComposition;
+import org.ucl.fhirwork.integration.ehr.model.Composition;
+import org.ucl.fhirwork.integration.ehr.model.HealthRecord;
+import org.ucl.fhirwork.integration.ehr.model.TemplateReference;
 import org.ucl.fhirwork.integration.ehr.model.composition.HeightWeightComposition;
 import org.ucl.fhirwork.integration.empi.model.Person;
 import org.ucl.fhirwork.integration.fhir.model.Observation;
@@ -17,7 +18,6 @@ import org.ucl.fhirwork.integration.fhir.model.Observation;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 
 @StepDefAnnotation
 @SuppressWarnings("unused")
@@ -27,7 +27,7 @@ public class ObservationSteps extends IntegrationSteps
     private List<Observation> observations;
 
     @Before
-    public void setup() throws TimeoutException
+    public void setup() throws Exception
     {
         super.setup();
         observations = new ArrayList<>();

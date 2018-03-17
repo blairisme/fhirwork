@@ -15,7 +15,7 @@ public class StepUtils
         while (stopwatch.elapsed(timeUnit) < timeout && !predicate.get()){
             sleep(5 * 1000);
         }
-        if (stopwatch.elapsed(timeUnit) > timeout){
+        if (stopwatch.elapsed(timeUnit) >= timeout){
             throw new TimeoutException(message);
         }
     }
