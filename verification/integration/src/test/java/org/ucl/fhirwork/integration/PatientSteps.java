@@ -18,17 +18,13 @@ import cucumber.runtime.java.StepDefAnnotation;
 import org.junit.Assert;
 import org.ucl.fhirwork.integration.common.http.RestServerException;
 import org.ucl.fhirwork.integration.cucumber.Profile;
-import org.ucl.fhirwork.integration.empi.EmpiServer;
 import org.ucl.fhirwork.integration.empi.model.Person;
-import org.ucl.fhirwork.integration.fhir.FhirServer;
 import org.ucl.fhirwork.integration.fhir.model.Patient;
 import org.ucl.fhirwork.integration.fhir.utils.NameUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Predicate;
 
 /**
@@ -44,7 +40,7 @@ public class PatientSteps extends IntegrationSteps
     private List<Patient> patients;
 
     @Before
-    public void setup() throws TimeoutException
+    public void setup() throws Exception
     {
         super.setup();
         patients = new ArrayList<>();

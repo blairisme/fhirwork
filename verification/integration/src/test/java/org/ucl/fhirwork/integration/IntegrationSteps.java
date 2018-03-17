@@ -22,10 +22,11 @@ public class IntegrationSteps
     private static FhirworkServer fhirworkServer;
 
     @Before
-    public void setup() throws TimeoutException {
-        initializeEhrServer();
+    public void setup() throws Exception {
         initializeEmpiServer();
         initializeFhirServer();
+        initializeFhirworkServer();
+        initializeEhrServer();
     }
 
     protected synchronized EhrServer getEhrServer() {
@@ -51,7 +52,7 @@ public class IntegrationSteps
                 System.getProperty("network.empi.username", "admin"),
                 System.getProperty("network.empi.password", "admin"));
 
-            StepUtils.wait(120, TimeUnit.SECONDS, () ->
+            StepUtils.wait(5, TimeUnit.MINUTES, () ->
                 HttpUtils.pingUrl(empiServer.getPingAddress()), empiServer.getAddress());
         }
     }
@@ -63,7 +64,7 @@ public class IntegrationSteps
                 System.getProperty("network.ehr.username", "guest"),
                 System.getProperty("network.ehr.password", "guest"));
 
-            StepUtils.wait(120, TimeUnit.SECONDS, () ->
+            StepUtils.wait(5, TimeUnit.MINUTES, () ->
                 HttpUtils.pingUrl(ehrServer.getPingAddress()), ehrServer.getAddress());
         }
     }
@@ -73,11 +74,15 @@ public class IntegrationSteps
             fhirServer = new FhirServer(
                 System.getProperty("network.fhir.address", "http://localhost:8090"));
 
+            StepUtils.wait(5, TimeUnit.MINUTES, () ->
+                HttpUtils.pingUrl(fhirServer.getPingAddress()), fhirServer.getAddress());
+        }
+    }
+
+    private void initializeFhirworkServer() {
+        if (fhirworkServer == null) {
             fhirworkServer = new FhirworkServer(
                 System.getProperty("network.fhir.address", "http://localhost:8090"));
-
-            StepUtils.wait(120, TimeUnit.SECONDS, () ->
-                HttpUtils.pingUrl(fhirServer.getPingAddress()), fhirServer.getAddress());
         }
     }
 
