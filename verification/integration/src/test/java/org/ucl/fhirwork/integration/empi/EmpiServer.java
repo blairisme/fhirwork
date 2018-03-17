@@ -16,6 +16,7 @@ import static org.ucl.fhirwork.integration.common.http.HttpHeader.*;
 import static org.ucl.fhirwork.integration.common.http.MimeType.*;
 
 import com.google.common.collect.ImmutableMap;
+import org.ucl.fhirwork.integration.common.http.HttpUtils;
 import org.ucl.fhirwork.integration.common.http.RestServer;
 import org.ucl.fhirwork.integration.common.http.RestServerException;
 import org.ucl.fhirwork.integration.empi.model.AuthenticationRequest;
@@ -42,6 +43,10 @@ public class EmpiServer
 
     public String getAddress() {
         return address;
+    }
+
+    public String getPingAddress() {
+        return HttpUtils.combineUrl(address, Authenticate.getPath());
     }
 
     public void addPerson(Person person) throws RestServerException
@@ -85,17 +90,6 @@ public class EmpiServer
         RestServer server = getServer();
         People people = server.get(LoadAllPersons, People.class, ImmutableMap.of(FirstRecord, index, MaxRecords, count));
         return people.getPerson();
-    }
-
-    public boolean ping()
-    {
-        try{
-            getPeople();
-            return true;
-        }
-        catch (RestServerException error){
-            return false;
-        }
     }
 
     private RestServer getServer() throws RestServerException

@@ -16,6 +16,7 @@ import static org.ucl.fhirwork.integration.common.http.MimeType.*;
 
 import com.google.common.collect.ImmutableMap;
 
+import org.ucl.fhirwork.integration.common.http.HttpUtils;
 import org.ucl.fhirwork.integration.common.http.RestServer;
 import org.ucl.fhirwork.integration.common.http.RestServerException;
 import org.ucl.fhirwork.integration.fhir.model.*;
@@ -38,6 +39,10 @@ public class FhirServer
 
     public String getAddress() {
         return address;
+    }
+
+    public String getPingAddress() {
+        return HttpUtils.combineUrl(address, Patient.getPath());
     }
 
     public void addPatient(Patient patient) throws RestServerException
@@ -119,17 +124,6 @@ public class FhirServer
         ObservationBundle bundle = server.get(FhirEndpoint.Observation, ObservationBundle.class,
                 ImmutableMap.of(Code, codes, FhirParameter.Subject, subject, "_format", "json"));
         return getObservations(bundle);
-    }
-
-    public boolean ping()
-    {
-        try{
-            searchPatients();
-            return true;
-        }
-        catch (RestServerException error){
-            return false;
-        }
     }
 
     private List<Patient> getPatients(PatientBundle bundle)

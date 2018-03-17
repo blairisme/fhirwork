@@ -212,7 +212,7 @@ public class RestServer
                     .body(body);
             HttpResponse<String> response = request.asString();
 
-            if (! HttpStatus.isSuccessful(response.getStatus())) {
+            if (! HttpUtils.isSuccessful(response.getStatus())) {
                 throw new RestServerException(response.getStatus());
             }
             return response.getBody();

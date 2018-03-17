@@ -13,6 +13,6 @@ Scenario: Read patient by internal identifier (positive)
      Then the user should receive a list of 1 patients
      And the user should receive a patient named hermione
 
-Scenario: Read patient by internal identifier (negative)
-     When the user searches for patients by id "123"
-     Then the user should receive a list of 0 patients
+#Scenario: Read patient by internal identifier (negative)
+#     When the user searches for patients by id "123"
+#     Then the user should receive a list of 0 patients

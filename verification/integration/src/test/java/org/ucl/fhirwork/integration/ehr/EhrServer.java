@@ -1,6 +1,7 @@
 package org.ucl.fhirwork.integration.ehr;
 
 import static org.ucl.fhirwork.integration.ehr.EhrEndpoint.Ehr;
+import static org.ucl.fhirwork.integration.ehr.EhrEndpoint.Query;
 import static org.ucl.fhirwork.integration.ehr.EhrEndpoint.Session;
 import static org.ucl.fhirwork.integration.ehr.EhrHeader.*;
 import static org.ucl.fhirwork.integration.ehr.EhrParameter.*;
@@ -8,6 +9,7 @@ import static org.ucl.fhirwork.integration.common.http.HttpHeader.*;
 import static org.ucl.fhirwork.integration.common.http.MimeType.*;
 
 import com.google.common.collect.ImmutableMap;
+import org.ucl.fhirwork.integration.common.http.HttpUtils;
 import org.ucl.fhirwork.integration.common.http.RestServer;
 import org.ucl.fhirwork.integration.common.http.RestServerException;
 import org.ucl.fhirwork.integration.common.serialization.JsonSerializer;
@@ -36,6 +38,10 @@ public class EhrServer
 
     public String getAddress() {
         return address;
+    }
+
+    public String getPingAddress() {
+        return HttpUtils.combineUrl(address, "aasdsa" ); //Session.getPath());
     }
 
     public void addTemplate(TemplateReference template) throws IOException, RestServerException
@@ -111,7 +117,7 @@ public class EhrServer
     {
         List<Composition> compositions = new ArrayList<>();
         try {
-            QueryBundle bundle = query("select a from EHR e contains COMPOSITION a");
+            QueryBundle bundle = query("select a from EHR [ehr_id/value='" + ehrId + "'] contains COMPOSITION a");
 
             for (QueryResult queryResult : bundle.getResultSet()) {
                 compositions.add(queryResult.getComposition());
@@ -127,17 +133,6 @@ public class EhrServer
     {
         RestServer server = getServer();
         server.delete("composition/" + composition.getUid().getValue(), Collections.emptyMap());
-    }
-
-    public boolean ping()
-    {
-        try{
-            getTemplates();
-            return true;
-        }
-        catch (RestServerException error){
-            return false;
-        }
     }
 
     public RestServer getServer() throws RestServerException

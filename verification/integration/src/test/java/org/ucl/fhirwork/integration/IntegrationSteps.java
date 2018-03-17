@@ -1,6 +1,7 @@
 package org.ucl.fhirwork.integration;
 
 import cucumber.api.java.Before;
+import org.ucl.fhirwork.integration.common.http.HttpUtils;
 import org.ucl.fhirwork.integration.common.http.RestServerException;
 import org.ucl.fhirwork.integration.cucumber.StepUtils;
 import org.ucl.fhirwork.integration.ehr.EhrServer;
@@ -22,8 +23,8 @@ public class IntegrationSteps
 
     @Before
     public void setup() throws TimeoutException {
-        initializeEmpiServer();
         initializeEhrServer();
+        initializeEmpiServer();
         initializeFhirServer();
     }
 
@@ -49,7 +50,9 @@ public class IntegrationSteps
                 System.getProperty("network.empi.address", "http://localhost:8080"),
                 System.getProperty("network.empi.username", "admin"),
                 System.getProperty("network.empi.password", "admin"));
-            StepUtils.wait(120, TimeUnit.SECONDS, () -> empiServer.ping(), empiServer.getAddress());
+
+            StepUtils.wait(120, TimeUnit.SECONDS, () ->
+                HttpUtils.pingUrl(empiServer.getPingAddress()), empiServer.getAddress());
         }
     }
 
@@ -59,12 +62,9 @@ public class IntegrationSteps
                 System.getProperty("network.ehr.address", "http://localhost:8888/rest/v1"),
                 System.getProperty("network.ehr.username", "guest"),
                 System.getProperty("network.ehr.password", "guest"));
-            StepUtils.wait(120, TimeUnit.SECONDS, () -> ehrServer.ping(), ehrServer.getAddress());
 
-            try {
-                ehrServer.getServer();
-            }
-            catch (Exception e) {e.printStackTrace();}
+            StepUtils.wait(120, TimeUnit.SECONDS, () ->
+                HttpUtils.pingUrl(ehrServer.getPingAddress()), ehrServer.getAddress());
         }
     }
 
@@ -72,9 +72,12 @@ public class IntegrationSteps
         if (fhirServer == null) {
             fhirServer = new FhirServer(
                 System.getProperty("network.fhir.address", "http://localhost:8090"));
+
             fhirworkServer = new FhirworkServer(
                 System.getProperty("network.fhir.address", "http://localhost:8090"));
-            StepUtils.wait(120, TimeUnit.SECONDS, () -> fhirServer.ping(), fhirServer.getAddress());
+
+            StepUtils.wait(120, TimeUnit.SECONDS, () ->
+                HttpUtils.pingUrl(fhirServer.getPingAddress()), fhirServer.getAddress());
         }
     }
 
