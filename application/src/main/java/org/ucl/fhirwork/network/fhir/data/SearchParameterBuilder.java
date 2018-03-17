@@ -10,7 +10,6 @@
 
 package org.ucl.fhirwork.network.fhir.data;
 
-import ca.uhn.fhir.model.dstu2.valueset.AdministrativeGenderEnum;
 import ca.uhn.fhir.model.primitive.StringDt;
 import ca.uhn.fhir.rest.param.DateParam;
 import ca.uhn.fhir.rest.param.TokenParam;
@@ -39,8 +38,7 @@ public class SearchParameterBuilder
 
     public void append(String conditional) throws IllegalArgumentException
     {
-        for (NameValuePair queryParameter: getQueryParameters(conditional))
-        {
+        for (NameValuePair queryParameter: getQueryParameters(conditional)) {
             SearchParameter searchParameter = SearchParameter.fromString(queryParameter.getName());
             append(searchParameter, queryParameter.getValue());
         }
@@ -68,21 +66,21 @@ public class SearchParameterBuilder
 
     public void append(SearchParameter key, TokenParam value)
     {
-        if (value != null){
+        if (value != null) {
             parameters.put(key, value);
         }
     }
 
     public void append(SearchParameter key, DateParam value)
     {
-        if (value != null){
+        if (value != null) {
             parameters.put(key, value);
         }
     }
 
     public void append(SearchParameter key, StringDt value)
     {
-        if (value != null){
+        if (value != null) {
             parameters.put(key, value);
         }
     }
@@ -94,21 +92,12 @@ public class SearchParameterBuilder
 
     private List<NameValuePair> getQueryParameters(String conditional)
     {
-        URI syntheticUri = URI.create("http://fhir.com/" + conditional);
-        return URLEncodedUtils.parse(syntheticUri, "UTF-8");
+        return URLEncodedUtils.parse(URI.create("http://fhirwork.org/" + conditional), "UTF-8");
     }
 
-    // TODO: Extract properly - http://hl7.org/fhir/search.html#token
     private TokenParam newToken(String value)
     {
-        String[] parameterSections = value.split("\\|");
-        if (parameterSections.length == 2)
-        {
-            String system = parameterSections[0];
-            String identifier = parameterSections[1];
-            return new TokenParam(system, identifier);
-        }
-        throw new IllegalArgumentException(value);
+        return TokenParamFactory.fromText(value);
     }
 
     private DateParam newDate(String value)

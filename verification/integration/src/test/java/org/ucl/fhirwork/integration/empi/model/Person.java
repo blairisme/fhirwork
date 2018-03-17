@@ -23,6 +23,7 @@ public class Person
     private String givenName;
     private String familyName;
     private Gender gender;
+    private String dateOfBirth;
 
     public Person()
     {
@@ -31,25 +32,28 @@ public class Person
         this.givenName = null;
         this.familyName = null;
         this.gender = null;
+        this.dateOfBirth = null;
     }
 
-    public Person(String personId, Identifier personIdentifiers, String givenName, String familyName, Gender gender)
+    public Person(String personId, Identifier personIdentifiers, String givenName, String familyName, Gender gender, String dateOfBirth)
     {
         this.personId = personId;
         this.givenName = givenName;
         this.familyName = familyName;
         this.personIdentifiers = personIdentifiers;
         this.gender = gender;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public static Person fromProfile(Profile profile)
     {
         return new Person(
             null,
-            Identifier.fromToken(profile.getId()),
+            Identifier.fromText(profile.getId(), profile.getDomain()),
             profile.getFirst(),
             profile.getLast(),
-            Gender.fromName(profile.getGender()));
+            Gender.fromName(profile.getGender()),
+            profile.getBirthday());
     }
 
     public String getPersonId() {
@@ -90,5 +94,13 @@ public class Person
 
     public void setFamilyName(String familyName) {
         this.familyName = familyName;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 }

@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 
 public class StepUtils
 {
-    public static void wait(long timeout, TimeUnit timeUnit, Supplier<Boolean> predicate) throws TimeoutException
+    public static void wait(long timeout, TimeUnit timeUnit, Supplier<Boolean> predicate, String message) throws TimeoutException
     {
         Stopwatch stopwatch = Stopwatch.createStarted();
 
@@ -16,7 +16,7 @@ public class StepUtils
             sleep(5 * 1000);
         }
         if (stopwatch.elapsed(timeUnit) > timeout){
-            throw new TimeoutException();
+            throw new TimeoutException(message);
         }
     }
 

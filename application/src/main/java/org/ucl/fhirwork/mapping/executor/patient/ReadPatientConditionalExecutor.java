@@ -9,10 +9,11 @@
  */
 package org.ucl.fhirwork.mapping.executor.patient;
 
+import org.apache.commons.lang3.Validate;
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
-import org.ucl.fhirwork.common.http.RestException;
+import org.ucl.fhirwork.common.network.Rest.RestException;
 import org.ucl.fhirwork.mapping.data.PatientFactory;
 import org.ucl.fhirwork.mapping.data.PersonFactory;
 import org.ucl.fhirwork.network.NetworkService;
@@ -22,8 +23,7 @@ import org.ucl.fhirwork.network.fhir.data.SearchParameter;
 import org.ucl.fhirwork.network.fhir.operations.patient.ReadPatientOperation;
 
 import javax.inject.Inject;
-import java.text.SimpleDateFormat;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -52,7 +52,9 @@ public class ReadPatientConditionalExecutor implements Executor
     }
 
     @Override
-    public void setOperation(Operation operation){
+    public void setOperation(Operation operation)
+    {
+        Validate.notNull(operation);
         ReadPatientOperation readPatient = (ReadPatientOperation)operation;
         searchParameters = readPatient.getSearchParameters();
     }
@@ -60,21 +62,20 @@ public class ReadPatientConditionalExecutor implements Executor
     @Override
     public Object invoke() throws ExecutionException
     {
-        try
-        {
-            List<Person> people = findPeople(searchParameters);
+        try {
+            Collection<Person> people = findPeople(searchParameters);
             return patientFactory.fromPeople(people);
         }
-        catch (RestException cause){
+        catch (Throwable cause){
             throw new ExecutionException(cause);
         }
     }
 
-    private List<Person> findPeople(Map<SearchParameter, Object> searchParameters) throws RestException
+    private Collection<Person> findPeople(Map<SearchParameter, Object> searchParameters) throws RestException
     {
         if (! searchParameters.isEmpty()){
             Person template = personFactory.fromSearchParameters(searchParameters);
-            return empiServer.findPersonsByAttributes(template);
+            return empiServer.findPersons(template);
         }
         return empiServer.loadAllPersons(0, 100); //TODO: Paging mechanism needed. Is included in FHIR spec
     }

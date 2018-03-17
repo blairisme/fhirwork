@@ -3,16 +3,16 @@ Feature: Read patient
 
 Background:
   Given the system has the following patients:
-    | id    | first     | last          | gender    |
-    | 1     | harry     | potter        | male      |
-    | 2     | hermione  | granger       | female    |
-    | 3     | ron       | weasley       | male      |
+    | id        | domain    | first     | last      | gender    | birthday              |
+    | 1         | SSN       | harry     | potter    | male      | 1980-01-01T00:00:00Z  |
+    | 2         | SSN       | hermione  | granger   | female    | 1980-01-01T00:00:00Z  |
+    | 3         | SSN       | ron       | weasley   | male      | 1980-01-01T00:00:00Z  |
 
-Scenario: Read patient information by identifier (positive)
+Scenario: Read patient by internal identifier (positive)
      When the user searches for patients by id for patient "hermione"
      Then the user should receive a list of 1 patients
      And the user should receive a patient named hermione
 
- Scenario: Read patient information by identifier (negative)
-     When the user searches for patients by id for patient "donald duck"
-     Then the user should receive a list of 0 patients
+#Scenario: Read patient by internal identifier (negative)
+#     When the user searches for patients by id "123"
+#     Then the user should receive a list of 0 patients

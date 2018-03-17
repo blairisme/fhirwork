@@ -10,28 +10,10 @@
 
 package org.ucl.fhirwork.network.ehr.server;
 
-import com.google.common.collect.ImmutableMap;
-
-
-
-import org.ucl.fhirwork.common.http.*;
-import org.ucl.fhirwork.common.serialization.JsonSerializer;
-import org.ucl.fhirwork.common.serialization.Serializer;
-import org.ucl.fhirwork.network.ehr.data.SessionToken;
+import org.ucl.fhirwork.common.network.Rest.RestException;
+import org.ucl.fhirwork.common.network.exception.ResourceMissingException;
+import org.ucl.fhirwork.network.ehr.data.HealthRecord;
 import org.ucl.fhirwork.network.ehr.data.QueryBundle;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
-import java.util.*;
-import static com.google.common.collect.ImmutableBiMap.of;
-import static org.ucl.fhirwork.common.http.HttpHeader.Accept;
-import static org.ucl.fhirwork.common.http.HttpHeader.ContentType;
-import static org.ucl.fhirwork.common.http.MimeType.Json;
-import static org.ucl.fhirwork.network.ehr.server.EhrHeader.SessionId;
-import static org.ucl.fhirwork.network.ehr.server.EhrParameter.*;
-import static org.ucl.fhirwork.network.ehr.server.EhrResource.*;
-import org.ucl.fhirwork.network.ehr.data.*;
-
 
 /**
  * Instances of this class represent an EHR server. Methods exists to create,
@@ -41,19 +23,8 @@ import org.ucl.fhirwork.network.ehr.data.*;
  * @author Xiaolong Chen
  * @author Jiaming Zhou
  */
-public class EhrServer
+public interface EhrServer
 {
-    private Provider<RestServer> serverFactory;
-    private RestServer server;
-    private String address;
-    private String username;
-    private String password;
-
-    @Inject
-    public EhrServer(Provider<RestServer> serverFactory){
-        this.serverFactory = serverFactory;
-    }
-
     /**
      * Sets the address and authentication information used to connect to the
      * EHR server.
@@ -62,77 +33,33 @@ public class EhrServer
      * @param username  the name of an account on the EMPI server.
      * @param password  the password of an EMPI account.
      */
-    public synchronized void setConnectionDetails(String address, String username, String password) {
-        this.address = address;
-        this.username = username;
-        this.password = password;
-        this.server = null;
-    }
+    void setConnectionDetails(String address, String username, String password);
 
-    public HealthRecord getEhr(String id, String namespace) throws RestException {
-        RestServer server = getServer();
-        RestRequest request = server.get(Ehr);
-        request.setParameters(ImmutableMap.of(SubjectId, id, SubjectNamespace, namespace));
-        RestResponse response = request.make(HandleFailure.ByException);
-        HealthRecord result = response.asType(HealthRecord.class);
-        return result;
-    }
+    /**
+     * Returns the {@link HealthRecord} belonging to the patient with the given
+     * identifier.
+     *
+     * @param id        the identifier of a patient.
+     * @param namespace the namespace the given identifier belongs to.
+     * @return          a {@code HealthRecord}.
+     * @throws RestException            thrown if an error occurs whilst
+     *                                  communicating with the EHR server.
+     * @throws ResourceMissingException thrown if a matching {@code HealthRecord}
+     *                                  isn't found.
+     */
+    HealthRecord getHealthRecord(String id, String namespace) throws RestException, ResourceMissingException;
 
-
-    public List<Composition> getCompositions(String ehrId) throws RestException, InstantiationException, IllegalAccessException {
-        List<Composition> compositions = new ArrayList<>();
-        CompositionBundle bundle = query("select a from EHR [ehr_id/value='" + ehrId + "'] contains COMPOSITION a",CompositionBundle.class);
-        for (CompositionResult compositionResult: bundle.getResultSet()) {
-            compositions.add(compositionResult.getComposition());
-        }
-        return compositions;
-    }
-
-    public QueryBundle query(String query) throws RestException
-    {
-        RestRequest request = getServer().get(Query);
-        request.setParameters(of(Aql, query));
-
-        RestResponse response = request.make(HandleFailure.ByException);
-        return response.getStatusCode() != 204 ? response.asType(QueryBundle.class) : new QueryBundle();
-    }
-
-    public <T> T query(String query, Class<T> type) throws RestException, InstantiationException, IllegalAccessException
-    {
-        RestRequest request = getServer().get(Query);
-        request.setParameters(of(Aql, query));
-
-        RestResponse response = request.make(HandleFailure.ByException);
-        return response.getStatusCode() != 204 ? response.asType(type) : type.newInstance();
-    }
-
-    public synchronized RestServer getServer() throws RestException
-    {
-        if (server == null) {
-            String sessionId = getSessionId();
-            server = newServer(address, new JsonSerializer(), ImmutableMap.of(ContentType, Json, Accept, Json, SessionId, sessionId));
-        }
-        return server;
-    }
-
-    private String getSessionId() throws RestException
-    {
-        RestServer rest = newServer(address, new JsonSerializer(), ImmutableMap.of(ContentType, Json, Accept, Json));
-        RestRequest request = rest.post(Session).setParameters(ImmutableMap.of(Username, username, Password, password));
-
-        RestResponse response = request.make(HandleFailure.ByException);
-        SessionToken sessionToken = response.asType(SessionToken.class);
-
-        return sessionToken.getSessionId();
-    }
-
-    private RestServer newServer(String address, Serializer serializer, Map<Object, Object> headers)
-    {
-        RestServer result = serverFactory.get();
-        result.setAddress(address);
-        result.setSerializer(serializer);
-        result.setHeaders(headers);
-        return result;
-    }
+    /**
+     * Executes the given AQL query and returns the results serialized into
+     * the given class.
+     *
+     * @param query an AQL query.
+     * @param type
+     * @param <T>
+     * @return
+     * @throws RestException            thrown if an error occurs whilst
+     *                                  communicating with the EHR server.
+     */
+    <T extends QueryBundle> T query(String query, Class<T> type) throws RestException;
 }
 

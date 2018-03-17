@@ -10,19 +10,20 @@
 
 package org.ucl.fhirwork.mapping.executor.patient;
 
+import org.apache.commons.lang3.Validate;
 import org.ucl.fhirwork.common.framework.ExecutionException;
 import org.ucl.fhirwork.common.framework.Executor;
 import org.ucl.fhirwork.common.framework.Operation;
-import org.ucl.fhirwork.common.http.RestException;
 import org.ucl.fhirwork.mapping.data.PersonFactory;
 import org.ucl.fhirwork.network.NetworkService;
+import org.ucl.fhirwork.network.empi.data.InternalIdentifier;
 import org.ucl.fhirwork.network.empi.data.Person;
 import org.ucl.fhirwork.network.empi.server.EmpiServer;
 import org.ucl.fhirwork.network.fhir.data.SearchParameter;
 import org.ucl.fhirwork.network.fhir.operations.patient.DeletePatientOperation;
 
 import javax.inject.Inject;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -33,7 +34,6 @@ import java.util.Map;
  */
 public class DeletePatientConditionalExecutor implements Executor
 {
-    private String personId;
     private Map<SearchParameter, Object> searchParameters;
     private EmpiServer empiServer;
     private PersonFactory personFactory;
@@ -50,8 +50,8 @@ public class DeletePatientConditionalExecutor implements Executor
     @Override
     public void setOperation(Operation operation)
     {
+        Validate.notNull(operation);
         DeletePatientOperation deletePatient = (DeletePatientOperation)operation;
-        personId = deletePatient.getPatientId().getIdPart();
         searchParameters = deletePatient.getSearchParameters();
     }
 
@@ -61,14 +61,14 @@ public class DeletePatientConditionalExecutor implements Executor
         try
         {
             Person template = personFactory.fromSearchParameters(searchParameters);
-            List<Person> people = empiServer.findPersonsByAttributes(template);
+            Collection<Person> people = empiServer.findPersons(template);
 
             for (Person person: people){
-                empiServer.removePerson(person.getPersonId());
+                empiServer.removePerson(person.getInternalIdentifier());
             }
             return null;
         }
-        catch (RestException cause){
+        catch (Throwable cause){
             throw new ExecutionException(cause);
         }
     }

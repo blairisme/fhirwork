@@ -1,6 +1,7 @@
 package org.ucl.fhirwork.integration.ehr;
 
 import static org.ucl.fhirwork.integration.ehr.EhrEndpoint.Ehr;
+import static org.ucl.fhirwork.integration.ehr.EhrEndpoint.Query;
 import static org.ucl.fhirwork.integration.ehr.EhrEndpoint.Session;
 import static org.ucl.fhirwork.integration.ehr.EhrHeader.*;
 import static org.ucl.fhirwork.integration.ehr.EhrParameter.*;
@@ -8,12 +9,14 @@ import static org.ucl.fhirwork.integration.common.http.HttpHeader.*;
 import static org.ucl.fhirwork.integration.common.http.MimeType.*;
 
 import com.google.common.collect.ImmutableMap;
+import org.ucl.fhirwork.integration.common.http.HttpUtils;
 import org.ucl.fhirwork.integration.common.http.RestServer;
 import org.ucl.fhirwork.integration.common.http.RestServerException;
 import org.ucl.fhirwork.integration.common.serialization.JsonSerializer;
 import org.ucl.fhirwork.integration.common.serialization.Serializer;
 import org.ucl.fhirwork.integration.common.serialization.XmlSerializer;
 import org.ucl.fhirwork.integration.ehr.model.*;
+import org.ucl.fhirwork.integration.ehr.model.composition.FlatComposition;
 
 import java.io.IOException;
 import java.util.*;
@@ -33,10 +36,26 @@ public class EhrServer
         this.password = password;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public String getPingAddress() {
+        return HttpUtils.combineUrl(address, "aasdsa" ); //Session.getPath());
+    }
+
     public void addTemplate(TemplateReference template) throws IOException, RestServerException
     {
-        RestServer server = createServer(ImmutableMap.of(ContentType, Xml), new XmlSerializer());
-        server.post(EhrEndpoint.Template, template.getContent(), Collections.emptyMap());
+        RestServer server = getServer();
+        try {
+            server.setHeader(ContentType, Xml);
+            server.removeHeader(Accept);
+            server.post(EhrEndpoint.Template, template.getContent(), Collections.emptyMap());
+        }
+        finally {
+            server.setHeader(ContentType, Json);
+            server.setHeader(Accept, Json);
+        }
     }
 
     public List<Template> getTemplates() throws RestServerException
@@ -68,6 +87,12 @@ public class EhrServer
         return server.get(Ehr, HealthRecord.class, ImmutableMap.of(SubjectId, id, SubjectNamespace, namespace));
     }
 
+    public void removeEhr(String ehrId) throws RestServerException
+    {
+        RestServer server = getServer();
+        server.delete("ehr/" + ehrId, ImmutableMap.of(EhrId, ehrId));
+    }
+
     public boolean ehrExists(String id, String namespace) throws RestServerException
     {
         RestServer server = getServer();
@@ -91,10 +116,15 @@ public class EhrServer
     public List<Composition> getCompositions(String ehrId) throws RestServerException
     {
         List<Composition> compositions = new ArrayList<>();
-        QueryBundle bundle = query("select a from EHR [ehr_id/value='" + ehrId + "'] contains COMPOSITION a");
+        try {
+            QueryBundle bundle = query("select a from EHR [ehr_id/value='" + ehrId + "'] contains COMPOSITION a");
 
-        for (QueryResult queryResult: bundle.getResultSet()) {
-            compositions.add(queryResult.getComposition());
+            for (QueryResult queryResult : bundle.getResultSet()) {
+                compositions.add(queryResult.getComposition());
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
         return compositions;
     }
@@ -105,31 +135,15 @@ public class EhrServer
         server.delete("composition/" + composition.getUid().getValue(), Collections.emptyMap());
     }
 
-    public boolean ping()
-    {
-        try{
-            getTemplates();
-            return true;
-        }
-        catch (RestServerException error){
-            return false;
-        }
-    }
-
-    private RestServer getServer() throws RestServerException
+    public RestServer getServer() throws RestServerException
     {
         if (restServer == null){
-            restServer = createServer(ImmutableMap.of(ContentType, Json, Accept, Json), new JsonSerializer());
+            Map<Object, Object> headers = new HashMap<>();
+            headers.putAll(ImmutableMap.of(ContentType, Json, Accept, Json));
+            headers.put(SessionId, getSessionId());
+            restServer = new RestServer(address, new JsonSerializer(), headers);
         }
         return restServer;
-    }
-
-    private RestServer createServer(Map<Object, Object> headers, Serializer serializer) throws RestServerException
-    {
-        Map<Object, Object> authHeaders = new HashMap<>();
-        authHeaders.putAll(headers);
-        authHeaders.put(SessionId, getSessionId());
-        return new RestServer(address, serializer, authHeaders);
     }
 
     private String getSessionId() throws RestServerException

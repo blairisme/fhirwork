@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/blairisme/fhirwork.svg?branch=develop)](https://travis-ci.org/blairisme/fhirwork)
 [![Code Coverage](https://codecov.io/gh/blairisme/fhirwork/branch/develop/graph/badge.svg)](https://codecov.io/gh/blairisme/fhirwork)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a35ff5d290d44bacab2a561044e802f8)](https://www.codacy.com/app/kalperen/fhirwork?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=blairisme/fhirwork&amp;utm_campaign=Badge_Grade)
 
 [FHIR](https://www.hl7.org/fhir/) compliant server backed by an [OpenEHR](https://www.openehr.org/) repository.
 

@@ -9,27 +9,26 @@
 
 package org.ucl.fhirwork.integration;
 
+import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import cucumber.runtime.java.StepDefAnnotation;
 import org.junit.Assert;
-import org.ucl.fhirwork.integration.common.http.HttpStatus;
 import org.ucl.fhirwork.integration.common.http.RestServerException;
 import org.ucl.fhirwork.integration.cucumber.Profile;
-import org.ucl.fhirwork.integration.cucumber.StepUtils;
 import org.ucl.fhirwork.integration.empi.EmpiServer;
 import org.ucl.fhirwork.integration.empi.model.Person;
-import org.ucl.fhirwork.integration.fhir.model.Patient;
 import org.ucl.fhirwork.integration.fhir.FhirServer;
+import org.ucl.fhirwork.integration.fhir.model.Patient;
 import org.ucl.fhirwork.integration.fhir.utils.NameUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Predicate;
 
 /**
@@ -40,44 +39,36 @@ import java.util.function.Predicate;
  */
 @StepDefAnnotation
 @SuppressWarnings("unused")
-public class PatientSteps
+public class PatientSteps extends IntegrationSteps
 {
-    private static boolean serversPinged = false;
-    private FhirServer fhirServer;
-    private EmpiServer empiServer;
     private List<Patient> patients;
 
     @Before
-    public void setup() throws Exception
+    public void setup() throws TimeoutException
     {
-        patients = Collections.emptyList();
-        fhirServer = new FhirServer(
-                System.getProperty("network.fhir.address", "http://localhost:8090"));
-        empiServer = new EmpiServer(
-                System.getProperty("network.empi.address", "http://localhost:8080"),
-                System.getProperty("network.empi.username", "admin"),
-                System.getProperty("network.empi.password", "admin"));
+        super.setup();
+        patients = new ArrayList<>();
+    }
 
-        if (! serversPinged) {
-            StepUtils.wait(60, TimeUnit.SECONDS, () -> empiServer.ping());
-            //StepUtils.wait(120, TimeUnit.SECONDS, () -> fhirServer.ping());
-            serversPinged = true;
-        }
+    @After
+    public void tearDown() throws Exception
+    {
+        getEmpiServer().removePeople();
     }
 
     @Given("^the system has no patients$")
     public void initializeEmpty() throws RestServerException
     {
-        empiServer.removePeople();
+        getEmpiServer().removePeople();
     }
 
     @Given("^the system has the following patients:$")
     public void initializePatients(List<Profile> profiles) throws RestServerException
     {
-        empiServer.removePeople();
+        getEmpiServer().removePeople();
         for (Profile profile: profiles) {
             Person person = Person.fromProfile(profile);
-            empiServer.addPerson(person);
+            getEmpiServer().addPerson(person);
         }
     }
 
@@ -86,73 +77,94 @@ public class PatientSteps
     {
         Profile profile = profiles.get(0);
         Patient patient = Patient.fromProfile(profile);
-        fhirServer.addPatient(patient);
+        getFhirServer().addPatient(patient);
     }
 
     @When("^the user searches for patients$")
-    public void patientSearch() throws RestServerException
+    public void readAll() throws RestServerException
     {
-        patients = fhirServer.searchPatients();
+        patients = getFhirServer().searchPatients();
     }
 
     @When("^the user searches for patients by id for patient \"(.*)\"$")
-    public void patientSearchById(String patientName) throws RestServerException
+    public void readByInternalId(String patientName) throws RestServerException
     {
-        String personId = getPersonIdByName(patientName);
-        if (personId != null){
-            Patient patient = fhirServer.readPatient(personId);
+        Person person = getPersonByName(patientName);
+        String personId = person.getPersonId();
+
+        Patient patient = getFhirServer().readPatient(personId);
+        patients = Arrays.asList(patient);
+    }
+
+    @When("^the user searches for patients by id \"(.*)\"$")
+    public void readByInternalIdExplicit(String id) throws RestServerException
+    {
+        try {
+            Patient patient = getFhirServer().readPatient(id);
             patients = Arrays.asList(patient);
+        }
+        catch (RestServerException error){
+            if (error.getStatusCode() != 404){
+                throw error;
+            }
         }
     }
 
     @When("^the user searches for patients with identifier \"(.*)\" and namespace \"(.*)\"$")
     public void patientSearchByIdentifier(String identifier, String namespace) throws RestServerException
     {
-        patients = fhirServer.searchPatientsByIdentifier(namespace + "|" + identifier);
+        patients = getFhirServer().searchPatientsByIdentifier(namespace + "|" + identifier);
     }
 
     @When("^the user searches for patients with (male|female) gender$")
     public void patientSearchByGender(String gender) throws RestServerException
     {
-        patients = fhirServer.searchPatientsByGender(gender);
+        patients = getFhirServer().searchPatientsByGender(gender);
     }
 
     @When("^the user searches for patients with last name \"(.*)\"$")
     public void patientSearchBySurname(String surname) throws RestServerException
     {
-        patients = fhirServer.searchPatientsBySurname(surname);
+        patients = getFhirServer().searchPatientsBySurname(surname);
     }
 
     @When("^the user searches for patients with (male|female) gender and last name \"(.*)\"$")
     public void patientSearchByGenderAndSurname(String gender, String surname) throws RestServerException
     {
-        patients = fhirServer.searchPatientsByGenderAndSurname(gender, surname);
+        patients = getFhirServer().searchPatientsByGenderAndSurname(gender, surname);
     }
 
     @When("^the user deletes the patient named \"(.*)\" using their id$")
     public void deletePatientById(String patientName) throws RestServerException
     {
-        String personId = getPersonIdByName(patientName);
-        if (personId == null) throw new IllegalStateException();
-        fhirServer.deletePatientById(personId);
+        Person person = getPersonByName(patientName);
+        getFhirServer().deletePatientById(person.getPersonId());
     }
 
     @When("^the user deletes the patient named \"(.*)\"$")
     public void deletePatientByName(String givenName) throws RestServerException
     {
-        fhirServer.deletePatientByGivenName(givenName);
+        getFhirServer().deletePatientByGivenName(givenName);
     }
 
-    @When("^the user updates a patient to the following data:$")
-    public void updatePatient(List<Profile> profiles) throws RestServerException
+    @When("^the user changes the (first name|last name) of \"(.*)\" to \"(.*)\"$")
+    public void updatePatient(String property, String name, String value) throws RestServerException
     {
-        for (Profile profile: profiles){
-            String personId = getPersonIdByName(profile.getFirst());
-            if (personId == null) throw new IllegalStateException();
+        Person person = getPersonByName(name);
+        String personId = person.getPersonId();
 
-            Patient patient = Patient.fromProfile(profile);
-            patient.setId(personId);
-            fhirServer.updatePatient(personId, patient);
+        Patient patient = getFhirServer().readPatient(personId);
+        if (property.equalsIgnoreCase("first name")){
+            patient.setFirstName(value);
+        }
+        if (property.equalsIgnoreCase("last name")){
+            patient.setLastName(value);
+        }
+        try {
+            getFhirServer().updatePatient(personId, patient);
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -180,33 +192,7 @@ public class PatientSteps
     @Then("^the system should contain (\\d) patients$")
     public void assertPatientCount(int count) throws RestServerException
     {
-        List<Person> people = empiServer.getPeople();
+        List<Person> people = getEmpiServer().getPeople();
         Assert.assertEquals(count, people.size());
-    }
-
-    private String getPersonIdByName(String patientName) throws RestServerException
-    {
-        Person person = getPersonByName(patientName);
-        return person != null ? person.getPersonId() : null;
-    }
-
-    private Person getPersonByName(String patientName) throws RestServerException
-    {
-        for (Person person: empiServer.getPeople()){
-            if (Objects.equals(person.getGivenName(), patientName)){
-                return person;
-            }
-        }
-        return null;
-    }
-
-    private String getPersonIdByIdentifier(String identifier) throws RestServerException
-    {
-        for (Person person: empiServer.getPeople()){
-            if (Objects.equals(person.getPersonIdentifiers().getIdentifier(), identifier)){
-                return person.getPersonId();
-            }
-        }
-        return null;
     }
 }

@@ -11,14 +11,15 @@
 package org.ucl.fhirwork.network.fhir.servlet;
 
 import ca.uhn.fhir.model.dstu2.resource.Observation;
-import ca.uhn.fhir.rest.annotation.RequiredParam;
-import ca.uhn.fhir.rest.annotation.Search;
+import ca.uhn.fhir.rest.annotation.*;
+import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.param.ReferenceParam;
 import ca.uhn.fhir.rest.param.TokenOrListParam;
 import ca.uhn.fhir.rest.server.IResourceProvider;
-import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.ucl.fhirwork.mapping.ExecutorService;
+import org.ucl.fhirwork.network.fhir.data.MethodOutcomes;
+import org.ucl.fhirwork.network.fhir.operations.observation.CreateObservationOperation;
 import org.ucl.fhirwork.network.fhir.operations.observation.ReadObservationOperation;
 
 import javax.inject.Inject;
@@ -31,7 +32,7 @@ import java.util.List;
  *
  * @author Blair Butterworth
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "unchecked"})
 public class ObservationResourceProvider implements IResourceProvider
 {
     private ExecutorService executorService;
@@ -46,18 +47,44 @@ public class ObservationResourceProvider implements IResourceProvider
         return Observation.class;
     }
 
-    @Search
-    @SuppressWarnings("unchecked")
-    public List<Observation> searchObservation(
-            @RequiredParam(name = Observation.SP_CODE) TokenOrListParam codes,
-            @RequiredParam(name = Observation.SP_PATIENT) ReferenceParam patient)
+    @Create
+    public MethodOutcome create(@ResourceParam Observation observation)
     {
         try {
-            ReadObservationOperation operation = new ReadObservationOperation(codes, patient);
+            CreateObservationOperation operation = new CreateObservationOperation(observation);
+            Observation result = (Observation)executorService.execute(operation);
+            return MethodOutcomes.identifier(result);
+        }
+        catch (Throwable throwable) {
+            throw MethodOutcomes.error(throwable);
+        }
+    }
+
+    @Search
+    public List<Observation> searchByPatient(
+        @OptionalParam(name = Observation.SP_CODE) TokenOrListParam codes,
+        @RequiredParam(name = Observation.SP_PATIENT) ReferenceParam patient)
+    {
+        return search(codes, patient);
+    }
+
+    @Search
+    public List<Observation> searchBySubject(
+        @OptionalParam(name = Observation.SP_CODE) TokenOrListParam codes,
+        @RequiredParam(name = Observation.SP_SUBJECT) ReferenceParam subject)
+    {
+        return search(codes, subject);
+    }
+
+    private List<Observation> search(TokenOrListParam codes, ReferenceParam subject)
+    {
+        try {
+            codes = codes != null ? codes : new TokenOrListParam();
+            ReadObservationOperation operation = new ReadObservationOperation(codes, subject);
             return (List<Observation>)executorService.execute(operation);
         }
-        catch (Throwable error) {
-            throw new InternalErrorException(error);
+        catch (Throwable throwable) {
+            throw MethodOutcomes.error(throwable);
         }
     }
 }

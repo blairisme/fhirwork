@@ -1,4 +1,6 @@
 <configuration>
+<!--<configuration scan="true" scanPeriod="30 seconds" >-->
+
     <!-- Configure the Console appender -->
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -7,16 +9,16 @@
     </appender>
 
     <!-- Configure the Sentry appender, overriding the logging threshold to the WARN level -->
-    <appender name="Sentry" class="io.sentry.logback.SentryAppender">
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>WARN</level>
-        </filter>
-    </appender>
+    <!--<appender name="Sentry" class="io.sentry.logback.SentryAppender">-->
+        <!--<filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+            <!--<level>WARN</level>-->
+        <!--</filter>-->
+    <!--</appender>-->
 
     <!-- Enable the Console and Sentry appenders, Console is provided as an example
          of a non-Sentry logger that is set to a different logging threshold -->
-    <root level="INFO">
+    <root level="WARN">
         <appender-ref ref="Console" />
-        <appender-ref ref="Sentry" />
+        <!--<appender-ref ref="Sentry" />-->
     </root>
 </configuration>

@@ -10,6 +10,9 @@
 
 package org.ucl.fhirwork.common.runtime;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +29,9 @@ public class JvmSingleton
 {
     private String name;
 
-    public JvmSingleton(String name) {
+    public JvmSingleton(String name, Observer observer) {
         this.name = name;
+        addObserver(observer);
     }
 
     public void addObserver(Observer observer) {
@@ -50,7 +54,8 @@ public class JvmSingleton
             }
         }
         catch (Throwable error) {
-            error.printStackTrace(); //TODO: log error
+            Logger logger = LoggerFactory.getLogger(JvmSingleton.class);
+            logger.warn("Notifying observer failed.", error);
         }
     }
 

@@ -18,7 +18,9 @@ public enum FhirParameter implements StringCovertable
     Given       ("given"),
     Family      ("family"),
     Format      ("_format"),
-    Identifier  ("identifier");
+    Identifier  ("identifier"),
+    Patient     ("patient"),
+    Subject     ("subject");
 
     private String value;
 

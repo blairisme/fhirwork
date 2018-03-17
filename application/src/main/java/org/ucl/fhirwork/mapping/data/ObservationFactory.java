@@ -16,52 +16,50 @@ import ca.uhn.fhir.model.dstu2.composite.QuantityDt;
 import ca.uhn.fhir.model.dstu2.composite.ResourceReferenceDt;
 import ca.uhn.fhir.model.dstu2.resource.Observation;
 import ca.uhn.fhir.model.primitive.DateTimeDt;
-import org.ucl.fhirwork.network.ehr.data.QueryBundle;
-import org.ucl.fhirwork.network.ehr.data.QueryResult;
+import org.ucl.fhirwork.mapping.query.scripted.ScriptObservation;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Instances of this class create {@link Observation} instances, usually by
+ * converting other objects.
+ *
+ * @author Blair Butterworth
+ */
 public class ObservationFactory
 {
     @Inject
     public ObservationFactory(){
     }
 
-    public List<Observation> fromQueryBundle(String loinc, String patientId, QueryBundle queryBundle)
-    {
-        List<Observation> result = new ArrayList<>(queryBundle.getResultSet().size());
-        for (QueryResult queryResult: queryBundle.getResultSet()){
-            result.add(fromQueryResult(patientId, loinc, queryResult));
-        }
-        return result;
-    }
-
-    public Observation fromQueryResult(String patientId, String loinc, QueryResult queryResult)
+    public Observation from(String patientId, String code, QuantityDt quantity, DateTimeDt effective)
     {
         Observation observation = new Observation();
         observation.setId(newId());
         observation.setSubject(newSubject(patientId));
-        observation.setValue(newQuantity(queryResult));
-        observation.setCode(newCode(loinc));
-        observation.setEffective(newEffective(queryResult));
+        observation.setValue(quantity);
+        observation.setCode(newCode(code));
+        observation.setEffective(effective);
+        return observation;
+    }
+
+    public Observation from(ScriptObservation scriptObservation, String patient, String code)
+     {
+        Observation observation = new Observation();
+        observation.setId(newId());
+        observation.setSubject(newSubject(patient));
+        observation.setValue(newQuantity(scriptObservation));
+        observation.setCode(newCode(code));
+        observation.setEffective(newEffective(scriptObservation));
         return observation;
     }
 
     private String newId()
     {
         return String.valueOf(ThreadLocalRandom.current().nextInt());
-    }
-
-    private QuantityDt newQuantity(QueryResult queryResult)
-    {
-        QuantityDt quantity = new QuantityDt();
-        quantity.setValue(Double.parseDouble(queryResult.getMagnitude()));
-        quantity.setUnit(queryResult.getUnit());
-        quantity.setCode(queryResult.getUnit());
-        quantity.setSystem("http://unitsofmeasure.org");
-        return quantity;
     }
 
     private CodeableConceptDt newCode(String loinc)
@@ -93,8 +91,18 @@ public class ObservationFactory
         return subject;
     }
 
-    private DateTimeDt newEffective(QueryResult queryResult)
+    private QuantityDt newQuantity(ScriptObservation scriptObservation)
     {
-        return new DateTimeDt(queryResult.getDate());
+        QuantityDt quantity = new QuantityDt();
+        quantity.setValue(scriptObservation.getValue());
+        quantity.setUnit(scriptObservation.getUnit());
+        quantity.setCode(scriptObservation.getUnit());
+        quantity.setSystem(scriptObservation.getUnitSystem());
+        return quantity;
+    }
+
+    private DateTimeDt newEffective(ScriptObservation scriptObservation)
+    {
+        return new DateTimeDt(scriptObservation.getDate());
     }
 }

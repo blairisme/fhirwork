@@ -43,4 +43,14 @@ public class Name
     public List<String> getFamily() {
         return family;
     }
+
+    public void setGivenName(String name) {
+        given.clear();
+        given.add(name);
+    }
+
+    public void setFamilyName(String name) {
+        family.clear();
+        family.add(name);
+    }
 }

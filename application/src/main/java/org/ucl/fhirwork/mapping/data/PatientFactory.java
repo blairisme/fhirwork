@@ -23,10 +23,7 @@ import org.ucl.fhirwork.network.empi.data.Person;
 import javax.inject.Inject;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Instances of this class create {@link Patient} instances, usually by
@@ -48,9 +45,9 @@ public class PatientFactory
         this.identifierFactory = identifierFactory;
     }
 
-    public List<Patient> fromPeople(List<Person> people)
+    public Collection<Patient> fromPeople(Collection<Person> people)
     {
-        List<Patient> result = new ArrayList<>(people.size());
+        Collection<Patient> result = new ArrayList<>(people.size());
         for (Person person: people){
             result.add(fromPerson(person));
         }
@@ -70,7 +67,7 @@ public class PatientFactory
 
     private void setId(Patient patient, Person person)
     {
-        patient.setId(new IdDt(person.getPersonId()));
+        patient.setId(new IdDt("Patient", person.getPersonId(), "1"));
     }
 
     private void setIdentifiers(Patient patient, Person person)

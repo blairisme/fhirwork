@@ -10,10 +10,14 @@
 
 package org.ucl.fhirwork.network.empi.data;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import javax.annotation.concurrent.Immutable;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Instances of this class are used to obtain a session token for accessing
+ * Instances of this class are used to obtain a session token, used to access
  * EMPI web services. The authenticate EMPI REST web service accepts
  * AuthenticationRequests using the following format.
  *
@@ -28,16 +32,15 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Blair Butterworth
  */
+@Immutable
 @XmlRootElement(name = "authenticationRequest")
 @SuppressWarnings("unused")
-public class AuthenticationRequest
+public final class AuthenticationRequest
 {
     private String username;
     private String password;
 
-    public AuthenticationRequest()
-    {
-        this("", "");
+    public AuthenticationRequest() {
     }
 
     public AuthenticationRequest(String username, String password) {
@@ -59,5 +62,27 @@ public class AuthenticationRequest
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+
+        if (object instanceof AuthenticationRequest) {
+            AuthenticationRequest other = (AuthenticationRequest)object;
+            return new EqualsBuilder()
+                .append(this.username, other.username)
+                .append(this.password, other.password)
+                .isEquals();
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+            .append(username)
+            .append(password)
+            .toHashCode();
     }
 }

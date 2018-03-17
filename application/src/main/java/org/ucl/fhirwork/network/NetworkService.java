@@ -11,6 +11,9 @@
 package org.ucl.fhirwork.network;
 
 import org.ucl.fhirwork.configuration.*;
+import org.ucl.fhirwork.configuration.data.ConfigType;
+import org.ucl.fhirwork.configuration.data.NetworkConfig;
+import org.ucl.fhirwork.configuration.data.NetworkConfigData;
 import org.ucl.fhirwork.network.ehr.server.EhrServer;
 import org.ucl.fhirwork.network.empi.server.EmpiServer;
 
@@ -52,8 +55,9 @@ public class NetworkService implements ConfigObserver
     }
 
     private void initialize() {
-        initializeEhrServer(configuration.getNetworkConfig(NetworkConfigType.Ehr));
-        initializeEmpiServer(configuration.getNetworkConfig(NetworkConfigType.Empi));
+        NetworkConfig networkConfig = configuration.getConfig(ConfigType.Network);
+        initializeEhrServer(networkConfig.getEhr());
+        initializeEmpiServer(networkConfig.getEmpi());
     }
 
     private void initializeEhrServer(NetworkConfigData networkProperties) {

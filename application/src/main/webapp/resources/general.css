@@ -3,6 +3,15 @@
    overflow: hidden;
 }
 
+.content {
+    background-color: #f1f1f1;
+    overflow: hidden;
+    float: none;
+    width: auto;
+    height: 100%;
+    padding: 20px 20px 20px 20px;
+}
+
 .navigation {
     width: 200px;
     height: 100%;
@@ -52,16 +61,29 @@
     background-color: white;
 
     -webkit-mask-image: url('./tools.svg');
-    mask-image: url(icon.svg);
+	 mask-image: url(icon.svg);
 }
 
+.cache {
+	 background-repeat: no-repeat;
+    background-color: white;
 
-/*** Settings Styles ***/
+    -webkit-mask-image: url('./tools.svg');
+    mask-image: url(icon.svg);
+}
 
 .title {
     color: #23282d;
     font-size: 23px;
     font-family: Verdana, Geneva, sans-serif;
+    margin-bottom: 20px;
+}
+
+.subheading {
+    color: #23282d;
+    font-size: 18px;
+    font-family: Verdana, Geneva, sans-serif;
+    margin-top: 20px;
     margin-bottom: 20px;
 }
 
@@ -93,7 +115,7 @@
 .button {
     line-height: 26px;
     height: 28px;
-    margin: 0;
+    margin: 10px 0px 0px 0px;
     padding: 0 10px 1px;
 
     background: #0085ba;
@@ -117,4 +139,28 @@
     font-family: Verdana, Geneva, sans-serif;
     text-decoration: none;
     text-shadow: 0 -1px 1px #006799, 1px 0 1px #006799, 0 1px 1px #006799, -1px 0 1px #006799;
+}
+
+.edit
+{
+    width: 30px;
+    height: 30px;
+
+    background-repeat: no-repeat;
+    background-image: url('./edit.svg');
+}
+
+.delete
+{
+    width: 30px;
+    height: 30px;
+
+    background-repeat: no-repeat;
+    background-image: url('./delete.svg');
+}
+
+.hiddenInput
+{
+    visibility: hidden;
+    display: none;
 }

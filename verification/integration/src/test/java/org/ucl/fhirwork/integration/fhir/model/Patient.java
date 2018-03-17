@@ -10,6 +10,7 @@
 package org.ucl.fhirwork.integration.fhir.model;
 
 import org.ucl.fhirwork.integration.cucumber.Profile;
+import org.ucl.fhirwork.integration.empi.model.Person;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +35,7 @@ public class Patient
     {
         return new Patient(
             Arrays.asList(Name.from(profile.getFirst(), profile.getLast())),
-            Arrays.asList(Identifier.from(profile.getId())),
+            Arrays.asList(Identifier.from(profile.getDomain(), profile.getId())),
             profile.getGender());
     }
 
@@ -50,7 +51,17 @@ public class Patient
         return resourceType;
     }
 
-    public void setId(String id){
+    public void setId(String id) {
         this.id = id;
+    }
+
+    public void setFirstName(String firstName) {
+        Name currentName = name.get(0);
+        currentName.setGivenName(firstName);
+    }
+
+    public void setLastName(String lastName) {
+        Name currentName = name.get(0);
+        currentName.setFamilyName(lastName);
     }
 }

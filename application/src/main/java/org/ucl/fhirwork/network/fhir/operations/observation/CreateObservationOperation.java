@@ -11,17 +11,20 @@
 package org.ucl.fhirwork.network.fhir.operations.observation;
 
 import ca.uhn.fhir.model.dstu2.resource.Observation;
+import org.ucl.fhirwork.network.fhir.operations.common.ConditionalOperation;
 
 /**
  * Instances of this class represent the FHIR create observation operation.
  *
  * @author Alperen Karaoglu
  */
-public class CreateObservationOperation {
+public class CreateObservationOperation extends ConditionalOperation {
 
     private Observation observation;
 
-    public CreateObservationOperation(Observation observation) { this.observation = observation; }
+    public CreateObservationOperation(Observation observation) {
+        this.observation = observation;
+    }
 
     public Observation getObservation() {
         return observation;

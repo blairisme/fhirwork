@@ -41,7 +41,6 @@ public class XmlSerializer implements Serializer
     {
         try {
             JAXBContext context = JAXBContext.newInstance(type);
-
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             marshaller.marshal(value, writer);

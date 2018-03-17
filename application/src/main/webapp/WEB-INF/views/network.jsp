@@ -8,9 +8,9 @@
     <link rel="stylesheet" type="text/css" href="resources/network.css"/>
 </head>
 <body>
-    <div class"container">
+    <div class="container">
         <div class="navigation">
-            <a class="link" href="/configuration/mapping">
+            <a class="link" href="/configuration/mapping/list">
                 <div class="icon mapping"></div>
                 <span>FHIR Mappings</span>
             </a>
@@ -18,8 +18,12 @@
                 <div class="icon network"></div>
                 <span>Network Settings</span>
             </a>
+            <a class="link" href="/configuration/cache">
+                <div class="icon cache"></div>
+                <span>Cache Settings</span>
+            </a>
         </div>
-        <div class="settings">
+        <div class="content">
             <h1 class="title">EMPI Settings</h1>
             <form action="network" method="POST">
                 <table>

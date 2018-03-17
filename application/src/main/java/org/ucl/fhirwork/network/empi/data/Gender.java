@@ -10,6 +10,10 @@
 
 package org.ucl.fhirwork.network.empi.data;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import javax.annotation.concurrent.Immutable;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -28,9 +32,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Blair Butterworth
  */
-@XmlRootElement(name = "identifier")
+@Immutable
+@XmlRootElement(name = "gender")
 @SuppressWarnings("unused")
-public class Gender
+public final class Gender
 {
     private String genderCd;
     private String genderCode;
@@ -41,7 +46,12 @@ public class Gender
     {
     }
 
-    public Gender(String genderCd, String genderCode, String genderName, String genderDescription) {
+    public Gender(
+        String genderCd,
+        String genderCode,
+        String genderName,
+        String genderDescription)
+    {
         this.genderCd = genderCd;
         this.genderCode = genderCode;
         this.genderName = genderName;
@@ -78,5 +88,31 @@ public class Gender
 
     public void setGenderDescription(String genderDescription) {
         this.genderDescription = genderDescription;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+
+        if (object instanceof Gender) {
+            Gender other = (Gender)object;
+            return new EqualsBuilder()
+                .append(this.genderCd, other.genderCd)
+                .append(this.genderCode, other.genderCode)
+                .append(this.genderName, other.genderName)
+                .append(this.genderDescription, other.genderDescription)
+                .isEquals();
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+            .append(genderCd)
+            .append(genderCode)
+            .append(genderName)
+            .append(genderDescription)
+            .toHashCode();
     }
 }

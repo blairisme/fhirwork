@@ -10,6 +10,10 @@
 
 package org.ucl.fhirwork.network.empi.data;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import javax.annotation.concurrent.Immutable;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -52,9 +56,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Blair Butterworth
  */
+@Immutable
 @XmlRootElement(name = "person")
 @SuppressWarnings("unused")
-public class Person
+public final class Person
 {
     private String personId;
     private Identifier[] personIdentifiers;
@@ -62,8 +67,19 @@ public class Person
     private String familyName;
     private Gender gender;
     private String dateOfBirth;
+    private String dateChanged;
 
     public Person() {
+    }
+
+    public Person(Person person) {
+        this.personId = person.personId;
+        this.personIdentifiers = person.personIdentifiers;
+        this.givenName = person.givenName;
+        this.familyName = person.familyName;
+        this.gender = person.gender;
+        this.dateOfBirth = person.dateOfBirth;
+        this.dateChanged = person.dateChanged;
     }
 
     public String getPersonId() {
@@ -72,6 +88,10 @@ public class Person
 
     public void setPersonId(String personId) {
         this.personId = personId;
+    }
+
+    public InternalIdentifier getInternalIdentifier() {
+        return new InternalIdentifier(personId);
     }
 
     public Identifier[] getPersonIdentifiers() {
@@ -112,5 +132,45 @@ public class Person
 
     public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getDateChanged() {
+        return dateChanged;
+    }
+
+    public void setDateChanged(String dateChanged) {
+        this.dateChanged = dateChanged;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+
+        if (object instanceof Person) {
+            Person other = (Person)object;
+            return new EqualsBuilder()
+                .append(this.personId, other.personId)
+                .append(this.personIdentifiers, other.personIdentifiers)
+                .append(this.givenName, other.givenName)
+                .append(this.familyName, other.familyName)
+                .append(this.gender, other.gender)
+                .append(this.dateOfBirth, other.dateOfBirth)
+                .append(this.dateChanged, other.dateChanged)
+                .isEquals();
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+            .append(personId)
+            .append(personIdentifiers)
+            .append(givenName)
+            .append(familyName)
+            .append(gender)
+            .append(dateOfBirth)
+            .append(dateChanged)
+            .toHashCode();
     }
 }

@@ -6,66 +6,101 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import cucumber.runtime.java.StepDefAnnotation;
 import org.junit.Assert;
-import org.ucl.fhirwork.integration.common.http.HttpStatus;
 import org.ucl.fhirwork.integration.common.http.RestServerException;
 import org.ucl.fhirwork.integration.cucumber.HealthData;
-import org.ucl.fhirwork.integration.cucumber.StepUtils;
-import org.ucl.fhirwork.integration.ehr.EhrServer;
 import org.ucl.fhirwork.integration.ehr.model.*;
-import org.ucl.fhirwork.integration.fhir.FhirServer;
+import org.ucl.fhirwork.integration.ehr.model.composition.GrowthChartComposition;
+import org.ucl.fhirwork.integration.ehr.model.composition.HeightWeightComposition;
+import org.ucl.fhirwork.integration.empi.model.Person;
 import org.ucl.fhirwork.integration.fhir.model.Observation;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 @StepDefAnnotation
 @SuppressWarnings("unused")
-public class ObservationSteps
+public class ObservationSteps extends IntegrationSteps
 {
-    private static boolean serversPinged = false;
-    private FhirServer fhirServer;
-    private EhrServer ehrServer;
+    private boolean destroyHealthRecords;
     private List<Observation> observations;
 
     @Before
-    public void setup() throws Exception
+    public void setup() throws TimeoutException
     {
-        fhirServer = new FhirServer(
-                System.getProperty("network.fhir.address", "http://localhost:8090"));
-        ehrServer = new EhrServer(
-            System.getProperty("network.ehr.address", "http://localhost:8888/rest/v1"),
-            System.getProperty("network.ehr.username", "guest"),
-            System.getProperty("network.ehr.password", "guest"));
-
-        if (! serversPinged) {
-            StepUtils.wait(60, TimeUnit.SECONDS, () -> ehrServer.ping());
-            StepUtils.wait(60, TimeUnit.SECONDS, () -> fhirServer.ping());
-            serversPinged = true;
-        }
+        super.setup();
+        observations = new ArrayList<>();
+        destroyHealthRecords = Boolean.valueOf(System.getProperty("data.ehr.destroy", "false"));
     }
 
     @Given("^the system has the following health data:$")
     public void initializeHealthData(List<HealthData> healthData) throws IOException, RestServerException
     {
-        installTemplates();
-        for (HealthData data: healthData){
-            HealthRecord record = getHealthRecord(data);
-            createComposition(data, record);
+        setConfiguration();
+        createTemplates();
+        removeHealthRecords(healthData);
+        createHealthRecords(healthData);
+        removeCompositions(healthData);
+        createCompositions(healthData);
+    }
+
+    private void setConfiguration() throws RestServerException
+    {
+        getFhirworkServer().removeMapping("39156-5");
+        getFhirworkServer().removeMapping("8287-5");
+        getFhirworkServer().removeMapping("37362-1");
+    }
+
+    private void createTemplates() throws IOException, RestServerException
+    {
+        createTemplate("RIPPLE - Personal Notes.v1", "templates/Ripple_Personal_Notes_v1.xml");
+        createTemplate("RIPPLE - Height_Weight.v1", "templates/Ripple_Height_Weight_v1.xml");
+        //createTemplate("Smart Growth Chart Data.v0", "templates/Smart_Growth_Chart_Data_v0.xml");
+    }
+
+    private void createTemplate(String id, String resource) throws IOException, RestServerException
+    {
+        if (! getEhrServer().templateExists(id)){
+            TemplateReference template = new TemplateReference(resource);
+            getEhrServer().addTemplate(template);
         }
     }
 
-    private void installTemplates() throws IOException, RestServerException
+    private void removeHealthRecords(List<HealthData> dataList) throws RestServerException
     {
-        installTemplate("RIPPLE - Personal Notes.v1", "templates/Ripple_Personal_Notes_v1.xml");
-        installTemplate("Smart Growth Chart Data.v0", "templates/Smart_Growth_Chart_Data_v0.xml");
+        if (destroyHealthRecords) {
+            for (HealthData data : dataList) {
+                removeHealthRecord(data);
+            }
+        }
     }
 
-    private void installTemplate(String id, String resource) throws IOException, RestServerException
+    private void removeHealthRecord(HealthData healthData) throws RestServerException
     {
-        if (! ehrServer.templateExists(id)){
-            TemplateReference template = new TemplateReference(resource);
-            ehrServer.addTemplate(template);
+        String subjectId = healthData.getSubject();
+        String subjectNamespace = healthData.getNamespace();
+
+        if (getEhrServer().ehrExists(subjectId, subjectNamespace)){
+            HealthRecord healthRecord = getEhrServer().getEhr(subjectId, subjectNamespace);
+            getEhrServer().removeEhr(healthRecord.getEhrId());
+        }
+    }
+
+    private void createHealthRecords(List<HealthData> dataList) throws RestServerException
+    {
+        for (HealthData data: dataList){
+            createHealthRecord(data);
+        }
+    }
+
+    private void createHealthRecord(HealthData healthData) throws RestServerException
+    {
+        String subjectId = healthData.getSubject();
+        String subjectNamespace = healthData.getNamespace();
+
+        if (! getEhrServer().ehrExists(subjectId, subjectNamespace)){
+            getEhrServer().createEhr(subjectId, subjectNamespace);
         }
     }
 
@@ -73,36 +108,82 @@ public class ObservationSteps
     {
         String subjectId = healthData.getSubject();
         String subjectNamespace = healthData.getNamespace();
-
-        if (! ehrServer.ehrExists(subjectId, subjectNamespace)){
-            return ehrServer.createEhr(subjectId, subjectNamespace);
-        }
-        return ehrServer.getEhr(subjectId, subjectNamespace);
+        return getEhrServer().getEhr(subjectId, subjectNamespace);
     }
 
-    private void createComposition(HealthData data, HealthRecord record) throws RestServerException
+    private void removeCompositions(List<HealthData> dataList) throws RestServerException
     {
-        GrowthChartComposition composition = GrowthChartComposition.fromHealthData(data);
-        ehrServer.createComposition(record, composition, GrowthChartComposition.class);
+        if (! destroyHealthRecords) {
+            for (HealthData healthData : dataList) {
+                HealthRecord healthRecord = getHealthRecord(healthData);
+                removeCompositions(healthRecord);
+            }
+        }
     }
 
     private void removeCompositions(HealthRecord record) throws RestServerException
     {
-        List<Composition> compositions = ehrServer.getCompositions(record.getEhrId());
+        List<Composition> compositions = getEhrServer().getCompositions(record.getEhrId());
         for (Composition composition: compositions){
-            ehrServer.removeComposition(composition);
+            getEhrServer().removeComposition(composition);
         }
     }
 
-    @When("^the user searches for observations$")
-    public void observationSearch() throws RestServerException
+    private void createCompositions(List<HealthData> healthDataList) throws RestServerException
     {
-        //observations = fhirServer.searchObservation("SSN|1", "http://loinc.org|3141-9");
+        for (HealthData healthData: healthDataList){
+            HealthRecord healthRecord = getHealthRecord(healthData);
+            createComposition(healthData, healthRecord);
+        }
     }
 
-    @Then("^the user should receive a list of (\\d) observations$")
+    private void createComposition(HealthData data, HealthRecord record) throws RestServerException
+    {
+        //GrowthChartComposition composition = GrowthChartComposition.fromHealthData(data);
+        //getEhrServer().createComposition(record, composition, GrowthChartComposition.class);
+
+        HeightWeightComposition composition = HeightWeightComposition.fromHealthData(data);
+        getEhrServer().createComposition(record, composition, HeightWeightComposition.class);
+    }
+
+    @When("^the user searches for all observations belonging to patient \"(.*)\"$")
+    public void readAllObservations(String patient) throws RestServerException
+    {
+        Person person = getPersonByName(patient);
+        observations = getFhirServer().searchPatientObservations(person.getPersonId());
+    }
+
+    @When("^the user searches for observations belonging to patient \"(.*)\" with LOINC code \"(.*)\"$")
+    public void readPatientObservations(String name, String code) throws RestServerException
+    {
+        Person person = getPersonByName(name);
+        String codes = getCodeParameter(code);
+        observations = getFhirServer().searchPatientObservations(person.getPersonId(), codes);
+    }
+
+    @When("^the user searches for observations belonging to subject \"(.*)\" with LOINC code \"(.*)\"$")
+    public void readSubjectObservations(String name, String code) throws RestServerException
+    {
+        Person person = getPersonByName(name);
+        String codes = getCodeParameter(code);
+        observations = getFhirServer().searchSubjectObservations(person.getPersonId(), codes);
+    }
+
+    @Then("^the user should receive a list of (\\d*) observations$")
     public void assertObservationList(int observationsCount)
     {
-        //Assert.assertEquals(observationsCount, observations.size());
+        Assert.assertEquals(observationsCount, observations.size());
+    }
+
+    private String getCodeParameter(String code)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String subSequence: code.split(",")){
+            stringBuilder.append("http://loinc.org|");
+            stringBuilder.append(subSequence);
+            stringBuilder.append(",");
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        return stringBuilder.toString();
     }
 }

@@ -10,6 +10,7 @@
 
 package org.ucl.fhirwork.mapping;
 
+import ca.uhn.fhir.model.primitive.IdDt;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -39,7 +40,7 @@ public class ExecutorServiceTest
                 createPatientProvider, deletePatientProvider, readPatientProvider, updatePatientProvider,
                 createConditionalProvider, deleteConditionalProvider, readConditionalProvider, updateConditionalProvider,
                 readObservationProvider);
-        Executor executor = executorService.getExecutor(new DeletePatientOperation(null));
+        Executor executor = executorService.getExecutor(new DeletePatientOperation((IdDt)null));
 
         Assert.assertNotNull(executor);
         Mockito.verify(createPatientProvider, Mockito.never()).get();

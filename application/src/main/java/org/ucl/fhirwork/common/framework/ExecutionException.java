@@ -23,9 +23,4 @@ public class ExecutionException extends Exception
     {
         super(cause);
     }
-
-    public ExecutionException(String message)
-    {
-        super(message);
-    }
 }

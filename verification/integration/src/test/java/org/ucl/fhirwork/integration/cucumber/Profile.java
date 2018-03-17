@@ -12,18 +12,27 @@ package org.ucl.fhirwork.integration.cucumber;
 public class Profile
 {
     private String id;
+    private String domain;
     private String first;
     private String last;
     private String gender;
+    private String birthday;
 
-    public Profile(String id, String first, String last, String gender) {
+    public Profile(String id, String domain, String first, String last, String gender, String birthday) {
         this.id = id;
+        this.domain = domain;
         this.first = first;
         this.last = last;
+        this.gender = gender;
+        this.birthday = birthday;
     }
 
     public String getId() {
         return id;
+    }
+
+    public String getDomain() {
+        return domain;
     }
 
     public String getFirst() {
@@ -36,5 +45,9 @@ public class Profile
 
     public String getGender() {
         return gender;
+    }
+
+    public String getBirthday() {
+        return birthday;
     }
 }

@@ -3,12 +3,12 @@ Feature: Patient Search
 
 Background:
   Given the system has the following patients:
-    | id    | first     | last          | gender    |
-    | 1     | harry     | potter        | male      |
-    | 2     | hermione  | granger       | female    |
-    | 3     | ron       | weasley       | male      |
-    | 4     | james     | potter        | male      |
-    | 5     | lily      | potter        | female    |
+    | id        | domain    | first     | last      | gender    | birthday              |
+    | 1         | SSN       | harry     | potter    | male      | 1980-01-01T00:00:00Z  |
+    | 2         | SSN       | hermione  | granger   | female    | 1980-01-01T00:00:00Z  |
+    | 3         | SSN       | ron       | weasley   | male      | 1980-01-01T00:00:00Z  |
+    | 4         | SSN       | james     | potter    | male      | 1980-01-01T00:00:00Z  |
+    | 5         | SSN       | lily      | potter    | female    | 1980-01-01T00:00:00Z  |
 
 Scenario: Search for patients without parameters
    When the user searches for patients

@@ -10,32 +10,31 @@
 
 package org.ucl.fhirwork.network.empi.data;
 
-import org.apache.commons.io.FileUtils;
-import org.junit.Assert;
-import org.junit.Test;
+import org.ucl.fhirwork.common.serialization.Serializer;
 import org.ucl.fhirwork.common.serialization.XmlSerializer;
 import org.ucl.fhirwork.test.TestResourceUtils;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 
-public class PersonTest
+public class PersonTest extends EmpiDataTest<Person>
 {
-    @Test
-    public void serializationTest() throws IOException
-    {
-        XmlSerializer serializer = new XmlSerializer();
-        String person = TestResourceUtils.readResource("empi/PersonExample.xml");
+    @Override
+    protected Class<Person> getObjectType() {
+        return Person.class;
+    }
 
-        Person deserialized = serializer.deserialize(person, Person.class);
-        Assert.assertEquals("Kathrin", deserialized.getGivenName());
-        Assert.assertEquals("Williams", deserialized.getFamilyName());
-        Assert.assertEquals(2, deserialized.getPersonIdentifiers().length);
+    @Override
+    protected Serializer getSerializer() {
+        return new XmlSerializer();
+    }
 
-        String serialized = serializer.serialize(deserialized, Person.class);
-        Assert.assertTrue(serialized.contains("<givenName>Kathrin</givenName>"));
-        Assert.assertTrue(serialized.contains("<familyName>Williams</familyName>"));
+    @Override
+    protected String getSerialized() throws IOException {
+        return TestResourceUtils.readResource("empi/PersonExample.xml");
+    }
+
+    @Override
+    protected Person getDeserialized() {
+        return PersonDataFactory.newPerson("123", "Kathrin", "Williams");
     }
 }

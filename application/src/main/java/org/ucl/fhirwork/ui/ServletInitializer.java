@@ -20,6 +20,12 @@ import org.ucl.fhirwork.ApplicationService;
 
 import java.lang.reflect.Method;
 
+/**
+ * Instances of this class configure the Spring MVC servlet engine used to
+ * render the FhirWork configuration user interface.
+ *
+ * @author Blair Butterworth
+ */
 @SuppressWarnings("unused")
 public class ServletInitializer implements WebApplicationInitializer
 {

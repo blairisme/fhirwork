@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<personIdentifier>
+    <dateCreated>2017-07-19T21:49:41.729Z</dateCreated>
+    <identifier>568749875445698798988873</identifier>
+    <identifierDomain>
+        <identifierDomainId>13</identifierDomainId>
+        <identifierDomainName>OpenMRS</identifierDomainName>
+        <namespaceIdentifier>35a02490</namespaceIdentifier>
+        <universalIdentifier>35a02490</universalIdentifier>
+        <universalIdentifierTypeCode>OpenMRS</universalIdentifierTypeCode>
+    </identifierDomain>
+</personIdentifier>

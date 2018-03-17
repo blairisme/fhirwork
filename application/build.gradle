@@ -35,13 +35,18 @@ apply plugin: 'org.akhikhl.gretty'
 gretty {
     contextPath = '/'
     httpPort = 8090
+
+    // Overwrite application configuration with Gradle properties
     jvmArgs = [
-      '-Dnetwork.ehr.address=' + project.getProperty('network.ehr.address'),
-      '-Dnetwork.ehr.username=' + project.getProperty('network.ehr.username'),
-      '-Dnetwork.ehr.password=' + project.getProperty('network.ehr.password'),
-      '-Dnetwork.empi.address=' + project.getProperty('network.empi.address'),
-      '-Dnetwork.empi.username=' + project.getProperty('network.empi.username'),
-      '-Dnetwork.empi.password=' + project.getProperty('network.empi.password')]
+      '-Dnetwork.ehr.address=' + ehrAddress,
+      '-Dnetwork.ehr.username=' + ehrUsername,
+      '-Dnetwork.ehr.password=' + ehrPassword,
+      '-Dnetwork.empi.address=' + empiAddress,
+      '-Dnetwork.empi.username=' + empiUsername,
+      '-Dnetwork.empi.password=' + empiPassword]
+
+    //disables hot deployment to prevent bug when config writing causes servlet reload
+    scanInterval = 0
 }
 
 war {
@@ -54,23 +59,27 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    compile group: 'ca.uhn.hapi.fhir', name:'hapi-fhir-base', version:'2.5'
-    compile group: 'ca.uhn.hapi.fhir', name: 'hapi-fhir-structures-dstu2', version: '2.5'
+    compile group: 'ca.uhn.hapi.fhir', name: 'hapi-fhir-base', version: '3.2.0'
+    compile group: 'ca.uhn.hapi.fhir', name: 'hapi-fhir-server', version: '3.2.0'
+    compile group: 'ca.uhn.hapi.fhir', name: 'hapi-fhir-structures-dstu2', version: '3.2.0'
     compile group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.9.RELEASE'
     compile group: 'org.springframework', name: 'spring-web', version: '5.0.2.RELEASE'
     compile group: 'org.springframework', name: 'spring-webmvc', version: '5.0.2.RELEASE'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     compile group: 'javax.servlet', name: 'jstl', version: '1.2'
     compile group: 'javax.inject', name: 'javax.inject', version: '1'
-    compile group: 'com.mashape.unirest', name:'unirest-java', version:'1.4.9'
     compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.2.12'
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
+    compile group: 'com.mashape.unirest', name:'unirest-java', version:'1.4.9'
     compile group: 'com.google.code.gson', name: 'gson', version: '2.8.2'
     compile group: 'com.google.guava', name: 'guava', version: '20.0'
     compile group: 'com.google.inject', name: 'guice', version: '3.0'
-    compile group: 'commons-io', name: 'commons-io', version: '2.6'
-    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.2'
+    compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.6.2'
 
     testCompile group: 'junit', name:'junit', version: '4.11'
     testCompile group: 'org.mockito', name:'mockito-core', version: '2.7.22'
+    testCompile group: 'nl.jqno.equalsverifier', name: 'equalsverifier', version: '2.4.3'
 }
 
 /*** code coverage configuration ***/

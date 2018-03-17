@@ -1,0 +1,8 @@
+{
+  "empiCacheEnabled": true,
+  "empiCacheSize": 10000,
+  "empiCacheExpiry": 1440,
+  "ehrCacheEnabled": true,
+  "ehrCacheSize": 100,
+  "ehrCacheExpiry": 1440
+}

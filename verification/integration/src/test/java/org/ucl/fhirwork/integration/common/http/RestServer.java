@@ -18,6 +18,7 @@ import com.mashape.unirest.request.body.RequestBodyEntity;
 import org.ucl.fhirwork.integration.common.lang.StringCovertable;
 import org.ucl.fhirwork.integration.common.serialization.Serializer;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +38,11 @@ public class RestServer
     public void setHeader(Object key, Object value)
     {
         headers.put(convert(key), convert(value));
+    }
+
+    public void removeHeader(Object key)
+    {
+        headers.remove(convert(key));
     }
 
     public void delete(RestEndpoint endPoint, Map<Object, Object> parameters) throws RestServerException
@@ -78,6 +84,28 @@ public class RestServer
                 throw new RestServerException(response.getStatus());
             }
             return serializer.deserialize(response.getBody(), type);
+        }
+        catch (UnirestException exception){
+            throw new RestServerException(exception);
+        }
+    }
+
+    public void get(RestEndpoint endPoint, Map<Object, Object> parameters) throws RestServerException
+    {
+        get(endPoint.getPath(), parameters);
+    }
+
+    public void get(String path, Map<Object, Object> parameters) throws RestServerException
+    {
+        try {
+            HttpRequest request = Unirest.get(server + path)
+                    .headers(headers)
+                    .queryString(convertParameters(parameters));
+            HttpResponse<String> response = request.asString();
+
+            if (! isSuccessful(response.getStatus())) {
+                throw new RestServerException(response.getStatus());
+            }
         }
         catch (UnirestException exception){
             throw new RestServerException(exception);
@@ -171,19 +199,20 @@ public class RestServer
     }
 
     public <T> String put(RestEndpoint endPoint, T value, Class<T> type) throws RestServerException {
-        return put(endPoint.getPath(), value, type);
+        return put(endPoint.getPath(), value, type, Collections.emptyMap());
     }
 
-    public <T> String put(String path, T value, Class<T> type) throws RestServerException
+    public <T> String put(String path, T value, Class<T> type, Map<Object, Object> parameters) throws RestServerException
     {
         try {
             String body = serializer.serialize(value, type);
             RequestBodyEntity request = Unirest.put(server + path)
                     .headers(headers)
+                    .queryString(convertParameters(parameters))
                     .body(body);
             HttpResponse<String> response = request.asString();
 
-            if (! HttpStatus.isSuccessful(response.getStatus())) {
+            if (! HttpUtils.isSuccessful(response.getStatus())) {
                 throw new RestServerException(response.getStatus());
             }
             return response.getBody();

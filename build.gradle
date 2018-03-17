@@ -28,6 +28,24 @@ idea {
 }
 
 subprojects {
+  ext {
+    testMode = getProperty('test.mode')
+    testOutput = getProperty('test.output').toBoolean()
+
+    localTestMode = testMode.equals('local')
+    remoteTestMode = testMode.equals('remote')
+
+    ehrAddress = getProperty(testMode + '.ehr.address')
+    ehrUsername = getProperty(testMode + '.ehr.username')
+    ehrPassword = getProperty(testMode + '.ehr.password')
+
+    empiAddress = getProperty(testMode + '.empi.address')
+    empiUsername = getProperty(testMode + '.empi.username')
+    empiPassword = getProperty(testMode + '.empi.password')
+
+    fhirAddress = getProperty(testMode + '.fhir.address')
+  }
+
   plugins.withType(IdeaPlugin) {
     idea {
       module {
@@ -41,6 +59,7 @@ subprojects {
         excludeDirs += file('bin')
         excludeDirs += file('.gradle')
         excludeDirs += file('.settings')
+        excludeDirs += file('.fhirwork')
       }
     }
 

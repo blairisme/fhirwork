@@ -1,7 +1,7 @@
 
 package org.ucl.fhirwork.network.ehr.server;
 
-import org.ucl.fhirwork.common.http.RestResource;
+import org.ucl.fhirwork.common.network.Rest.RestResource;
 
 
 /**

@@ -10,6 +10,12 @@
 
 package org.ucl.fhirwork.network.ehr.data;
 
+/**
+ * Instances of this class represent an OpenEHR health record, a container into
+ * which all clinical data for a patient is stored.
+ *
+ * @author Blair Butterworth
+ */
 public class HealthRecord
 {
     private String ehrId;

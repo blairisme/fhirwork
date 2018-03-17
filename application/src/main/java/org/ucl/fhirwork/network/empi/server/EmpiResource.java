@@ -10,7 +10,7 @@
 
 package org.ucl.fhirwork.network.empi.server;
 
-import org.ucl.fhirwork.common.http.RestResource;
+import org.ucl.fhirwork.common.network.Rest.RestResource;
 
 /**
  * Options in this enumeration represent the addresses of EMPI REST web
@@ -20,18 +20,17 @@ import org.ucl.fhirwork.common.http.RestResource;
  */
 public enum EmpiResource implements RestResource
 {
-    AddPerson               ("openempi-admin/openempi-ws-rest/person-manager-resource/addPerson"),
-    Authenticate            ("openempi-admin/openempi-ws-rest/security-resource/authenticate"),
-    FindPersonById          ("openempi-admin/openempi-ws-rest/person-query-resource/findPersonById"),
-    FindPersonsByAttributes ("openempi-admin/openempi-ws-rest/person-query-resource/findPersonsByAttributes"),
-    LoadPerson              ("openempi-admin/openempi-ws-rest/person-query-resource/loadPerson"),
-    LoadAllPersons          ("openempi-admin/openempi-ws-rest/person-query-resource/loadAllPersonsPaged"),
-    RemovePerson            ("openempi-admin/openempi-ws-rest/person-manager-resource/removePersonById"),
-    UpdatePerson            ("openempi-admin/openempi-ws-rest/person-manager-resource/updatePerson");
+    AddPerson       ("openempi-admin/openempi-ws-rest/person-manager-resource/addPerson"),
+    Authenticate    ("openempi-admin/openempi-ws-rest/security-resource/authenticate"),
+    FindPersons     ("openempi-admin/openempi-ws-rest/person-query-resource/findPersonsByAttributes"),
+    LoadPerson      ("openempi-admin/openempi-ws-rest/person-query-resource/loadPerson"),
+    LoadAllPersons  ("openempi-admin/openempi-ws-rest/person-query-resource/loadAllPersonsPaged"),
+    RemovePerson    ("openempi-admin/openempi-ws-rest/person-manager-resource/removePersonById"),
+    UpdatePerson    ("openempi-admin/openempi-ws-rest/person-manager-resource/updatePersonById");
 
     private String path;
 
-    private EmpiResource(String path)
+    EmpiResource(String path)
     {
         this.path = path;
     }

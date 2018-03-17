@@ -11,13 +11,20 @@ package org.ucl.fhirwork.integration.common.http;
 
 public class RestServerException extends Exception
 {
+    private int statusCode;
+
     public RestServerException(Exception cause)
     {
         super(cause);
     }
 
-    public RestServerException(int httpCode)
+    public RestServerException(int statusCode)
     {
-        super("REST server error: status code " + httpCode);
+        super("REST server error: status code " + statusCode);
+        this.statusCode = statusCode;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
     }
 }
