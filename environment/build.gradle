@@ -104,3 +104,47 @@ task envStop() {
 task envStopProduction() {
   dependsOn 'envStop'
 }
+
+String[] listContainers() {
+  def output = new ByteArrayOutputStream()
+  project.exec {
+      commandLine = ['docker', 'ps', '-a', '-q']
+      standardOutput = output
+  }
+  String result = output.toString()
+  return result.split("\\r?\\n")
+}
+
+task removeContainers() {
+  dependsOn = ['envStop']
+  doLast {
+    project.exec {
+        String[] commands = ['docker', 'rm']
+        commandLine = commands + listContainers()
+    }
+  }
+}
+
+String[] listImages() {
+  def output = new ByteArrayOutputStream()
+  project.exec {
+      commandLine = ['docker', 'images', '-q']
+      standardOutput = output
+  }
+  String result = output.toString()
+  return result.split("\\r?\\n")
+}
+
+task removeImages() {
+  dependsOn = ['envStop']
+  doLast {
+    project.exec {
+        String[] commands = ['docker', 'rmi']
+        commandLine = commands + listImages()
+    }
+  }
+}
+
+task envReset() {
+  dependsOn = ['removeContainers', 'removeImages']
+}
