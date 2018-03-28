@@ -1,0 +1,10 @@
+\contentsline {section}{Contents}{1}{section*.1}
+\contentsline {section}{\numberline {1}Introduction}{1}{section.1}
+\contentsline {section}{\numberline {2}Regression Testing}{1}{section.2}
+\contentsline {section}{\numberline {3}System Design Improvements}{2}{section.3}
+\contentsline {subsection}{\numberline {3.1}Performance Optimization}{3}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Network}{3}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}User Configuration}{3}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}Bonfhir Manual Testing Tool}{4}{subsection.3.4}
+\contentsline {section}{\numberline {4}Evaluation, Testing, Performance}{4}{section.4}
+\contentsline {section}{\numberline {5}Future Work}{5}{section.5}
