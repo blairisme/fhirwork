@@ -8,7 +8,7 @@
 
 ## Test Environment
 
-The FHIRWork server requires a number of services in order to run. Chiefly an OpenEHR from which to obtain patient data, an an EMPI service containing patient identifiers.
+The FHIRWork server requires a number of services in order to run. Chiefly an OpenEHR from which to obtain patient data, an EMPI service containing patient identifiers.
 
 1. Download, install and run [Docker](https://www.docker.com).
 1. Open a terminal and change directory to the directory containing this file.
